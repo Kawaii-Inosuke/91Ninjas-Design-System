@@ -20,7 +20,7 @@ pub fn menu_tree_named(english_names: bool) -> Vec<(&'static str, Vec<Item>)> {
             // Quit from File, Language and Appearance synthesized). It stays first: `from_tree`
             // gives the first menu the App role.
             crate::native_menu::APP_NAME, // 91studio
-            vec![c("About 91 Studio", "help.about")],
+            vec![c("About 91Ninjas Studio", "help.about")],
         ),
         (
             "File",
@@ -628,6 +628,7 @@ pub fn menu_tree_named(english_names: bool) -> Vec<(&'static str, Vec<Item>)> {
             let lang = crate::i18n::current();
             let mut panels = vec![
                 panel("Actions", "actions"),
+                panel("AI Design Assistant", crate::panels::studio_ai::ID), // 91studio
                 panel("Align", "align"),
                 panel("Appearance", "appearance"),
                 panel("Artboards", "artboards"),
@@ -675,7 +676,6 @@ pub fn menu_tree_named(english_names: bool) -> Vec<(&'static str, Vec<Item>)> {
                     type_items
                 }),
                 panel("Variables", crate::panels::variables::ID),
-                panel("91 Studio AI", crate::panels::studio_ai::ID), // 91studio
             ];
             sort_by_localized_label(&mut panels, lang);
             window_items.extend(panels);
@@ -694,13 +694,13 @@ pub fn menu_tree_named(english_names: bool) -> Vec<(&'static str, Vec<Item>)> {
             "Help",
             vec![
                 // 91studio: no upstream community links (D-022); the code we build on stays credited.
-                c("VectorCraft (the editor 91 Studio is built on)", "help.github"),
+                c("VectorCraft (the editor 91Ninjas Studio is built on)", "help.github"),
                 Sep,
                 c("Search Commands…", "help.commandPalette"),
                 todos("VectorCraft Help…", "F1"),
                 Sep,
                 c("Check for Updates…", "help.checkForUpdates"),
-                c("About 91 Studio", "help.about"),
+                c("About 91Ninjas Studio", "help.about"),
             ],
         ),
     ]

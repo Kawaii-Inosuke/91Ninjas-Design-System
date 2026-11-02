@@ -55,19 +55,37 @@ class CriticReport(BaseModel):
     fails: list[Finding] = Field(default_factory=list)
 
 
+# Layout names other packs use for our families (the infographic skill's packs say three_column_grid).
+LAYOUT_ALIASES = {"three_column_grid": "column_grid"}
+
+
 def allowed_layouts(brand: Brand) -> list[str]:
-    """Families the brand allows (all when it lists none). Recently used ones are only a preference (D-020)."""
-    fams = [f for f in (brand.layouts or list(LAYOUTS)) if f in LAYOUTS]
+    """Families the brand allows (all when it lists none), from entries like "vertical_list/icon". A shape we have
+    no template for (pyramid, hub_and_spoke…) is made with `custom`. Recent ones are only a preference (D-020)."""
+    fams: list[str] = []
+    for entry in brand.layouts or list(LAYOUTS):
+        fam = entry.partition("/")[0]
+        fam = LAYOUT_ALIASES.get(fam, fam)
+        if fam in LAYOUTS and fam not in fams:
+            fams.append(fam)
     if "custom" not in fams:
         fams.append("custom")
     return fams
+
+
+def custom_shapes(brand: Brand) -> list[str]:
+    """Shapes the brand lists that only `custom` can make (shown to the layout agent as ideas)."""
+    known = set(LAYOUTS) | set(LAYOUT_ALIASES)
+    return sorted({e.partition("/")[0] for e in brand.layouts} - known)
 
 
 def _layouts_text(brand: Brand, avoid: list[str]) -> str:
     lines = [f"- {f}{' (' + '|'.join(LAYOUTS[f]) + ')' if LAYOUTS[f] else ''}: {LAYOUT_GUIDE[f]}" for f in allowed_layouts(brand)]
     recent = (f"\nUsed recently for this client: {', '.join(avoid)}. Prefer a different one, unless the designer asked "
               "for one of these or it is clearly the best fit." if avoid else "")
-    return "Layouts you may use:\n" + "\n".join(lines) + recent
+    shapes = custom_shapes(brand)
+    extra = f"\nThis client also uses these shapes (make them with `custom`): {', '.join(shapes)}." if shapes else ""
+    return "Layouts you may use:\n" + "\n".join(lines) + extra + recent
 
 
 def _brand_text(brand: Brand) -> str:

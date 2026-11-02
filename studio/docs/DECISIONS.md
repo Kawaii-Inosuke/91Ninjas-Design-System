@@ -246,6 +246,43 @@ Format per entry: **Context → Decision → Alternatives → Consequences**. En
   - The theme's orange accent colour is upstream's look, not a trademark. It can change when there's a 91Ninjas palette.
   - Translations of the renamed menu items fall back to English until translated.
 
+## D-023: The user's choices for name, logo and the AI entry point (2026-11-02)
+- **Context:** The user supplied the 91Ninjas logo and asked for the "91Ninjas Studio" name, an AI button in place of Discord, and a good "AI …" name for the panel.
+- **Decision** (refines D-022):
+  - **Name:** product name **"91Ninjas Studio"** (`APP_NAME`).
+  - **App icon:** the **91 mark** from the logo, redrawn as vector shapes measured from the supplied image so it is crisp at every size. It is white on a rounded tile in the brand ink `#062324`.
+  - **Welcome screen:** the **91NINJAS wordmark** above "Welcome to 91Ninjas Studio", tinted with the theme's text colour.
+  - **App bar:** an **"AI" button** (wand icon) where Discord was. It opens the panel.
+  - **Panel name:** **"AI Design Assistant"**, listed alphabetically in the Window menu.
+- **Licensing:** the 91Ninjas name, mark and wordmark are 91Ninjas trademarks, used by their owner, and recorded as not open source in `ASSETS.md`.
+
+## D-024: The AI panel is a chat; clients are added from it (2026-11-03)
+- **Context:** The user found the form-style panel poor, couldn't add a client, and asked for a chatbot inspired by a reference design.
+- **Decision:**
+  - **Header:** the client chip (initials in the client's primary colour) and a client menu (switch client, *Import client pack…*, *Add client from a brand folder…*), plus a connection dot.
+  - **Thread:** designer bubbles on the right; assistant bubbles on the left, with the brief, versions with critic findings and previews, the placement note, and results. Progress lines are small notes, and a spinner shows the current step.
+  - **Approvals:** cards in the thread.
+  - **Welcome:** a greeting plus suggestion chips (from my text, as a timeline, as a comparison, import pack, add folder).
+  - **Message box:** **one** message box with a send button (Enter sends, Shift+Enter breaks the line). A message starts a design when idle, becomes change notes at the outline approval, and becomes an artboard edit once the design is placed.
+- **How it's built:**
+  - File dialogs go through the editor's `picks` module (off the UI thread on Linux).
+  - The sidecar gained `POST /api/clients/from-folder` and `POST /api/clients/import-path`.
+- **Also:**
+  - FCC is installed locally from its brand folder (`packs.create_from_folder`: 20 past designs, Inter fonts installed for the editor). Its `brand.css` is left out, because it targets other templates.
+  - Layout entries like `vertical_list/icon` and the skill's `three_column_grid` now map onto our families. The extra shapes (pyramid, hub_and_spoke…) go to `custom`.
+
+## D-025: The 91Ninjas look: teal-black UI with a mint accent (2026-11-03)
+- **Context:** The user shared two mockups: a teal-black UI with a mint accent, the wordmark in the app bar, and a large welcome screen with a "Design with AI" card.
+- **Decision:**
+  - **Theme greys:** the Modern scheme's dark and Charcoal greys are tinted toward the brand ink `#062324`.
+  - **Mint accent:** a new **Mint** accent (`#7ee8c8` on dark, `#0f8a6e` on light) is the default, in both the UI (`Accent::Mint`) and the engine (`uiAccent: "mint"`). The other accents stay selectable.
+  - **Lettering on accent fills:** a new token, `on_accent`, colours text and marks on accent fills: dark ink on mint, white otherwise. It replaces the hard-coded white on primary buttons, checkboxes, radio dots, the place badge and the chat panel.
+  - **App bar:** the **91NINJAS wordmark** replaces the square mark.
+  - **Welcome screen:** a two-colour title, a tagline, large pill **New File** / **Open** buttons, and a **Design with AI** card with an **Open AI Assistant →** button.
+- **Not built:** the mockups' account avatar, cloud, Share and Export buttons (nothing behind them yet) and the decorative wave.
+- **This machine:** the saved accent was switched from coral to mint in `~/.config/vectorcraft/ui.json`. A backup is at `ui.json.before-mint`.
+- **Checked:** 2,884 ui-egui tests pass (3 updated for the wordmark and card); 71 engine prefs tests pass; clippy is clean; checked live in a screenshot.
+
 ## D-007: Every phase ends with a phase report and a docs update (2026-11-02)
 - **Decision:**
   - At the end of each phase, write `phases/PHASE-N.md` and update the PRD, TRD, ARCHITECTURE and SECURITY docs.

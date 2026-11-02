@@ -37,11 +37,12 @@ impl Brightness {
     }
 }
 
-/// User Interface › Accent Color: the one colour for what is on, chosen or focused. Coral, the
-/// default, is the app icon's.
+/// User Interface › Accent Color: the one colour for what is on, chosen or focused.
+/// 91studio: Mint, the 91Ninjas Studio accent, is the default (D-025); Coral was upstream's.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub enum Accent {
     #[default]
+    Mint,
     Coral,
     Blue,
     Violet,
@@ -51,9 +52,10 @@ pub enum Accent {
 }
 
 impl Accent {
-    pub const ALL: [Accent; 6] = [Accent::Coral, Accent::Blue, Accent::Violet, Accent::Green, Accent::Amber, Accent::Pink];
+    pub const ALL: [Accent; 7] = [Accent::Mint, Accent::Coral, Accent::Blue, Accent::Violet, Accent::Green, Accent::Amber, Accent::Pink];
     pub fn id(self) -> &'static str {
         match self {
+            Accent::Mint => "mint",
             Accent::Coral => "coral",
             Accent::Blue => "blue",
             Accent::Violet => "violet",
@@ -65,10 +67,17 @@ impl Accent {
     pub fn parse(s: &str) -> Option<Self> {
         Self::ALL.into_iter().find(|a| a.id().eq_ignore_ascii_case(s))
     }
+    /// 91studio: what is written on a fill of this accent: dark ink on light mint, white on the others.
+    fn on_accent(self, dark: bool) -> u32 {
+        if self == Accent::Mint && dark { 0x062324 } else { 0xffffff }
+    }
     /// (accent, accent_strong) on dark panels and on light ones; the strong one fills buttons
     /// with white lettering.
     fn colors(self, dark: bool) -> (u32, u32) {
         match (self, dark) {
+            // 91studio: mint on dark (dark lettering, see `on_accent`), a deep teal on light.
+            (Accent::Mint, true) => (0x7ee8c8, 0x6fdfbd),
+            (Accent::Mint, false) => (0x0f8a6e, 0x0d7d63),
             (Accent::Coral, true) => (0xf06a52, 0xe8573f),
             (Accent::Coral, false) => (0xd9472f, 0xd14a33),
             (Accent::Blue, true) => (0x5b96ff, 0x2f74f0),
@@ -127,6 +136,8 @@ pub struct Tokens {
     pub tool_active: Color32,
     pub accent: Color32,
     pub accent_strong: Color32,
+    /// 91studio: lettering and marks on an accent fill (primary buttons, checked boxes, badges).
+    pub on_accent: Color32,
     pub row_selected: Color32,
     pub pasteboard: Color32,
     pub ruler: Color32,
@@ -172,38 +183,39 @@ pub struct Tokens {
 impl Tokens {
     pub fn for_brightness(b: Brightness) -> Self {
         let hex = |s: u32| Color32::from_rgb((s >> 16) as u8, (s >> 8) as u8, s as u8);
-        // The Craft look: cool slate greys, flat faces with soft corners, and one accent (the app
-        // icon's coral) for what is on, chosen or focused. The four brightness levels share the
+        // 91studio: the 91Ninjas look (D-025): greys tinted toward the brand ink #062324, flat faces with
+        // soft corners, and one accent (mint by default) for what is on, chosen or focused. The four brightness levels share the
         // style and differ only in their greys.
         let base = Tokens {
             dark: true,
-            app_bar: hex(0x0b0d12),
-            panel: hex(0x181b22),
-            panel_darker: hex(0x13161c),
-            input: hex(0x0f1116),
-            input_border: hex(0x2c323e),
-            border: hex(0x06070a),
-            divider: hex(0x232832),
-            text: hex(0xdfe4ec),
-            text_dim: hex(0x969faf),
-            text_disabled: hex(0x5a6271),
-            icon: hex(0xc9d0dc),
-            hover: hex(0x262b35),
-            tool_active: hex(0x2f3541),
+            app_bar: hex(0x070d0e),
+            panel: hex(0x111a1b),
+            panel_darker: hex(0x0c1415),
+            input: hex(0x0a1112),
+            input_border: hex(0x24393a),
+            border: hex(0x040707),
+            divider: hex(0x1c2a2b),
+            text: hex(0xdfeae8),
+            text_dim: hex(0x8fa3a0),
+            text_disabled: hex(0x55696a),
+            icon: hex(0xc5d6d3),
+            hover: hex(0x1d2c2d),
+            tool_active: hex(0x253738),
             accent: hex(0xf06a52),
             accent_strong: hex(0xe8573f),
+            on_accent: Color32::WHITE,
             row_selected: hex(0x3a2a2c),
-            pasteboard: hex(0x101217),
-            ruler: hex(0x13161c),
-            ruler_tick: hex(0x6f788a),
+            pasteboard: hex(0x0b1213),
+            ruler: hex(0x0c1415),
+            ruler_tick: hex(0x6a817f),
             smart_guide: hex(0xff3dfc),
             guide: hex(0x4affff),
-            measure_bg: Color32::from_rgba_unmultiplied(24, 27, 34, 235),
-            button: hex(0x282d37),
+            measure_bg: Color32::from_rgba_unmultiplied(17, 26, 27, 235),
+            button: hex(0x1c2b2c),
             radius: 4,
             text_strong: hex(0xffffff),
-            tab_strip: hex(0x0f1116),
-            button_border: hex(0x4a5363),
+            tab_strip: hex(0x0a1112),
+            button_border: hex(0x3d5556),
             selection: hex(0x4f80ff),
             anchor_selected: hex(0x3d82ff),
             flyout_active: hex(0xff8a74),
@@ -223,27 +235,27 @@ impl Tokens {
             Brightness::Dark => base,
             // Charcoal, the default.
             Brightness::MediumDark => Tokens {
-                app_bar: hex(0x1b1f27),
-                panel: hex(0x272c36),
-                panel_darker: hex(0x21262f),
-                tab_strip: hex(0x1e222a),
-                input: hex(0x1a1e26),
-                input_border: hex(0x3a414e),
-                border: hex(0x11141a),
-                divider: hex(0x323946),
-                text: hex(0xe4e9f1),
-                text_dim: hex(0x99a2b2),
-                text_disabled: hex(0x626b7a),
-                icon: hex(0xccd3de),
-                hover: hex(0x353c49),
-                tool_active: hex(0x3d4553),
+                app_bar: hex(0x0f1a1b),
+                panel: hex(0x172426),
+                panel_darker: hex(0x132021),
+                tab_strip: hex(0x111d1e),
+                input: hex(0x0f1a1b),
+                input_border: hex(0x2f4547),
+                border: hex(0x081011),
+                divider: hex(0x24363a),
+                text: hex(0xe3eeec),
+                text_dim: hex(0x97aaa7),
+                text_disabled: hex(0x5d7172),
+                icon: hex(0xcadad7),
+                hover: hex(0x24373a),
+                tool_active: hex(0x2c4144),
                 row_selected: hex(0x4a3236),
-                pasteboard: hex(0x1e222a),
-                ruler: hex(0x21262f),
-                ruler_tick: hex(0x7c8597),
-                measure_bg: Color32::from_rgba_unmultiplied(39, 44, 54, 235),
-                button: hex(0x39404d),
-                button_border: hex(0x5a6476),
+                pasteboard: hex(0x101b1c),
+                ruler: hex(0x132021),
+                ruler_tick: hex(0x748b88),
+                measure_bg: Color32::from_rgba_unmultiplied(23, 36, 38, 235),
+                button: hex(0x223538),
+                button_border: hex(0x4a6366),
                 ..base
             },
             Brightness::MediumLight => Tokens {
@@ -327,6 +339,7 @@ impl Tokens {
             tool_active: hex(0x1d1d1d),
             accent: hex(0x378ef0),
             accent_strong: hex(0x1473e6),
+            on_accent: Color32::WHITE,
             row_selected: hex(0x484b50),
             pasteboard: hex(0x1e1e1e),
             ruler: hex(0x2f2f2f),
@@ -443,6 +456,7 @@ impl Tokens {
         Tokens {
             accent: a,
             accent_strong: strong,
+            on_accent: hex(accent.on_accent(self.dark)),
             flyout_active: if self.dark { a } else { strong },
             row_selected: tint(if self.dark { 0.24 } else { 0.2 }),
             tool_active: tint(if self.dark { 0.3 } else { 0.24 }),

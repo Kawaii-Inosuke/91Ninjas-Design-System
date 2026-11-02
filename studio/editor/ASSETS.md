@@ -14,11 +14,12 @@ Generated-in-code art is original and has no file to list. This covers the defau
 |---|---|---|---|---|
 | `epaint_default_fonts/fonts/egui-icons.ttf` (egui dependency) | John Slegers (emoji-icon-font) | https://github.com/storytold/egui/blob/6d518fc799681571963842f95b55a6b68431b15a/crates/epaint_default_fonts/fonts/egui-icons.txt; original https://github.com/jslegers/emoji-icon-font | MIT (full text in NOTICE) | Small special-icon subset embedded by default_fonts |
 | `epaint_default_fonts/fonts/emoji-icon-font.ttf` (egui dependency) | John Slegers | https://github.com/storytold/egui/blob/6d518fc799681571963842f95b55a6b68431b15a/crates/epaint_default_fonts/fonts/emoji-icon-font-mit-license.txt; original https://github.com/jslegers/emoji-icon-font | MIT (full text in NOTICE) | Parent face embedded by monochrome_emoji_fonts |
-| `assets/91studio/icon.svg` | 91Ninjas (91 Studio) | original work | MIT OR Apache-2.0 | Placeholder app icon (D-022); see assets/91studio/README.md |
-| `assets/91studio/icon-128.png` | 91Ninjas (91 Studio) | original work | MIT OR Apache-2.0 | Placeholder app icon (D-022); see assets/91studio/README.md |
-| `assets/91studio/icon-256.png` | 91Ninjas (91 Studio) | original work | MIT OR Apache-2.0 | Placeholder app icon (D-022); see assets/91studio/README.md |
-| `assets/91studio/icon-512.png` | 91Ninjas (91 Studio) | original work | MIT OR Apache-2.0 | Placeholder app icon (D-022); see assets/91studio/README.md |
-| `assets/91studio/README.md` | 91Ninjas (91 Studio) | original work | MIT OR Apache-2.0 | Placeholder app icon (D-022); see assets/91studio/README.md |
+| `assets/91studio/icon.svg` | 91Ninjas | supplied by the owner (91Ninjas logo) | 91Ninjas trademark, used by its owner (not open source) | App icon master: the 91 mark redrawn as vectors (D-022) |
+| `assets/91studio/icon-128.png` | 91Ninjas | supplied by the owner (91Ninjas logo) | 91Ninjas trademark, used by its owner (not open source) | App icon |
+| `assets/91studio/icon-256.png` | 91Ninjas | supplied by the owner (91Ninjas logo) | 91Ninjas trademark, used by its owner (not open source) | App icon |
+| `assets/91studio/icon-512.png` | 91Ninjas | supplied by the owner (91Ninjas logo) | 91Ninjas trademark, used by its owner (not open source) | App icon |
+| `assets/91studio/91ninjas-wordmark.png` | 91Ninjas | supplied by the owner (91Ninjas logo) | 91Ninjas trademark, used by its owner (not open source) | Welcome screen wordmark, tinted by the theme |
+| `assets/91studio/README.md` | 91Ninjas | supplied by the owner (91Ninjas logo) | 91Ninjas trademark, used by its owner (not open source) | Notes on these files |
 | `assets/app-icon/LICENSE.txt` | (licence/readme text) | VectorCraft | MIT OR Apache-2.0 |  |
 | `assets/app-icon/README.md` | (licence/readme text) | VectorCraft | MIT OR Apache-2.0 |  |
 | `assets/app-icon/hicolor/128x128/apps/ai.storyteller.vectorcraft.png` | Project owner (ArtCraft team) | Original artwork drawn in ArtCraft for VectorCraft, vectorised and rendered by `packaging/icons.sh` | MIT OR Apache-2.0 (`assets/app-icon/LICENSE.txt`) | App icon (engraved dragon) |

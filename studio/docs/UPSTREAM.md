@@ -33,6 +33,8 @@ The repo was about one month old at fork time, with about 7.5k commits and dozen
 
 | Rebrand (D-022): `ui-egui` `native_menu.rs` (APP_NAME), `chrome.rs`, `canvas/home.rs`, `dialogs/about.rs`, `menus/tree.rs`, `menus/bar.rs`, `menus/ui_commands.rs`, `brand.rs`; app `titlebar.rs`, `main.rs`; tests that assert names (`chrome/tests.rs`, `tests/home.rs`, `tests/nativemenu.rs`, `i18n/tests.rs`, `titlebar.rs`); `README.md`, `NOTICE`, `ASSETS.md`; `docs/brand/` deleted | The product is 91 Studio; ArtCraft trademarks removed as the licence requires | 2,882 ui-egui tests, `xtask assets`, `xtask brands` |
 
+| 91Ninjas look (D-025): `ui-egui` `theme.rs` (Mint accent, `on_accent`, tinted greys), `widgets/buttons.rs`, `widgets/toggles.rs`, `place.rs`, `chrome.rs` (wordmark), `canvas/home.rs` (welcome), `brand.rs`; tests `brand.rs`, `chrome/tests.rs`, `tests/home.rs`; engine `prefs.rs` (default `mint`), `cmd/prefscmds.rs` (Mint choice) | The product's own look | 2,884 ui-egui + 71 engine prefs tests |
+
 Our own new files: `assets/91studio/` (placeholder icon), `crates/studio-bridge/`, `apps/vectorcraft/src/studio_bridge.rs`, `apps/vectorcraft/src/studio_agents.rs`, `crates/ui-egui/src/studio.rs`, `crates/ui-egui/src/panels/studio_ai.rs`.
 
 ## Git setup

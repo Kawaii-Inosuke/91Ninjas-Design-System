@@ -153,6 +153,25 @@ def create_client(client: str, *, design_md: str, critic_rules: str, past: list[
     return brandmod.load(client, root)
 
 
+def create_from_folder(folder: Path, client: str | None = None, *, root: Path | None = None, overwrite: bool = False,
+                       with_brand_css: bool = False) -> brandmod.Brand:
+    """A client from a brand folder laid out like a pack (DESIGN.md, critic_rules.md, past/, assets/fonts, assets/icons,
+    source/), e.g. an infographic-skill brand. `assets/brand.css` is left out unless asked: it is written for other
+    templates than ours."""
+    folder = folder.expanduser().resolve()
+    if not (folder / "DESIGN.md").is_file():
+        raise PackError(f"{folder} has no DESIGN.md: pick the client's brand folder")
+    files = lambda sub, exts: sorted(p for p in (folder / sub).glob("*") if p.is_file() and p.suffix.lower() in exts) if (folder / sub).is_dir() else []
+    css = folder / "assets" / "brand.css"
+    rules = folder / "critic_rules.md"
+    return create_client(
+        check_client_id(client or re.sub(r"[^a-z0-9-]+", "-", folder.name.lower()).strip("-")),
+        design_md=(folder / "DESIGN.md").read_text(), critic_rules=rules.read_text() if rules.is_file() else "",
+        past=files("past", IMAGE_EXT), fonts=files("assets/fonts", FONT_EXT), icons=files("assets/icons", {".svg"}),
+        brand_css=css.read_text() if with_brand_css and css.is_file() else None,
+        sources=[p for p in files("source", ALLOWED_EXT) if p.stat().st_size <= 20 * 1024 * 1024], root=root, overwrite=overwrite)
+
+
 def _safe_name(name: str) -> str:
     stem, dot, ext = name.rpartition(".")
     stem = re.sub(r"[^A-Za-z0-9_-]+", "-", stem or ext).strip("-")[:80] or "file"

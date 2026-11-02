@@ -1,4 +1,4 @@
-//! Help → About 91 Studio (91studio: was About VectorCraft).
+//! Help → About 91Ninjas Studio (91studio: was About VectorCraft).
 
 use crate::VectorcraftApp;
 use crate::theme;
@@ -9,7 +9,7 @@ pub(super) fn show(app: &mut VectorcraftApp, ctx: &egui::Context) {
         return;
     }
     let mut open = true;
-    egui::Window::new(tl!("About 91 Studio")) // 91studio
+    egui::Window::new(tl!("About 91Ninjas Studio")) // 91studio
         .collapsible(false)
         .resizable(false)
         .open(&mut open)
@@ -63,7 +63,7 @@ fn about_tab(app: &mut VectorcraftApp, ui: &mut egui::Ui) {
     ui.add_space(12.0);
     ui.label(
         egui::RichText::new(tl!(
-            "91 Studio by 91Ninjas, built on VectorCraft (MIT OR Apache-2.0). Fonts: Source Sans 3, Inter, JetBrains Mono (OFL). Icons: Lucide (ISC) + VectorCraft."
+            "91Ninjas Studio, built on VectorCraft (MIT OR Apache-2.0). Fonts: Source Sans 3, Inter, JetBrains Mono (OFL). Icons: Lucide (ISC) + VectorCraft."
         ))
         .size(11.0),
     );

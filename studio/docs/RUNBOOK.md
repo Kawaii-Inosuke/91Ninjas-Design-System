@@ -25,6 +25,8 @@ cd studio/editor
 cargo run --release -p vectorcraft                  # desktop app
 cargo run --release -p vectorcraft-cli -- --help    # headless CLI
 ```
+**Always build with `CARGO_INCREMENTAL=0`** (e.g. `echo 'export CARGO_INCREMENTAL=0' >> ~/.bashrc`). A build without it doesn't reuse the existing build and writes a ~3 GB `target/debug/incremental` cache (2026-11-03).
+
 **Disk policy: keep only one build at a time.**
 - Use the dev build (`cargo run -p vectorcraft`, output in `target/debug`) day to day.
 - Before a release build, delete the dev one (`rm -rf target/debug`). Delete `target/release` again once you no longer need it.

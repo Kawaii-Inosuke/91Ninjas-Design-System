@@ -644,10 +644,10 @@ pub const UI_COMMANDS: &[(&str, &str, &str, &str)] = &[
         "",
         "{} opens the Save PDF dialog; with params = document.exportPdf options written to path (asked when missing; viewAfterSaving opens the file) → {path, bytes, warnings}",
     ),
-    ("help.about", "About 91 Studio", "", "{}"),
+    ("help.about", "About 91Ninjas Studio", "", "{}"),
     ("help.checkForUpdates", "Check for Updates…", "", "{}"),
     ("help.commandPalette", "Search Commands…", "Cmd+Shift+/", "{}"),
-    ("app.quit", "Quit 91 Studio", "Cmd+Q", "{}"),
+    ("app.quit", "Quit 91Ninjas Studio", "Cmd+Q", "{}"),
     (
         "ui.swatchOptions",
         "Swatch Options…",

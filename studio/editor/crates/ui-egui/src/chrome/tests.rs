@@ -1201,10 +1201,10 @@ fn window_title_with_no_document_is_the_app_name() {
 fn window_title_follows_the_active_file() {
     let mut app = title_test_app(true);
     app.run("file.new", json!({"width": 100, "height": 100, "name": "foo.svg"})).unwrap();
-    assert_eq!(super::window_title(&app), "foo.svg \u{2014} 91 Studio");
+    assert_eq!(super::window_title(&app), "foo.svg \u{2014} 91Ninjas Studio");
     // Unsaved changes gain a `*` prefix, like the `*` in the document tabs.
     app.run("shape.rectangle", json!({"x": 0, "y": 0, "width": 10, "height": 10})).unwrap();
-    assert_eq!(super::window_title(&app), "*foo.svg \u{2014} 91 Studio");
+    assert_eq!(super::window_title(&app), "*foo.svg \u{2014} 91Ninjas Studio");
 }
 
 #[test]
@@ -1215,13 +1215,14 @@ fn system_mode_hides_the_mark() {
         let ctx = egui::Context::default();
         crate::theme::install_fonts(&ctx);
         let mut out = ctx.run_ui(egui::RawInput::default(), |ui| super::app_bar(&mut app, ui));
-        let uploads = out.textures_delta.set.values().flat_map(|d| d.iter()).filter(|d| d.image.size() == [128, 128]).count();
+        // 91studio: the app bar's mark is the wordmark now (D-025).
+        let uploads = out.textures_delta.set.values().flat_map(|d| d.iter()).filter(|d| d.image.size() == [1394, 210]).count();
         out.textures_delta.clear();
         let marks: Vec<egui::Rect> = out
             .shapes
             .iter()
             .filter_map(|c| match &c.shape {
-                egui::Shape::Mesh(m) if m.texture_id == crate::brand::texture_id(&ctx) => Some(m.calc_bounds()),
+                egui::Shape::Mesh(m) if m.texture_id == crate::brand::wordmark_texture_id(&ctx) => Some(m.calc_bounds()),
                 _ => None,
             })
             .collect();
@@ -1251,7 +1252,7 @@ fn sync_window_title_sends_only_on_change() {
     assert!(!cmds.iter().any(|c| matches!(c, egui::ViewportCommand::Title(_))), "repeat Title: {cmds:?}");
     app.run("file.new", json!({"width": 100, "height": 100, "name": "foo.svg"})).unwrap();
     super::sync_window_title(&mut app, &ctx);
-    assert_eq!(app.last_window_title, "foo.svg \u{2014} 91 Studio");
+    assert_eq!(app.last_window_title, "foo.svg \u{2014} 91Ninjas Studio");
 }
 /// Draw actual tabs, including the same per-frame view synchronization as the app.
 fn artboard_document_tabs_frame(app: &mut crate::VectorcraftApp, ctx: &egui::Context, events: Vec<egui::Event>) -> Vec<egui::Rect> {

@@ -1051,7 +1051,7 @@ const KEEPS_MENU_NAMES: [&str; 19] =
 /// names and the perspective grid presets (names, shown untranslated wherever else they appear).
 /// Each language's own name in the Language menu is left alone too.
 const MENU_KEEP_AS_IS: &[&str] = &[
-    "91 Studio", // 91studio: the app menu takes the product name
+    "91Ninjas Studio", // 91studio: the app menu takes the product name
     "OpenType",
     "Essentials",
     "Essentials Classic",

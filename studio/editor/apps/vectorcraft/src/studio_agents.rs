@@ -73,18 +73,18 @@ pub fn launch() -> Option<Sidecar> {
         return None;
     }
     let Some(dir) = agents_dir() else {
-        log::info!("91 Studio agents not found (set STUDIO_AGENTS_DIR); the AI panel is off");
+        log::info!("91Ninjas Studio agents not found (set STUDIO_AGENTS_DIR); the AI panel is off");
         return None;
     };
     let Some(uv) = uv() else {
-        log::warn!("91 Studio agents: `uv` not found (set STUDIO_UV); the AI panel is off");
+        log::warn!("91Ninjas Studio agents: `uv` not found (set STUDIO_UV); the AI panel is off");
         return None;
     };
     let port = free_port()?;
     let token = match vectorcraft_studio_bridge::new_token() {
         Ok(t) => t,
         Err(e) => {
-            log::warn!("91 Studio agents: {e}");
+            log::warn!("91Ninjas Studio agents: {e}");
             return None;
         }
     };
@@ -109,11 +109,11 @@ pub fn launch() -> Option<Sidecar> {
         .spawn();
     match child {
         Ok(child) => {
-            log::info!("91 Studio agents starting on 127.0.0.1:{port} from {} (log {})", dir.display(), log_path.display());
+            log::info!("91Ninjas Studio agents starting on 127.0.0.1:{port} from {} (log {})", dir.display(), log_path.display());
             Some(Sidecar { info: SidecarInfo { port, token }, child })
         }
         Err(e) => {
-            log::warn!("91 Studio agents failed to start with {}: {e}", uv.display());
+            log::warn!("91Ninjas Studio agents failed to start with {}: {e}", uv.display());
             None
         }
     }

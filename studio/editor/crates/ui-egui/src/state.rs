@@ -208,7 +208,7 @@ pub const ICON_PANELS: &[(&str, &str, &str)] = &[
     (crate::addons::pathtools::shape::ID, "Parametric Shape", "hexagon"),
     (crate::addons::pen::ID, "Smart Pen", "spline-pointer"),
     // 91studio: the AI panel (D-021).
-    (crate::panels::studio_ai::ID, "91 Studio AI", "wand-sparkles"),
+    (crate::panels::studio_ai::ID, "AI Design Assistant", "wand-sparkles"),
 ];
 
 /// Groups of icon panels separated by dividers in the collapsed column.

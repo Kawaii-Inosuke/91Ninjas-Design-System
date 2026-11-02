@@ -1,4 +1,4 @@
-use super::{CornerRadius, Tokens, Ui, VectorcraftApp, json, theme, vec2, widgets};
+use super::{CornerRadius, Tokens, Ui, VectorcraftApp, json, theme, vec2};
 
 /// The Home screen (`app.home`; with no document open, unless its preference is off).
 pub(super) fn home(app: &mut VectorcraftApp, ui: &mut Ui, rect: egui::Rect) {
@@ -22,27 +22,36 @@ pub(super) fn home(app: &mut VectorcraftApp, ui: &mut Ui, rect: egui::Rect) {
     });
 }
 
-/// The Home screen's column: welcome, New / Open, Recent Files, presets and community links.
+/// The Home screen's column: welcome, New / Open, Recent Files, presets and the AI card.
+/// 91studio: the 91Ninjas Studio welcome (D-022, D-025).
 fn home_content(app: &mut VectorcraftApp, ui: &mut Ui) {
     let t = Tokens::get(ui.ctx());
-    // 91studio: our product's welcome (D-022).
-    ui.label(egui::RichText::new(tl!("Welcome to 91 Studio")).font(theme::semibold(26.0)).color(t.text));
-    ui.add_space(4.0);
-    ui.label(egui::RichText::new(tl!("On-brand designs made by AI, finished by you.")).size(14.0).color(t.text_dim));
+    crate::brand::wordmark(ui, 34.0, t.text_strong);
     ui.add_space(22.0);
+    // One label in two colours: the product name in the accent.
+    let mut title = egui::text::LayoutJob::default();
+    let font = theme::semibold(40.0);
+    title.append(tl!("Welcome to "), 0.0, egui::TextFormat::simple(font.clone(), t.text_strong));
+    title.append(tl!("91Ninjas Studio"), 0.0, egui::TextFormat::simple(font, t.accent));
+    ui.label(title);
+    ui.add_space(8.0);
+    ui.label(
+        egui::RichText::new(tl!("Make on-brand infographics with AI, then finish them with precise vector tools.")).size(16.0).color(t.text_dim),
+    );
+    ui.add_space(26.0);
     ui.horizontal(|ui| {
-        if widgets::primary_button(ui, tl!("New file")).clicked() {
+        ui.spacing_mut().item_spacing.x = 14.0;
+        if pill(ui, "plus", tl!("New File"), true).clicked() {
             app.run("file.newDialog", json!({})).ok();
         }
-        ui.add_space(8.0);
-        if widgets::secondary_button(ui, tl!("Open")).clicked() {
+        if pill(ui, "folder-open", tl!("Open"), false).clicked() {
             app.run("file.open", json!({})).ok();
         }
     });
     recent(app, ui);
-    ui.add_space(28.0);
-    ui.label(egui::RichText::new(tl!("Quickly start a new file")).font(theme::semibold(14.0)).color(t.text));
-    ui.add_space(10.0);
+    ui.add_space(30.0);
+    ui.label(egui::RichText::new(tl!("Quickly start a new file")).font(theme::semibold(16.0)).color(t.text_strong));
+    ui.add_space(12.0);
     // A few of New Document's presets (`file.newPresets`), as its cards.
     let presets = ["Letter", "A4", "Web 1920×1080", "Phone 390×844", "Postcard", "Social Square Post 1080×1080"];
     ui.horizontal_wrapped(|ui| {
@@ -54,13 +63,65 @@ fn home_content(app: &mut VectorcraftApp, ui: &mut Ui) {
             }
         }
     });
-    ui.add_space(28.0);
-    // 91studio: the AI panel instead of the upstream community links (D-022).
-    ui.label(egui::RichText::new(tl!("Make a design with AI")).font(theme::semibold(14.0)).color(t.text));
-    ui.add_space(10.0);
-    if widgets::secondary_button(ui, tl!("Open the 91 Studio AI panel")).clicked() {
-        app.run("window.panel", json!({ "panel": crate::panels::studio_ai::ID })).ok();
+    ui.add_space(30.0);
+    ai_card(app, ui, &t);
+}
+
+/// A large rounded button with an icon: filled with the accent (`primary`) or quiet.
+fn pill(ui: &mut Ui, icon: &str, label: &str, primary: bool) -> egui::Response {
+    let t = Tokens::get(ui.ctx());
+    let (fill, fg) = if primary { (t.accent_strong, t.on_accent) } else { (t.button, t.text_strong) };
+    let galley = ui.painter().layout_no_wrap(label.to_string(), theme::semibold(15.0), fg);
+    let h = 44.0;
+    let (r, resp) = ui.allocate_exact_size(vec2(galley.size().x + 72.0, h), egui::Sense::click());
+    let fill = if resp.hovered() { fill.gamma_multiply(0.88) } else { fill };
+    ui.painter().rect_filled(r, CornerRadius::same(22), fill);
+    let ir = egui::Rect::from_center_size(r.left_center() + vec2(30.0, 0.0), vec2(18.0, 18.0));
+    crate::icons::paint(ui, icon, ir, fg);
+    ui.painter().galley(egui::pos2(ir.right() + 10.0, r.center().y - galley.size().y / 2.0), galley, fg);
+    if resp.hovered() {
+        ui.ctx().set_cursor_icon(egui::CursorIcon::PointingHand);
     }
+    resp
+}
+
+/// "Design with AI": what the AI Design Assistant does, and a button that opens it.
+fn ai_card(app: &mut VectorcraftApp, ui: &mut Ui, t: &Tokens) {
+    egui::Frame::new()
+        .fill(t.panel)
+        .stroke(egui::Stroke::new(1.0, t.input_border))
+        .corner_radius(CornerRadius::same(14))
+        .inner_margin(egui::Margin::symmetric(22, 18))
+        .show(ui, |ui| {
+            ui.set_width(ui.available_width().min(720.0));
+            ui.horizontal(|ui| {
+                crate::icons::icon(ui, "sparkles", 30.0, t.accent);
+                ui.add_space(8.0);
+                ui.vertical(|ui| {
+                    ui.set_max_width((ui.available_width() - 210.0).max(200.0));
+                    ui.label(egui::RichText::new(tl!("Design with AI")).font(theme::semibold(18.0)).color(t.text_strong));
+                    ui.add_space(4.0);
+                    ui.add(
+                        egui::Label::new(
+                            egui::RichText::new(tl!("Paste your content: the assistant drafts an on-brand infographic, checks it against the client's rules and puts it on an artboard.")).color(t.text_dim),
+                        )
+                        .wrap(),
+                    );
+                });
+                ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                    let label = tl!("Open AI Assistant  →");
+                    let galley = ui.painter().layout_no_wrap(label.to_string(), theme::semibold(14.0), t.accent);
+                    let (r, resp) = ui.allocate_exact_size(vec2(galley.size().x + 40.0, 40.0), egui::Sense::click());
+                    let fill = if resp.hovered() { t.hover } else { egui::Color32::TRANSPARENT };
+                    ui.painter().rect_filled(r, CornerRadius::same(20), fill);
+                    ui.painter().rect_stroke(r, CornerRadius::same(20), egui::Stroke::new(1.5, t.accent), egui::StrokeKind::Inside);
+                    ui.painter().galley(r.center() - galley.size() / 2.0, galley, t.accent);
+                    if resp.clicked() {
+                        app.run("window.panel", json!({ "panel": crate::panels::studio_ai::ID })).ok();
+                    }
+                });
+            });
+        });
 }
 
 /// The Home screen's Recent Files (#663): the first of File › Open Recent Files, each its name and

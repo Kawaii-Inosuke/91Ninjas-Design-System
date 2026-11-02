@@ -428,7 +428,7 @@ pub fn paint_cursor(app: &mut VectorcraftApp, ctx: &egui::Context, painter: &egu
         // The badge: how many files are loaded.
         let c = r.right_top() + egui::vec2(-2.0, 2.0);
         painter.circle_filled(c, 9.0, t.accent);
-        painter.text(c, egui::Align2::CENTER_CENTER, count.to_string(), theme::semibold(10.5), egui::Color32::WHITE);
+        painter.text(c, egui::Align2::CENTER_CENTER, count.to_string(), theme::semibold(10.5), t.on_accent);
     }
 }
 

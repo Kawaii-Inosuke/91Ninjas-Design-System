@@ -120,7 +120,7 @@ pub(crate) fn primary_button_width(ui: &mut Ui, text: &str, min_width: f32) -> R
 /// Returns its response with the enabled state and screen-reader name preserved.
 fn primary_button_sized(ui: &mut Ui, text: &str, enabled: bool, min_width: f32) -> Response {
     let t = Tokens::get(ui.ctx());
-    let fg = if enabled { Color32::WHITE } else { t.text_disabled };
+    let fg = if enabled { t.on_accent } else { t.text_disabled }; // 91studio: was white (D-025)
     let galley = ui.painter().layout_no_wrap(tl!(text).to_string(), theme::semibold(12.5), fg);
     let w = galley.size().x + 32.0;
     let (rect, resp) = ui.allocate_exact_size(vec2(w.max(min_width), 28.0), if enabled { Sense::click() } else { Sense::hover() });

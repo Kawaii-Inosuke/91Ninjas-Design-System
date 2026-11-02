@@ -103,3 +103,23 @@ def test_a_run_through_the_api(client):
     done = [e for e in events(client, rid, {"done"}) if e["type"] == "done"][0]
     assert done["data"]["status"] == "done" and set(done["data"]["files"]) >= {"png", "svg"}
     assert client.post(f"/api/runs/{rid}/messages", headers=AUTH, json={"text": "bigger"}).status_code == 409   # not in the editor
+
+
+def test_clients_from_a_folder_and_a_pack_path(client, tmp_path):
+    from PIL import Image
+    folder = tmp_path / "Acme Bank"
+    (folder / "past").mkdir(parents=True)
+    (folder / "DESIGN.md").write_text((FIX / "brands/demo/DESIGN.md").read_text())
+    (folder / "critic_rules.md").write_text("# rules")
+    for i in range(3):
+        Image.new("RGB", (30, 20), (i * 60, 90, 200)).save(folder / "past" / f"p{i}.png")
+    r = client.post("/api/clients/from-folder", headers=AUTH, json={"path": str(folder)})
+    assert r.status_code == 200 and r.json()["client"] == "acme-bank", r.text
+    assert client.post("/api/clients/from-folder", headers=AUTH, json={"path": str(folder)}).status_code == 422  # exists
+    assert client.post("/api/clients/from-folder", headers=AUTH, json={"path": str(tmp_path)}).status_code == 422  # no DESIGN.md
+    pack = client.post("/api/clients/acme-bank/export", headers=AUTH)
+    p = tmp_path / "acme.91pack"
+    p.write_bytes(pack.content)
+    pv = client.post("/api/clients/import-path", headers=AUTH, json={"path": str(p)}).json()
+    assert pv["client"] == "acme-bank" and pv["exists"]
+    assert client.post(f"/api/clients/import/{pv['id']}/install", headers=AUTH, json={"mode": "replace"}).json()["client"] == "acme-bank"

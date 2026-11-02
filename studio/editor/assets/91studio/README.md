@@ -1,7 +1,11 @@
-# 91 Studio app icon (placeholder)
+# 91Ninjas Studio icon and wordmark
 
-A rounded blue tile (`#0164F0`, corner radius 112/512, as the upstream tile) with a white "91".
-Placeholder until 91Ninjas supplies its logo: replace `icon.svg` and the PNGs (128, 256, 512 px), keeping
-the file names, and the app picks them up (`crates/ui-egui/src/brand.rs`, `apps/vectorcraft/src/titlebar.rs`).
-Original work for 91 Studio; licensed like the rest of the code (MIT OR Apache-2.0). The "91" is set in
-DejaVu Sans Bold (Bitstream Vera licence, permits rendering into artwork).
+- `icon.svg`, `icon-128.png`, `icon-256.png`, `icon-512.png`: the app icon. The 91Ninjas "91" mark in white on a
+  rounded tile in the brand ink `#062324` (corner radius 112/512, as the upstream tile). The mark was redrawn as
+  vector shapes measured from the 91Ninjas logo the owner supplied, so it is crisp at every size.
+- `91ninjas-wordmark.png`: the 91NINJAS wordmark from that logo, white on transparent; the welcome screen tints
+  it with the theme's text colour.
+
+The 91Ninjas name, mark and wordmark belong to 91Ninjas and are used here by the owner. They are not covered
+by the code's open-source licence. To update: replace these files, keeping the names
+(`crates/ui-egui/src/brand.rs`, `apps/vectorcraft/src/titlebar.rs` read them).

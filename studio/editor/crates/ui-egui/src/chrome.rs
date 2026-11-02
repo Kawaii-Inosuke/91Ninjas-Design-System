@@ -60,9 +60,9 @@ pub fn app_bar(app: &mut VectorcraftApp, ui: &mut Ui) {
         ui.horizontal_centered(|ui| {
             // With the system title bar the OS draws its own icon: no in-app brand mark.
             if !system {
-                let (r, _) = ui.allocate_exact_size(vec2(MARK, MARK), Sense::hover());
-                crate::brand::paint_mark(ui, r);
-                ui.add_space(6.0);
+                // 91studio: the 91NINJAS wordmark in place of the square mark (D-025).
+                crate::brand::wordmark(ui, MARK * 0.8, crate::theme::Tokens::get(ui.ctx()).text_strong);
+                ui.add_space(10.0);
             }
             let on_home = menus::home_showing(app);
             if widgets::icon_button(ui, "house", tl!("Home"), on_home, 20.0).clicked() {
@@ -88,8 +88,8 @@ pub fn app_bar(app: &mut VectorcraftApp, ui: &mut Ui) {
             let icon = 28.0;
             let search = room >= 64.0 + 8.0 + gap + icon;
             let ws_w = ws_w.min(room - 8.0 - gap - if search { icon } else { 0.0 }).max(64.0);
-            // 91studio: no upstream community button in the app bar (D-022).
-            let discord = false;
+            // 91studio: the AI Design Assistant's button where upstream had Discord (D-022).
+            let ai_button = search && room >= ws_w + 8.0 + gap + icon + 10.0 + gap + crate::panels::studio_ai::bar_button_width(ui);
             let mut rui = ui.new_child(egui::UiBuilder::new().max_rect(right).layout(egui::Layout::right_to_left(egui::Align::Center)));
             let ui = &mut rui;
             // Workspace switcher: shows the current workspace, opens Window → Workspace.
@@ -111,9 +111,9 @@ pub fn app_bar(app: &mut VectorcraftApp, ui: &mut Ui) {
                     app.ui.palette_query.clear();
                 }
             }
-            if discord {
+            if ai_button {
                 ui.add_space(10.0);
-                crate::community::discord_button(app, ui, false);
+                crate::panels::studio_ai::bar_button(app, ui);
             }
             if app.services.native_menu.is_some() {
                 let title = ui.painter().layout_no_wrap(crate::native_menu::APP_NAME.into(), egui::FontId::proportional(13.5), t.text);

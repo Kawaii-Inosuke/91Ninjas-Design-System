@@ -407,7 +407,7 @@ impl Default for Prefs {
             scratch_primary: s("Startup"),
             scratch_secondary: s("None"),
             ui_brightness: s("mediumDark"),
-            ui_accent: s("coral"),
+            ui_accent: s("mint"), // 91studio: the 91Ninjas Studio accent (D-025)
             ui_color_scheme: s("modern"),
             canvas_color: s("matchUi"),
             auto_collapse_icon_panels: false,

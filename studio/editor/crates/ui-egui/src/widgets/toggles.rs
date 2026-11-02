@@ -63,7 +63,7 @@ fn check_row_named(ui: &mut Ui, text: &str, name: &str, value: Option<bool>, ena
     ui.painter().rect_stroke(bx, CornerRadius::same(2), Stroke::new(1.0, border), StrokeKind::Inside);
     match value {
         Some(true) => {
-            let c = if enabled { Color32::WHITE } else { t.text_disabled };
+            let c = if enabled { t.on_accent } else { t.text_disabled };
             ui.painter().line_segment([bx.left_center() + vec2(3.0, 0.0), bx.center_bottom() + vec2(-1.0, -3.5)], Stroke::new(1.6, c));
             ui.painter().line_segment([bx.center_bottom() + vec2(-1.0, -3.5), bx.right_top() + vec2(-3.0, 3.0)], Stroke::new(1.6, c));
         }
@@ -98,7 +98,7 @@ fn radio_row(ui: &mut Ui, text: &str, name: &str, selected: bool, enabled: bool)
     let c = bx.center();
     ui.painter().circle(c, 6.0, if selected && enabled { t.accent_strong } else { t.input }, Stroke::new(1.0, border));
     if selected {
-        ui.painter().circle_filled(c, 2.5, if enabled { Color32::WHITE } else { t.text_disabled });
+        ui.painter().circle_filled(c, 2.5, if enabled { t.on_accent } else { t.text_disabled });
     }
     resp.widget_info(|| egui::WidgetInfo::selected(egui::Role::RadioButton, enabled && ui.is_enabled(), selected, name));
     enabled && resp.clicked()

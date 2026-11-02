@@ -43,6 +43,11 @@ class Message(BaseModel):
     text: str
 
 
+class PathBody(BaseModel):
+    path: str
+    client: str | None = None
+
+
 class StartBody(BaseModel):
     client: str
     content: str = ""
@@ -149,6 +154,30 @@ def create_app(token: str, manager: RunManager | None = None) -> FastAPI:
         return {"id": pv.id, "client": pv.client, "name": pv.display_name, "version": pv.version, "author": pv.author,
                 "created_at": pv.created_at, "colors": pv.colors, "fonts": pv.fonts, "exists": pv.exists,
                 "samples": [s.name for s in pv.samples], "rules": pv.rules[:4000]}
+
+    def preview_json(pv: packs.ImportPreview) -> dict:
+        return {"id": pv.id, "client": pv.client, "name": pv.display_name, "version": pv.version, "author": pv.author,
+                "created_at": pv.created_at, "colors": pv.colors, "fonts": pv.fonts, "exists": pv.exists,
+                "samples": [s.name for s in pv.samples], "rules": pv.rules[:4000]}
+
+    @app.post("/api/clients/import-path", dependencies=[api])
+    def import_path(body: PathBody) -> dict:
+        """The editor's panel: a pack the designer picked in the file dialog (validated as any import)."""
+        try:
+            pv = packs.inspect_pack(Path(body.path).expanduser())
+        except (OSError, packs.PackError, brandmod.BrandError) as e:
+            raise HTTPException(422, str(e)) from None
+        previews[pv.id] = pv
+        return preview_json(pv)
+
+    @app.post("/api/clients/from-folder", dependencies=[api])
+    def from_folder(body: PathBody) -> dict:
+        """The editor's panel: a client from a brand folder (DESIGN.md, critic_rules.md, past/, assets/fonts…)."""
+        try:
+            b = packs.create_from_folder(Path(body.path), body.client or None, overwrite=False)
+        except (OSError, packs.PackError, brandmod.BrandError) as e:
+            raise HTTPException(422, str(e)) from None
+        return {"client": b.client, "name": b.name, "problems": b.problems}
 
     @app.post("/api/clients/import/{pid}/install", dependencies=[api])
     def install(pid: str, body: InstallBody) -> dict:
