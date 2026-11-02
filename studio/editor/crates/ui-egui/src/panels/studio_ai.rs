@@ -16,12 +16,15 @@ use crate::{icons, widgets};
 pub const ID: &str = "studioAi";
 /// Messages kept in the thread (the run's full log stays with the agents).
 const MAX_MESSAGES: usize = 150;
+/// How often the panel asks again while the agents start (every [`RETRY_EVERY_S`] seconds: about a minute).
+const START_RETRIES: u32 = 40;
+const RETRY_EVERY_S: f64 = 1.5;
 /// The message box's height.
 const COMPOSER_H: f32 = 96.0;
 
 // ── app bar button ──────────────────────────────────────────────────────────────────────────────────
 
-/// The app bar button's label, height and width.
+/// The AI button's label, height and width (Control bar; the app bar while the Control bar is hidden).
 fn bar_layout(ui: &Ui) -> (std::sync::Arc<egui::Galley>, f32, f32) {
     let h = 24.0;
     let galley = ui.painter().layout_no_wrap(tl!("AI").to_string(), egui::FontId::proportional(12.0), Color32::PLACEHOLDER);
@@ -41,8 +44,12 @@ pub fn bar_button(app: &mut VectorcraftApp, ui: &mut Ui) -> egui::Response {
     let icon = h * 0.55;
     let (r, resp) = ui.allocate_exact_size(vec2(w, h), egui::Sense::click());
     let ir = egui::Rect::from_center_size(r.left_center() + vec2(h * 0.35 + icon / 2.0, 0.0), vec2(icon, icon));
-    ui.painter().rect_filled(r, CornerRadius::same(6), if resp.hovered() { t.hover } else { t.button });
-    icons::paint(ui, "wand-sparkles", ir, t.accent);
+    // 91studio: outlined in the accent, as in the 91Ninjas mockup (D-028).
+    if resp.hovered() {
+        ui.painter().rect_filled(r, CornerRadius::same(6), t.hover);
+    }
+    ui.painter().rect_stroke(r, CornerRadius::same(6), egui::Stroke::new(1.0, t.accent), egui::StrokeKind::Inside);
+    icons::paint(ui, "sparkles", ir, t.accent);
     let y = r.center().y - galley.size().y / 2.0;
     ui.painter().galley(egui::pos2(ir.right() + h * 0.2, y), galley, if resp.hovered() { t.text_strong } else { t.text });
     let resp = resp.on_hover_text(tl!("Open the AI Design Assistant"));
@@ -96,6 +103,11 @@ static ATTACHED: std::sync::Mutex<Option<String>> = std::sync::Mutex::new(None);
 struct State {
     tab: Tab,
     started: bool,
+    /// The first health/clients requests failed because the agents are still starting: they are
+    /// asked again at `retry_at` (seconds, egui time), up to [`START_RETRIES`] times.
+    retry_pending: bool,
+    retry_at: Option<f64>,
+    retries: u32,
     agents_ok: bool,
     editor_ok: bool,
     status: String,
@@ -185,6 +197,8 @@ fn on_event(st: &mut State, e: &Value, fetch: &mut Vec<(String, String)>) {
         }
         "message" if s(&d, "from") != "designer" => st.say(Who::Assistant, s(&d, "text"), vec![]),
         "error" => st.say(Who::Assistant, format!("Something went wrong: {}", s(&d, "error")), vec![]),
+        // A key or model failed and another took over (D-027).
+        "rotation" => st.say(Who::Note, format!("{} failed; switched to {}", s(&d, "failed"), s(&d, "next")), vec![]),
         "done" => on_done(st, &d),
         _ => {}
     }
@@ -240,6 +254,12 @@ fn on_answer(st: &mut State, tag: &str, result: Result<Value, String>, follow: &
     st.busy = false;
     let v = match result {
         Ok(v) => v,
+        // The app starts the agents with itself and they take a few seconds: ask again quietly.
+        Err(_) if matches!(tag, "health" | "clients") && st.retries < START_RETRIES => {
+            st.retry_pending = true;
+            st.status = tl!("Starting the AI agents…").into();
+            return;
+        }
         Err(e) if tag == "health" => {
             st.agents_ok = false;
             st.status = format!("Agents not reachable: {e}");
@@ -850,6 +870,17 @@ pub fn show(app: &mut VectorcraftApp, ui: &mut Ui) {
         asks.push(("clients", "GET", "/api/clients".into(), None));
     }
     absorb(app, ui.ctx(), &mut st);
+    if st.retry_pending {
+        let now = ui.input(|i| i.time);
+        let at = *st.retry_at.get_or_insert(now + RETRY_EVERY_S);
+        if now >= at {
+            st.retry_pending = false;
+            st.retry_at = None;
+            st.retries += 1;
+            asks.push(("health", "GET", "/api/health".into(), None));
+            asks.push(("clients", "GET", "/api/clients".into(), None));
+        }
+    }
 
     tab_bar(ui, &mut st, &t);
     ui.add_space(6.0);
@@ -866,7 +897,7 @@ pub fn show(app: &mut VectorcraftApp, ui: &mut Ui) {
             history_tab(app, ui, &st, &t);
         }
     }
-    if st.running || st.busy || !st.started {
+    if st.running || st.busy || !st.started || st.retry_pending {
         ui.ctx().request_repaint_after(std::time::Duration::from_millis(250));
     }
     if let Some(a) = app.services.studio_agents.as_mut() {

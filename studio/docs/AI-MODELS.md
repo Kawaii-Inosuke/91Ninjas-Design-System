@@ -26,6 +26,12 @@ All of this is configured in `agents/models.yaml`. Code never hard-codes a model
   It can also go through `LiteLLMModel` with a `groq/<model>` ID. Check this against the docs before relying on it.
 - **Claude (later, config only):** `strands.models.anthropic.AnthropicModel` (Anthropic API) or `BedrockModel`.
 
+## Keys, rotation and fallbacks (D-027)
+- Put keys in `studio/agents/.env` or `studio/.env`. Add more keys as `GEMINI_API_KEY_2` … or `GEMINI_API_KEYS=k1,k2` (the same for `GROQ_`).
+- `uv run python -m studio_agents.models --list` checks every key and lists its models.
+- When a key or model fails, the next key is tried, then the `fallbacks` in `models.yaml`. The chat shows a note when this happens.
+- **Observed 2026-11-03 on the user's free-tier Gemini key:** no quota for Pro, and Flash and 2.5 Flash were "high demand". Flash Lite carried the whole run. A paid Gemini key, or a second key, would let the Pro and Flash models do the layout and critique.
+
 ## Keys
 - `GEMINI_API_KEY` and `GROQ_API_KEY` go in `studio/agents/.env`. That file is gitignored and never pasted into chat.
 - Phase 5 adds a company gateway so keys are no longer stored on designer machines.

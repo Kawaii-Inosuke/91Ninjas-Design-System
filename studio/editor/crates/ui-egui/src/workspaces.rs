@@ -70,6 +70,9 @@ impl Default for Workspace {
 }
 
 pub const ESSENTIALS: &str = "Essentials";
+/// 91studio: the 91Ninjas Studio workspace (D-028): Control bar, rulers, and three open panel
+/// columns (Layers · Color · Stroke, Properties, AI Design Assistant), as in the 91Ninjas mockup.
+pub const STUDIO: &str = "91Ninjas";
 /// Touch workspace (Window → Workspace → Touch; Preferences › Devices › Enable Touch Workspace).
 pub const TOUCH: &str = "Touch";
 
@@ -82,6 +85,14 @@ pub fn builtins() -> Vec<Workspace> {
         x
     };
     vec![
+        // 91studio: first in the menu (D-028).
+        w(STUDIO, &|x| {
+            x.control_bar = true;
+            x.rulers = true;
+            x.toolbar_double = true;
+            x.task_bar = false;
+            x.docking = Some(studio_docking());
+        }),
         w(ESSENTIALS, &|_| {}),
         w("Essentials Classic", &|x| {
             x.control_bar = true;
@@ -141,6 +152,44 @@ pub fn builtins() -> Vec<Workspace> {
             x.open_panel = Some("align".into());
         }),
     ]
+}
+
+/// 91studio: the 91Ninjas workspace's panels (D-028). Columns from the window edge inwards: the AI
+/// Design Assistant; Properties · Appearance · Libraries; then Layers · Artboards · Asset Export
+/// over Color · Swatches · Gradient over Stroke · Transparency.
+pub fn studio_docking() -> craft_ui::docking::Layout<String> {
+    use craft_ui::docking::{Column, Group};
+    let group = |panels: &[&str], height: Option<f32>| {
+        let mut g = Group::new(panels.iter().map(|p| p.to_string()).collect(), 0);
+        g.height = height;
+        g
+    };
+    crate::panel_docking::with_canvas(
+        vec![
+            Column::new(vec![group(&[crate::panels::studio_ai::ID], None)], 330.0),
+            Column::new(vec![group(&["properties", "appearance", "libraries"], None)], 315.0),
+            Column::new(
+                vec![
+                    group(&["layers", "artboards", crate::panels::asset_export::ID], None),
+                    group(&["color", "swatches", "gradient"], Some(250.0)),
+                    group(&["stroke", "transparency"], Some(210.0)),
+                ],
+                300.0,
+            ),
+        ],
+        Vec::new(),
+    )
+}
+
+/// 91studio: once per profile, the 91Ninjas workspace becomes the current one (D-028). A designer who
+/// then picks another workspace keeps it.
+pub fn adopt_studio_workspace(ui: &mut UiState) {
+    if ui.studio_workspace_adopted {
+        return;
+    }
+    ui.studio_workspace_adopted = true;
+    // STUDIO is built in, so the switch finds it.
+    let _ = switch(ui, STUDIO);
 }
 
 /// Preferences › Devices › Enable Touch Workspace (#394): on, a touch screen switches to the Touch
@@ -552,7 +601,31 @@ mod tests {
     #[test]
     fn essentials_is_the_default_layout() {
         let ui = UiState::default();
-        assert_eq!(capture(&ui, ESSENTIALS), builtins()[0]);
+        // 91studio: the 91Ninjas workspace is listed first (D-028); the app adopts it once at start.
+        assert_eq!(builtins()[0].name, STUDIO);
+        assert_eq!(capture(&ui, ESSENTIALS), builtins()[1]);
+        assert_eq!(ui.workspace, ESSENTIALS);
+    }
+
+    /// 91studio (D-028): the 91Ninjas workspace is adopted once, with the mockup's three open columns.
+    #[test]
+    fn studio_workspace_is_adopted_once_with_three_open_columns() {
+        let mut ui = UiState::default();
+        adopt_studio_workspace(&mut ui);
+        assert_eq!(ui.workspace, STUDIO);
+        assert!(ui.control_bar && ui.view.rulers && ui.toolbar_double && !ui.task_bar);
+        let layout = crate::panel_docking::layout_of(&ui);
+        assert!(crate::panel_docking::valid(&layout));
+        let expected = [crate::panels::studio_ai::ID, "properties", "appearance", "libraries", "layers", "artboards", "color", "swatches", "stroke"];
+        for p in expected {
+            assert!(layout.contains(&p.to_string()), "{p} is in the layout");
+        }
+        let columns = crate::panel_docking::dock_columns(&layout);
+        assert_eq!(columns.len(), 3);
+        assert!(columns.iter().all(|c| !c.iconic), "all three columns are open");
+        // A designer who picks another workspace keeps it.
+        switch(&mut ui, ESSENTIALS).unwrap();
+        adopt_studio_workspace(&mut ui);
         assert_eq!(ui.workspace, ESSENTIALS);
     }
 

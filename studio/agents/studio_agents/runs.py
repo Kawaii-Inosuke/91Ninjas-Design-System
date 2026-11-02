@@ -20,7 +20,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 from studio_agents import brand as brandmod
-from studio_agents import config, steps
+from studio_agents import config, models, steps
 from studio_agents.bridge import Bridge, BridgeError
 from studio_agents.history import History
 from studio_agents.render.build import RenderResult, render
@@ -142,6 +142,9 @@ class RunManager:
         (run.dir / "run.json").write_text(json.dumps(run.public() | {"events": run.events}, indent=1, default=str))
 
     def _stage(self, run: Run, stage: str, note: str = "") -> None:
+        # A key or model that failed and what took over (D-027), told once.
+        while models.rotation_log:
+            self._emit(run, "rotation", models.rotation_log.pop(0))
         run.stage = stage
         self._emit(run, "stage", {"stage": stage, "note": note})
 

@@ -151,6 +151,16 @@ pub fn control_bar(app: &mut VectorcraftApp, ui: &mut Ui) {
                 for i in 0..5 {
                     ui.painter().circle_filled(g.center_top() + vec2(0.0, 2.0 + i as f32 * 4.0), 0.9, t.text_disabled);
                 }
+                // 91studio: the AI Design Assistant's button at the bar's right end (D-028), when the app
+                // runs the agents; the controls keep the rest of the bar.
+                let full = ui.max_rect();
+                let ai_w = crate::panels::studio_ai::bar_button_width(ui);
+                if app.services.studio_agents.is_some() && full.width() > ai_w + 200.0 {
+                    let ai_rect = egui::Rect::from_min_max(egui::pos2(full.right() - ai_w, full.top()), full.right_bottom());
+                    let mut aui = ui.new_child(egui::UiBuilder::new().max_rect(ai_rect).layout(egui::Layout::right_to_left(egui::Align::Center)));
+                    crate::panels::studio_ai::bar_button(app, &mut aui);
+                    ui.set_max_width((full.width() - ai_w - 16.0).max(0.0));
+                }
                 if app.session.active().is_none() {
                     ui.label(egui::RichText::new(tl!("No Document")).color(t.text_dim));
                     return;

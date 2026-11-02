@@ -399,6 +399,8 @@ fn main() -> std::process::ExitCode {
                 // 91studio: no update check: it looks for upstream VectorCraft releases (D-022).
                 app.set_startup_update_check(false);
                 load_prefs(&mut app, saved);
+                // 91studio: the 91Ninjas workspace, once per profile (D-028).
+                vectorcraft_ui_egui::workspaces::adopt_studio_workspace(&mut app.ui);
                 // The saved PDF presets live in their own folder (also read by vectorcraft-cli),
                 // which takes over from the copy the preferences file used to hold.
                 prefs_dir::attach_pdf_preset_store(&mut app.session);

@@ -84,7 +84,12 @@ AUTO_CHECKS = """([width, maxH, fonts, palette, minPx]) => {
   const canvas = document.querySelector('#canvas'), H = canvas.scrollHeight;
   if (canvas.scrollWidth > width) out.push(`canvas wider than ${width}px (${canvas.scrollWidth})`);
   if (H > maxH) out.push(`canvas taller than ${maxH}px (${H})`);
-  for (const f of fonts) for (const w of [400, 700]) if (!document.fonts.check(`${w} 16px "${f}"`)) { out.push(`font not available: ${f}`); break; }
+  // A brand font is there when any of its faces loaded (unused weights never load); a system font when the browser has it.
+  for (const f of fonts) {
+    const faces = [...document.fonts].filter(x => x.family.replace(/["']/g, '') === f);
+    const ok = faces.length ? faces.some(x => x.status === 'loaded') : document.fonts.check(`16px "${f}"`);
+    if (!ok) out.push(`font not available: ${f}`);
+  }
   const off = new Set(), small = new Set();
   for (const el of document.querySelectorAll('#canvas *')) {
     const s = getComputedStyle(el), r = el.getBoundingClientRect();

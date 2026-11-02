@@ -294,6 +294,53 @@ Format per entry: **Context → Decision → Alternatives → Consequences**. En
 - **Left out:** the mockup's *Recolor*, *Remove background* and *Convert to vector* rows. The agents can't do these yet, and fake rows would mislead.
 - **Checked:** 2,884 ui-egui tests and 60 Python tests pass; all three tabs checked live in screenshots.
 
+## D-027: Key rotation, fallbacks and fast failure for the AI models (2026-11-03)
+- **Context:** The first real runs on the user's keys showed three things:
+  - The `.env` was in `studio/`, not `studio/agents/`.
+  - The Gemini key has no quota for Pro, Flash was overloaded ("503 high demand"), and the guessed Groq model didn't exist.
+  - Strands' default retry (up to 6 tries, waits up to 240 s) made one step take 7 minutes.
+- **Decision:**
+  - **Keys:** read from `studio/agents/.env` and `studio/.env`. Several keys per provider are allowed (`GEMINI_API_KEY`, `_2`…`_9`, or a comma-separated `GEMINI_API_KEYS`; the same for Groq).
+  - **Rotation:**
+    - Every model call goes through `models.with_rotation`. A key, quota, rate-limit, outage or unknown-model error moves to the next key, then to the role's `fallbacks` in `models.yaml`.
+    - Fallbacks: Gemini Pro → Flash → 2.5 Flash → Flash Lite → Groq gpt-oss-120b (text-only steps).
+    - A rate-limited key rests for 60 s **per model**.
+    - A "busy" error gets one retry after 3 s.
+    - The key that worked is tried first next time.
+    - A bad *answer* is not rotated.
+  - **Fail fast:** Strands' retry is set to 1 attempt, the Google and OpenAI client retries are off, and every call has a 90 s timeout.
+  - **Critic without vision:** if no model that can see images is up, the critic judges from the spec and the machine checks, and every finding is marked "checked without seeing the image".
+  - **Model names:** pinned from what the keys actually list: `gemini-pro-latest` and `gemini-flash-latest` (aliases), Groq `openai/gpt-oss-120b`.
+  - **Visible to the designer:** rotations appear in the chat as quiet notes.
+- **Also fixed:** the font auto-check failed on brand fonts whose unused weights never load, which made the critic loop run to its limit. It now passes when any face loaded.
+- **Result:** a full real FCC design (brief → layout → render → critic → place → export) completed on the user's keys, with Gemini Flash Lite carrying it while the other models were unavailable. The outline was ready in 36 s, down from 446 s.
+
+## D-028: The editor's layout follows the 91Ninjas mockup (2026-11-03)
+- **Context:** The user's mockup shows the Illustrator-style layout: a second bar (Control bar) with Stroke, Opacity and Style; three open panel columns (Layers · Color · Stroke, Properties, AI Assistant); Share and Export at the top right; and a mint document tab. The app showed one tabbed panel column and a strip of icons, no Control bar, and a search box and workspace switcher at the top right.
+- **Decision:**
+  - **New built-in workspace "91Ninjas"**, listed first:
+    - The Control bar, rulers and the two-column toolbar are on. The floating Contextual Task Bar and the hint line are off.
+    - Three open columns, from the right:
+      - AI Design Assistant;
+      - Properties · Appearance · Libraries;
+      - Layers · Artboards · Asset Export over Color · Swatches · Gradient over Stroke · Transparency.
+    - The other panels stay in Window.
+    - Every profile switches to it once (`studio_workspace_adopted`). A designer who picks another workspace keeps it, and Window › Workspace › Reset brings it back.
+  - **Top bar:**
+    - **Export** (mint) opens Export As PNG / SVG / As… / for Screens.
+    - **Share** opens Package… / Save a Copy… (handing a design to another designer).
+    - Both are existing File commands; nothing new exports.
+    - The search icon and the workspace switcher left the bar: the command palette keeps its shortcut, and workspaces stay under Window › Workspace.
+    - A narrow window drops Share first.
+  - **AI button:** at the Control bar's right end, outlined in mint. It is in the top bar only while the Control bar is hidden, and only shows when the app runs the agents.
+  - **Document tab:** the active tab is mint with dark lettering.
+  - **AI panel:** while the agents start (about 10 s), it asks again quietly every 1.5 s for up to a minute, instead of showing "the agents aren't running". It matters now because the panel is always open at start.
+  - **Not built:** the mockup's cloud icon and profile picture. The app has no accounts or cloud, so they would do nothing.
+- **Consequences:**
+  - Upstream tests changed only where they named the old bar (`titlebar.rs` widget count and Share/Export, the `workspaces.rs` default test).
+  - New test `studio_workspace_is_adopted_once_with_three_open_columns`.
+  - 2,885 ui-egui tests and clippy pass. Checked live with screenshots at 1920×958.
+
 ## D-007: Every phase ends with a phase report and a docs update (2026-11-02)
 - **Decision:**
   - At the end of each phase, write `phases/PHASE-N.md` and update the PRD, TRD, ARCHITECTURE and SECURITY docs.

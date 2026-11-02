@@ -501,6 +501,9 @@ pub struct UiState {
     /// User-saved workspaces (New Workspace…).
     #[serde(default)]
     pub custom_workspaces: Vec<crate::workspaces::Workspace>,
+    /// 91studio: the 91Ninjas workspace was made the current one once (D-028); later switches stay.
+    #[serde(default)]
+    pub studio_workspace_adopted: bool,
     /// Layout changes made in a workspace since it was saved (or last reset), by workspace name:
     /// switching back to it brings them back; Reset <name> drops them.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
@@ -958,6 +961,7 @@ impl Default for UiState {
             workspace: default_workspace(),
             touch_workspace_restore: None,
             custom_workspaces: vec![],
+            studio_workspace_adopted: false,
             workspace_changes: vec![],
             recent_files: vec![],
             recent_fonts: vec![],

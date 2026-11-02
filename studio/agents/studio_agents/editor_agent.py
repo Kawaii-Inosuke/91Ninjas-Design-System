@@ -65,8 +65,16 @@ class CanvasEditor:
         palette = ", ".join(f"{k} {v}" for k, v in brand.palette().items())
         system = prompt("editor") + f"\n\nBrand colours you may use: {palette}. Fonts: {', '.join(brand.fonts())}."
         self.agent = Agent(model=models.build("editor"), system_prompt=system, tools=[inspect_design, apply_edits],
-                           callback_handler=None)
+                           callback_handler=None, retry_strategy=models.no_retry_strategy())
 
     def ask(self, request: str) -> str:
-        result = self.agent(request)
-        return str(result).strip()
+        """The request through the editor role's keys and fallbacks (D-027): a failed attempt leaves no half turn behind."""
+        def call(model, _candidate) -> str:
+            start = len(self.agent.messages)
+            self.agent.model = model
+            try:
+                return str(self.agent(request)).strip()
+            except Exception:
+                del self.agent.messages[start:]
+                raise
+        return models.with_rotation("editor", call)

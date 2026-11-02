@@ -144,3 +144,19 @@ def test_a_model_failure_fails_the_run_and_releases(mgr):
     run = go(mgr, Broken())
     assert run.status == "failed" and "quota exceeded" in run.events[-1]["data"]["error"]
     assert mgr.history.get(run.history_id)["status"] == "abandoned"
+
+
+def test_the_critic_works_without_vision_when_no_vision_model_is_up(mgr):
+    class NoVision(Script):
+        def __call__(self, role, system, prompt, output, images, tools):
+            if role == "critic" and images:
+                raise models.ModelError("every key and fallback failed for the critic agent: 503")
+            if role == "critic":
+                assert "No image is available" in prompt
+                return CriticReport(passes=False, fails=[Finding(rule="15", problem="title may be long", fix="shorten")])
+            return super().__call__(role, system, prompt, output, images, tools)
+    run = go(mgr, NoVision())
+    mgr.decide(run.id, "outline", "approve")
+    run = mgr.wait(run.id)
+    assert run.gate["kind"] == "final"
+    assert "checked without seeing the image" in run.versions[0]["fails"][0]["problem"]

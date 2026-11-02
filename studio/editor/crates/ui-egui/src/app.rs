@@ -495,7 +495,10 @@ impl VectorcraftApp {
         }
         if self.ui.status_bar && self.ui.screen_mode < 3 {
             chrome::status_bar(self, ui);
-            chrome::hint_bar(self, ui);
+            // 91studio: the 91Ninjas workspace has the status bar alone (D-028).
+            if self.ui.workspace != crate::workspaces::STUDIO {
+                chrome::hint_bar(self, ui);
+            }
         } else {
             // Keeps the previous frame's value valid for menus drawn above, before the bars.
             widgets::set_menu_floor(&ctx, ctx.content_rect().bottom());

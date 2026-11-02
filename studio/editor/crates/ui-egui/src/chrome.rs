@@ -3,7 +3,7 @@
 use std::borrow::Cow;
 use std::sync::Arc;
 
-use egui::{CornerRadius, Sense, Stroke, Ui, vec2};
+use egui::{Sense, Stroke, Ui, vec2};
 use serde_json::json;
 use vectorcraft_doc::NodeKind;
 
@@ -15,6 +15,7 @@ use crate::{VectorcraftApp, icons, menus, titlebar};
 
 mod control_bar;
 mod hints;
+mod share_export; // 91studio
 mod status_bar;
 mod tabs;
 
@@ -36,8 +37,6 @@ pub use tabs::{doc_tabs, isolation_bar, step_document};
 pub const APP_BAR_HEIGHT: f32 = 32.0;
 /// The brand mark's side.
 const MARK: f32 = 18.0;
-/// Height of the workspace switcher.
-const WIDGET_H: f32 = 22.0;
 
 /// The application bar: brand mark, Home, menus, then Discord, search and the workspace switcher
 /// at the right. With [`VectorcraftApp::custom_titlebar`] it is also the window's title bar
@@ -78,38 +77,18 @@ pub fn app_bar(app: &mut VectorcraftApp, ui: &mut Ui) {
             let right_edge = if custom { full.right() - titlebar::WIDTH - 10.0 } else { full.right() };
             let right = egui::Rect::from_min_max(egui::pos2(menus_end + 8.0, full.top()), egui::pos2(right_edge, full.bottom()));
             let room = right.width();
-            // Built-in workspace names translate; the user's own stay as typed.
-            let ws_name =
-                if crate::workspaces::is_builtin(&app.ui.workspace) { tl!(&app.ui.workspace).to_string() } else { app.ui.workspace.clone() };
-            let ws = ui.painter().layout_no_wrap(ws_name, egui::FontId::proportional(12.0), t.text);
-            let ws_w = (ws.size().x + 36.0).clamp(112.0, 190.0);
+            // 91studio: Share and Export at the right (D-028), as in the 91Ninjas mockup; the workspace
+            // switcher and search left the bar (Window › Workspace and the palette's shortcut stay).
+            // The AI button sits here only while the Control bar, its usual place, is hidden.
             let gap = ui.spacing().item_spacing.x;
-            // The search icon, as in PhotoCraft: shown while a minimal switcher fits beside it.
-            let icon = 28.0;
-            let search = room >= 64.0 + 8.0 + gap + icon;
-            let ws_w = ws_w.min(room - 8.0 - gap - if search { icon } else { 0.0 }).max(64.0);
-            // 91studio: the AI Design Assistant's button where upstream had Discord (D-022).
-            let ai_button = search && room >= ws_w + 8.0 + gap + icon + 10.0 + gap + crate::panels::studio_ai::bar_button_width(ui);
+            let export = room >= share_export::export_width(ui) + 8.0;
+            let share = room >= share_export::width(ui) + 8.0;
+            let ai_button =
+                !app.ui.control_bar && share && room >= share_export::width(ui) + 18.0 + gap + crate::panels::studio_ai::bar_button_width(ui);
             let mut rui = ui.new_child(egui::UiBuilder::new().max_rect(right).layout(egui::Layout::right_to_left(egui::Align::Center)));
             let ui = &mut rui;
-            // Workspace switcher: shows the current workspace, opens Window → Workspace.
-            let (wr, wresp) = ui.allocate_exact_size(vec2(ws_w, WIDGET_H), Sense::click());
-            ui.painter().rect_filled(wr, CornerRadius::same(4), if wresp.hovered() { t.hover } else { t.panel });
-            ui.painter().with_clip_rect(wr.shrink2(vec2(4.0, 0.0))).galley(wr.left_center() + vec2(10.0, -ws.size().y / 2.0), ws, t.text);
-            icons::paint(ui, "chevron-down", egui::Rect::from_center_size(wr.right_center() - vec2(12.0, 0.0), vec2(12.0, 12.0)), t.text_dim);
-            let wresp = wresp.on_hover_text(tl!("Switch workspace"));
-            egui::Popup::menu(&wresp).show(|ui| crate::workspaces::popup(app, ui));
-            ui.add_space(8.0);
-            // Search → command palette (its shortcut opens it too).
-            if search {
-                let tip = match menus::shortcut_of("help.commandPalette") {
-                    Some(sc) => format!("{}  ({})", tl!("Search commands and tools"), menus::shown_shortcut(sc)),
-                    None => tl!("Search commands and tools").to_string(),
-                };
-                if widgets::icon_button(ui, "search", &tip, app.ui.palette_open, icon).clicked() {
-                    app.ui.palette_open = !app.ui.palette_open;
-                    app.ui.palette_query.clear();
-                }
+            if export {
+                share_export::show(app, ui, share);
             }
             if ai_button {
                 ui.add_space(10.0);

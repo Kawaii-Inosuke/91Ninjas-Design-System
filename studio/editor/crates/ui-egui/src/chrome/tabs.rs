@@ -54,7 +54,8 @@ pub fn doc_tabs(app: &mut VectorcraftApp, ui: &mut Ui) {
         .enumerate()
         .map(|(i, d)| {
             let title = doc_tab_title(app, i, d);
-            let color = if Some(i) == active { t.text_strong } else { t.text_dim };
+            // 91studio: the active tab is an accent tab with accent lettering (D-028).
+            let color = if Some(i) == active { t.on_accent } else { t.text_dim };
             (title.clone(), ui.painter().layout_no_wrap(title, theme::semibold(title_size), color))
         })
         .collect();
@@ -74,7 +75,9 @@ pub fn doc_tabs(app: &mut VectorcraftApp, ui: &mut Ui) {
         let r = egui::Rect::from_min_size(egui::pos2(x, strip.top()), vec2(*w, strip.height() - 1.0));
         let resp = ui.interact(r, ui.scope_id().with(("tab", i)), Sense::click());
         if is_active {
-            ui.painter().rect_filled(r, 0.0, t.panel);
+            // 91studio: filled with the accent, rounded at the top, as in the 91Ninjas mockup (D-028).
+            let tab = egui::Rect::from_min_max(r.min + vec2(2.0, 4.0), r.max);
+            ui.painter().rect_filled(tab, egui::CornerRadius { nw: 6, ne: 6, sw: 0, se: 0 }, t.accent_strong);
         } else if resp.hovered() {
             ui.painter().rect_filled(r, 0.0, t.hover.gamma_multiply(0.4));
         }
@@ -84,7 +87,12 @@ pub fn doc_tabs(app: &mut VectorcraftApp, ui: &mut Ui) {
         let (x_center, title_left) = if CLOSE_BEFORE_TITLE { (r.left() + 16.0, r.left() + 32.0) } else { (r.right() - 16.0, r.left() + 14.0) };
         let xr = egui::Rect::from_center_size(egui::pos2(x_center, r.center().y), vec2(12.0, 12.0));
         let xresp = ui.interact(xr.expand(3.0), ui.scope_id().with(("tabx", i)), Sense::click());
-        icons::paint(ui, "x", xr, if xresp.hovered() { t.text_strong } else { t.text });
+        let x_color = match (is_active, xresp.hovered()) {
+            (true, _) => t.on_accent, // 91studio
+            (false, true) => t.text_strong,
+            (false, false) => t.text,
+        };
+        icons::paint(ui, "x", xr, x_color);
         ui.painter().galley(egui::pos2(title_left, r.center().y - galley.size().y / 2.0), galley.clone(), t.text);
         hovering_art |= crate::document_drag::hover_tab(app, &resp, i, xr.expand(3.0));
         if xresp.clicked() {

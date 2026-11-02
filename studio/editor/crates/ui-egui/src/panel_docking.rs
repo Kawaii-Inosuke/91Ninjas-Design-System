@@ -213,7 +213,7 @@ fn default_flags(ui: &UiState, layout: &Layout<String>) -> Option<(DockTab, bool
 }
 
 /// Every dock column, from each dock's window edge inwards.
-fn dock_columns(layout: &Layout<String>) -> Vec<&Column<String>> {
+pub(crate) fn dock_columns(layout: &Layout<String>) -> Vec<&Column<String>> {
     let mut out = Vec::new();
     let mut visit: Vec<&Node<String>> = layout.root.iter().collect();
     let mut seen = 0usize;

@@ -137,7 +137,14 @@ def critique(brand: Brand, spec: Spec, result: RenderResult) -> CriticReport:
             + "Spec that was rendered:\n" + spec.model_dump_json(indent=1, exclude_none=True) + "\n\n"
             + "Automatic checks (machine-measured): " + ("; ".join(result.auto_checks) or "none") + "\n"
             + f"Rendered size: {result.width}×{result.height}px. The preview image is attached.")
-    report = models.ask("critic", prompt("critic"), text, CriticReport, images=[result.preview])
+    try:
+        report = models.ask("critic", prompt("critic"), text, CriticReport, images=[result.preview])
+    except models.ModelError:
+        # No model that can see images is available right now (D-027): judge from the spec and the machine
+        # checks rather than failing the run, and say so in every finding.
+        blind = text.replace("The preview image is attached.", "No image is available: judge from the spec and the automatic checks only.")
+        report = models.ask("critic", prompt("critic"), blind, CriticReport)
+        report.fails = [Finding(rule=f.rule, problem=f"{f.problem} (checked without seeing the image)", fix=f.fix) for f in report.fails]
     if result.auto_checks and report.passes:   # machine findings always count
         report = CriticReport(passes=False, fails=[*report.fails, *(Finding(rule="auto", problem=c, fix="resolve it")
                                                                    for c in result.auto_checks)])

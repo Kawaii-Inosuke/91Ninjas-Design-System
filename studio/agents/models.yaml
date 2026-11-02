@@ -1,10 +1,23 @@
-# Which AI model each agent uses (D-003). Change a line here to switch provider or model; no code changes.
-# Providers: gemini (GEMINI_API_KEY), groq (GROQ_API_KEY, OpenAI-compatible API), anthropic (ANTHROPIC_API_KEY, later).
-# Model ids: check what your keys can use with `uv run python -m studio_agents.models --list`, then pin them here.
+# Which AI model each agent uses (D-003, D-027). Change a line here to switch provider or model; no code changes.
+# Providers: gemini (GEMINI_API_KEY…), groq (GROQ_API_KEY…, OpenAI-compatible API), anthropic (ANTHROPIC_API_KEY…).
+# Model ids: `uv run python -m studio_agents.models --list` shows what your keys can use (checked 2026-11-03).
+# The *-latest aliases follow Google's current models.
 roles:
-  brief:      {provider: gemini, model: gemini-2.5-flash, temperature: 0.3}   # content → topic, angle, key points
-  layout:     {provider: gemini, model: gemini-2.5-pro,   temperature: 0.4}   # brief → design spec
-  critic:     {provider: gemini, model: gemini-2.5-pro,   temperature: 0.1}   # looks at the preview (vision)
-  editor:     {provider: gemini, model: gemini-2.5-flash, temperature: 0.2}   # chat edits on the artboard
-  onboarder:  {provider: gemini, model: gemini-2.5-pro,   temperature: 0.3}   # drafts a new client's DESIGN.md (vision)
-  tagger:     {provider: groq,   model: llama-3.3-70b-versatile, temperature: 0.1}   # cheap bulk text: tag past work
+  brief:      {provider: gemini, model: gemini-flash-latest, temperature: 0.3}   # content → topic, angle, key points
+  layout:     {provider: gemini, model: gemini-pro-latest,   temperature: 0.4}   # brief → design spec
+  critic:     {provider: gemini, model: gemini-pro-latest,   temperature: 0.1}   # looks at the preview (vision)
+  editor:     {provider: gemini, model: gemini-flash-latest, temperature: 0.2}   # chat edits on the artboard
+  onboarder:  {provider: gemini, model: gemini-pro-latest,   temperature: 0.3}   # drafts a new client's DESIGN.md (vision)
+  tagger:     {provider: groq,   model: openai/gpt-oss-120b, temperature: 0.1}   # cheap bulk text: tag past work
+
+# When every key of a role's provider fails (bad key, quota used up, rate limit, outage), these are tried in
+# order. `vision: false` entries are skipped for steps that look at images (the critic).
+fallbacks:
+  gemini:                                   # each Gemini model has its own capacity and quota
+    - {provider: gemini, model: gemini-flash-latest}
+    - {provider: gemini, model: gemini-2.5-flash}
+    - {provider: gemini, model: gemini-flash-lite-latest}
+    - {provider: groq,   model: openai/gpt-oss-120b, vision: false}
+  groq:
+    - {provider: groq,   model: qwen/qwen3.8-27b, vision: false}
+    - {provider: gemini, model: gemini-flash-latest}

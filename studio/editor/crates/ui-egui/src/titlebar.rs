@@ -280,7 +280,8 @@ mod tests {
             assert!(close.height() >= 30.0 && [min, max, close].iter().all(|r| r.width() == BUTTON_WIDTH));
             assert_eq!((min.right(), max.right()), (max.left(), close.left()));
             let widgets = w.bar_widgets();
-            assert!(widgets.len() >= 11, "home, eight menus, workspace switcher, search: {widgets:?}");
+            // 91studio: Export (and Share where it fits) in place of the workspace switcher and search (D-028).
+            assert!(widgets.len() >= 11, "home, nine menus, Export: {widgets:?}");
             for (i, a) in widgets.iter().enumerate() {
                 assert!(a.right() <= min.left() - 8.0, "{a:?} runs into the caption buttons at {width}");
                 for b in &widgets[i + 1..] {
@@ -291,6 +292,9 @@ mod tests {
             let texts: Vec<String> = texts(&out).into_iter().map(|(t, _)| t).collect();
             let has = |s: &str| texts.iter().any(|t| t == s);
             assert!(!has("Discord"), "{width}: {texts:?}");
+            assert!(has("Export"), "{width}: {texts:?}");
+            assert_eq!(has("Share"), width > 1000.0, "Share shows when there's room: {width}: {texts:?}");
+            // The AI button joins them while the Control bar (its usual place) is hidden and there's room.
             assert_eq!(has("AI"), width > 1000.0, "the AI button shows when there's room: {width}: {texts:?}");
             // Search is an icon only (as in PhotoCraft): its label lives in the tooltip.
             assert!(!has("Search commands and tools"), "{width}: {texts:?}");
