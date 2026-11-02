@@ -80,8 +80,21 @@ struct Client {
     color: Option<Color32>,
 }
 
+/// The panel's tabs.
+#[derive(Clone, Copy, Default, PartialEq)]
+enum Tab {
+    #[default]
+    Chat,
+    Clients,
+    History,
+}
+
+/// An image the designer picked to attach (the dialog answers outside the panel's frame).
+static ATTACHED: std::sync::Mutex<Option<String>> = std::sync::Mutex::new(None);
+
 #[derive(Clone, Default)]
 struct State {
+    tab: Tab,
     started: bool,
     agents_ok: bool,
     editor_ok: bool,
@@ -100,6 +113,11 @@ struct State {
     import: Option<Value>,
     placed: bool,
     busy: bool,
+    /// A picture of the content, sent with the next design.
+    attachment: Option<String>,
+    /// The History tab: the client's designs, and which client they are for.
+    history: Vec<Value>,
+    history_for: String,
 }
 
 fn s(v: &Value, key: &str) -> String {
@@ -237,6 +255,7 @@ fn on_answer(st: &mut State, tag: &str, result: Result<Value, String>, follow: &
                 if st.editor_ok { tl!("Agents ready · editor connected").into() } else { tl!("Agents ready · editor not connected").into() };
         }
         "clients" => on_clients(st, &v),
+        "history" => st.history = v.as_array().cloned().unwrap_or_default(),
         "start" => {
             let id = s(&v, "id");
             if !id.is_empty() {
@@ -244,12 +263,14 @@ fn on_answer(st: &mut State, tag: &str, result: Result<Value, String>, follow: &
                 st.running = true;
                 st.thinking = tl!("reading the content").into();
                 st.run = Some(id.clone());
+                st.attachment = None;
                 *follow = Some(id);
             }
         }
         "import" => {
             st.say(Who::Assistant, format!("“{}” v{} by {}: install it?", s(&v, "name"), s(&v, "version"), s(&v, "author")), vec![]);
             st.import = Some(v);
+            st.tab = Tab::Chat;
         }
         "install" | "folder" => {
             st.say(Who::Assistant, format!("Added client {}. It's selected; paste your content to start.", s(&v, "client")), vec![]);
@@ -257,6 +278,7 @@ fn on_answer(st: &mut State, tag: &str, result: Result<Value, String>, follow: &
             st.clients.push(Client { id: s(&v, "client"), name: s(&v, "client"), color: None });
             st.client = st.clients.len().saturating_sub(1);
             st.started = false; // refresh the list (names, colours)
+            st.tab = Tab::Chat;
         }
         _ => {}
     }
@@ -429,58 +451,165 @@ fn bubble(ui: &mut Ui, m: &Msg, t: &Tokens) {
     ui.add_space(6.0);
 }
 
-/// Suggestions shown before the first message.
-fn welcome(app: &mut VectorcraftApp, ui: &mut Ui, st: &mut State, t: &Tokens) {
-    let who = st.client().map_or_else(|| tl!("your clients").to_string(), |c| c.name.clone());
-    let hello = if st.clients.is_empty() {
-        tl!("Hi! Add a client first (the menu above: a .91pack from a colleague, or a brand folder). Then paste your content and I'll design it.")
-            .to_string()
-    } else {
-        format!(
-            "Hi! I design on-brand infographics for {who}. Paste an article section, notes or copy below: I'll write a brief, lay it out, check it against the brand rules and put it on an artboard for you to finish."
-        )
-    };
-    bubble(ui, &Msg { text: hello, ..Default::default() }, t);
-    ui.add_space(4.0);
-    ui.horizontal_wrapped(|ui| {
-        ui.spacing_mut().item_spacing = vec2(6.0, 6.0);
-        if chip(ui, "wand-sparkles", tl!("Infographic from my text"), t) {
-            st.instruction.clear();
+/// The empty thread: what the assistant does, and the things it can start with.
+fn empty_state(app: &mut VectorcraftApp, ui: &mut Ui, st: &mut State, t: &Tokens) {
+    ui.vertical_centered(|ui| {
+        ui.add_space(18.0);
+        let (r, _) = ui.allocate_exact_size(vec2(72.0, 72.0), egui::Sense::hover());
+        ui.painter().rect_filled(r, CornerRadius::same(20), t.accent.gamma_multiply(0.16));
+        icons::paint(ui, "sparkles", r.shrink(19.0), t.accent);
+        ui.add_space(14.0);
+        ui.label(RichText::new(tl!("Design with AI")).font(crate::theme::semibold(18.0)).color(t.text_strong));
+        ui.add_space(4.0);
+        let line = match st.client() {
+            None => tl!("Add a client first: a .91pack from a colleague, or a brand folder.").to_string(),
+            Some(c) => format!("Turn your content into on-brand infographics for {}, then finish them on the artboard.", c.name),
+        };
+        ui.add(egui::Label::new(RichText::new(line).color(t.text_dim)).wrap());
+    });
+    ui.add_space(16.0);
+    let rows: [(&str, &str, Option<&str>); 3] = [
+        ("wand-sparkles", tl!("Infographic from my text"), None),
+        ("history", tl!("As a timeline"), Some("use a timeline")),
+        ("layout-grid", tl!("As a comparison"), Some("compare the options side by side")),
+    ];
+    for (icon, label, instruction) in rows {
+        if action_row(ui, icon, label, t) {
+            st.instruction = instruction.map(|i| tl!(i).to_string()).unwrap_or_default();
+            ui.memory_mut(|m| m.request_focus(ui.make_persistent_id("studio-ai-draft")));
         }
-        if chip(ui, "history", tl!("As a timeline"), t) {
-            st.instruction = tl!("use a timeline").into();
+    }
+    if action_row(ui, "file-plus", tl!("Add a client"), t) {
+        st.tab = Tab::Clients;
+    }
+    let _ = app;
+}
+
+/// A full-width row: icon, label, chevron. Returns whether it was clicked.
+fn action_row(ui: &mut Ui, icon: &str, label: &str, t: &Tokens) -> bool {
+    let w = ui.available_width();
+    let (r, resp) = ui.allocate_exact_size(vec2(w, 42.0), egui::Sense::click());
+    ui.painter().rect_filled(r, CornerRadius::same(10), if resp.hovered() { t.hover } else { t.panel_darker });
+    ui.painter().rect_stroke(r, CornerRadius::same(10), Stroke::new(1.0, t.input_border), egui::StrokeKind::Inside);
+    icons::paint(ui, icon, egui::Rect::from_center_size(r.left_center() + vec2(22.0, 0.0), vec2(17.0, 17.0)), t.accent);
+    ui.painter().text(r.left_center() + vec2(42.0, 0.0), egui::Align2::LEFT_CENTER, label, egui::FontId::proportional(13.0), t.text);
+    icons::paint(ui, "chevron-right", egui::Rect::from_center_size(r.right_center() - vec2(18.0, 0.0), vec2(14.0, 14.0)), t.text_dim);
+    if resp.hovered() {
+        ui.ctx().set_cursor_icon(egui::CursorIcon::PointingHand);
+    }
+    ui.add_space(8.0);
+    resp.clicked()
+}
+
+/// Chat · Clients · History, underlined in the accent.
+fn tab_bar(ui: &mut Ui, st: &mut State, t: &Tokens) {
+    ui.horizontal(|ui| {
+        ui.spacing_mut().item_spacing.x = 18.0;
+        for (tab, label) in [(Tab::Chat, tl!("Chat")), (Tab::Clients, tl!("Clients")), (Tab::History, tl!("History"))] {
+            let on = st.tab == tab;
+            let galley = ui.painter().layout_no_wrap(label.to_string(), crate::theme::semibold(13.0), if on { t.accent } else { t.text_dim });
+            let (r, resp) = ui.allocate_exact_size(vec2(galley.size().x, 30.0), egui::Sense::click());
+            ui.painter().galley(egui::pos2(r.left(), r.center().y - galley.size().y / 2.0 - 2.0), galley, if on { t.accent } else { t.text_dim });
+            if on {
+                ui.painter().line_segment([r.left_bottom(), r.right_bottom()], Stroke::new(2.0, t.accent));
+            }
+            if resp.clicked() {
+                st.tab = tab;
+            }
         }
-        if chip(ui, "layout-grid", tl!("As a comparison"), t) {
-            st.instruction = tl!("compare the options side by side").into();
+    });
+    widgets::divider(ui);
+}
+
+/// The Clients tab: the installed clients (a click picks one) and the ways to add one.
+fn clients_tab(app: &mut VectorcraftApp, ui: &mut Ui, st: &mut State, t: &Tokens) {
+    ScrollArea::vertical().auto_shrink([false, false]).show(ui, |ui| {
+        if st.clients.is_empty() {
+            ui.label(RichText::new(tl!("No clients yet.")).color(t.text_dim));
         }
-        if can_open(app) && chip(ui, "file-plus", tl!("Import client pack"), t) {
+        for i in 0..st.clients.len() {
+            let Some(c) = st.clients.get(i).cloned() else { continue };
+            let w = ui.available_width();
+            let (r, resp) = ui.allocate_exact_size(vec2(w, 44.0), egui::Sense::click());
+            let on = i == st.client;
+            ui.painter().rect_filled(
+                r,
+                CornerRadius::same(10),
+                if on {
+                    t.row_selected
+                } else if resp.hovered() {
+                    t.hover
+                } else {
+                    t.panel_darker
+                },
+            );
+            let chip = egui::Rect::from_center_size(r.left_center() + vec2(24.0, 0.0), vec2(28.0, 28.0));
+            ui.painter().rect_filled(chip, CornerRadius::same(7), c.color.unwrap_or(t.accent));
+            ui.painter().text(chip.center(), egui::Align2::CENTER_CENTER, initials(&c.name), egui::FontId::proportional(11.5), Color32::WHITE);
+            ui.painter().text(r.left_center() + vec2(48.0, 0.0), egui::Align2::LEFT_CENTER, &c.name, egui::FontId::proportional(13.0), t.text_strong);
+            if resp.clicked() {
+                st.client = i;
+                st.tab = Tab::Chat;
+            }
+            ui.add_space(6.0);
+        }
+        ui.add_space(10.0);
+        if can_open(app) && action_row(ui, "file-plus", tl!("Import a client pack (.91pack)…"), t) {
             import_pack(app);
         }
-        if can_pick_folder(app) && chip(ui, "folder-open", tl!("Add client from folder"), t) {
+        if can_pick_folder(app) && action_row(ui, "folder-open", tl!("Add a client from a brand folder…"), t) {
             add_folder(app);
+        }
+        ui.label(
+            RichText::new(tl!("A brand folder holds DESIGN.md, critic_rules.md, past/ (3 or more old infographics) and assets/fonts."))
+                .small()
+                .color(t.text_dim),
+        );
+    });
+}
+
+/// The History tab: the client's designs, newest first, with buttons that open their files.
+fn history_tab(app: &mut VectorcraftApp, ui: &mut Ui, st: &State, t: &Tokens) {
+    let who = st.client().map(|c| c.name.clone()).unwrap_or_default();
+    ui.label(RichText::new(format!("{} {who}", tl!("Designs for"))).strong().color(t.text_strong));
+    ui.add_space(6.0);
+    ScrollArea::vertical().auto_shrink([false, false]).show(ui, |ui| {
+        if st.history.is_empty() {
+            ui.label(RichText::new(tl!("No designs yet. Start one in Chat.")).color(t.text_dim));
+        }
+        for d in &st.history {
+            Frame::new()
+                .fill(t.panel_darker)
+                .stroke(Stroke::new(1.0, t.input_border))
+                .corner_radius(CornerRadius::same(10))
+                .inner_margin(Margin::same(10))
+                .show(ui, |ui| {
+                    ui.set_width(ui.available_width());
+                    ui.add(egui::Label::new(RichText::new(s(d, "topic")).strong().color(t.text_strong)).wrap());
+                    let date = s(d, "approved_at");
+                    let date = if date.is_empty() { s(d, "created_at") } else { date };
+                    ui.label(
+                        RichText::new(format!("{} · {} · {}", s(d, "status"), s(d, "layout"), date.get(..10).unwrap_or_default()))
+                            .small()
+                            .color(t.text_dim),
+                    );
+                    ui.horizontal_wrapped(|ui| {
+                        for (k, v) in d.get("files").and_then(Value::as_object).into_iter().flatten() {
+                            let Some(path) = v.as_str() else { continue };
+                            if ui.small_button(format!("{} {}", tl!("Open"), k.to_uppercase())).on_hover_text(path).clicked() {
+                                app.run("file.open", json!({ "path": path })).ok();
+                            }
+                        }
+                    });
+                });
+            ui.add_space(8.0);
         }
     });
 }
 
-fn chip(ui: &mut Ui, icon: &str, label: &str, t: &Tokens) -> bool {
-    let resp = Frame::new()
-        .fill(t.panel_darker)
-        .stroke(Stroke::new(1.0, t.border))
-        .corner_radius(CornerRadius::same(14))
-        .inner_margin(Margin::symmetric(10, 5))
-        .show(ui, |ui| {
-            ui.horizontal(|ui| {
-                ui.spacing_mut().item_spacing.x = 5.0;
-                icons::icon(ui, icon, 14.0, t.accent);
-                ui.label(RichText::new(label).small().color(t.text));
-            });
-        })
-        .response
-        .interact(egui::Sense::click());
-    if resp.hovered() {
-        ui.ctx().set_cursor_icon(egui::CursorIcon::PointingHand);
-    }
-    resp.clicked()
+fn initials(name: &str) -> String {
+    let i: String = name.split_whitespace().filter_map(|w| w.chars().next()).filter(|c| c.is_alphanumeric()).take(2).collect();
+    if i.is_empty() { "?".into() } else { i.to_uppercase() }
 }
 
 /// The approval card at the end of the thread; the designer's choice comes back.
@@ -610,8 +739,11 @@ fn import_card(ui: &mut Ui, st: &State, asks: &mut Asks, t: &Tokens) -> bool {
     done
 }
 
-/// The message box; returns the text when the designer sends it.
-fn composer(ui: &mut Ui, st: &mut State, t: &Tokens) -> Option<String> {
+/// The message box: the text, an image to attach, and send. Returns the text when the designer sends it.
+fn composer(app: &mut VectorcraftApp, ui: &mut Ui, st: &mut State, t: &Tokens) -> Option<String> {
+    if let Some(path) = ATTACHED.lock().ok().and_then(|mut a| a.take()) {
+        st.attachment = Some(path);
+    }
     let hint = if st.gate.as_ref().is_some_and(|g| s(g, "kind") == "outline") {
         tl!("What should change in the outline?")
     } else if st.placed {
@@ -619,31 +751,41 @@ fn composer(ui: &mut Ui, st: &mut State, t: &Tokens) -> Option<String> {
     } else if st.running {
         tl!("Working on it…")
     } else {
-        tl!("Paste your content, or describe the infographic…")
+        tl!("Describe what you want, or paste your content…")
     };
-    let can_send = !st.busy && !st.draft.trim().is_empty() && (!st.running || st.placed || accepts_notes(st)) && st.client().is_some();
+    let has_input = !st.draft.trim().is_empty() || (st.attachment.is_some() && !st.running);
+    let can_send = !st.busy && has_input && (!st.running || st.placed || accepts_notes(st)) && st.client().is_some();
     let mut send = false;
-    Frame::new().fill(t.input).stroke(Stroke::new(1.0, t.input_border)).corner_radius(CornerRadius::same(12)).inner_margin(Margin::same(8)).show(
+    Frame::new().fill(t.input).stroke(Stroke::new(1.0, t.input_border)).corner_radius(CornerRadius::same(12)).inner_margin(Margin::same(10)).show(
         ui,
         |ui| {
-            if !st.instruction.is_empty() {
-                ui.horizontal(|ui| {
-                    ui.label(RichText::new(format!("{}: {}", tl!("Instruction"), st.instruction)).small().color(t.accent));
-                    if ui.small_button("×").clicked() {
-                        st.instruction.clear();
-                    }
-                });
+            ui.set_width(ui.available_width());
+            if !st.instruction.is_empty() && ui.small_button(format!("{}: {}  ×", tl!("Instruction"), st.instruction)).clicked() {
+                st.instruction.clear();
             }
+            // Enter sends, Shift+Enter breaks the line: Enter is taken before the text box sees it, while it has the keyboard.
+            let id = ui.make_persistent_id("studio-ai-draft");
+            let enter = ui.memory(|m| m.has_focus(id)) && ui.input_mut(|i| i.consume_key(egui::Modifiers::NONE, egui::Key::Enter));
+            ui.add(TextEdit::multiline(&mut st.draft).id(id).hint_text(hint).frame(Frame::NONE).desired_rows(2).desired_width(f32::INFINITY));
             ui.horizontal(|ui| {
-                let w = (ui.available_width() - 40.0).max(60.0);
-                // Enter sends, Shift+Enter breaks the line: Enter is taken before the text box sees it, while it has the keyboard.
-                let id = ui.make_persistent_id("studio-ai-draft");
-                let enter = ui.memory(|m| m.has_focus(id)) && ui.input_mut(|i| i.consume_key(egui::Modifiers::NONE, egui::Key::Enter));
-                ui.add(TextEdit::multiline(&mut st.draft).id(id).hint_text(hint).frame(Frame::NONE).desired_rows(3).desired_width(w));
-                let (r, resp) = ui.allocate_exact_size(vec2(30.0, 30.0), egui::Sense::click());
-                ui.painter().circle_filled(r.center(), 15.0, if can_send { t.accent } else { t.button });
-                icons::paint(ui, "dc-arrow-up", r.shrink(8.0), if can_send { t.on_accent } else { t.text_disabled });
-                send = can_send && (resp.on_hover_text(tl!("Send (Enter)")).clicked() || enter);
+                let can_attach = can_open(app) && !st.running;
+                let attach =
+                    ui.add_enabled_ui(can_attach, |ui| widgets::icon_button(ui, "image", tl!("Attach a picture of the content"), false, 26.0)).inner;
+                if attach.clicked() {
+                    attach_picture(app);
+                }
+                if let Some(a) = st.attachment.clone() {
+                    let name = std::path::Path::new(&a).file_name().map(|n| n.to_string_lossy().to_string()).unwrap_or(a);
+                    if ui.small_button(format!("{name}  ×")).clicked() {
+                        st.attachment = None;
+                    }
+                }
+                ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
+                    let (r, resp) = ui.allocate_exact_size(vec2(34.0, 34.0), egui::Sense::click());
+                    ui.painter().rect_filled(r, CornerRadius::same(9), if can_send { t.accent_strong } else { t.button });
+                    icons::paint(ui, "dc-arrow-up", r.shrink(9.0), if can_send { t.on_accent } else { t.text_disabled });
+                    send = can_send && (resp.on_hover_text(tl!("Send (Enter)")).clicked() || enter);
+                });
             });
         },
     );
@@ -655,13 +797,29 @@ fn composer(ui: &mut Ui, st: &mut State, t: &Tokens) -> Option<String> {
     None
 }
 
+/// Pick a picture of the content (PNG, JPEG, WebP) through [`crate::picks`]; it reaches the panel by [`ATTACHED`].
+fn attach_picture(app: &mut VectorcraftApp) {
+    crate::picks::button(app, |app| {
+        let pick = FilePick { filters: vec![FilePick::filter("Image", &["png", "jpg", "jpeg", "webp"])], ..Default::default() };
+        if let Some(path) = crate::picks::open(app, &pick)
+            && let Ok(mut slot) = ATTACHED.lock()
+        {
+            *slot = Some(path);
+        }
+    });
+}
+
 fn accepts_notes(st: &State) -> bool {
     st.gate.as_ref().is_some_and(|g| g.get("options").and_then(Value::as_array).is_some_and(|o| o.iter().any(|x| x == "change")))
 }
 
 /// Where a sent message goes: a new design, notes for the outline, or an edit on the artboard.
 fn route(st: &mut State, text: String, asks: &mut Asks) {
-    st.say(Who::Designer, text.clone(), vec![]);
+    let shown = match (&st.attachment, text.is_empty(), st.running) {
+        (Some(_), true, false) => tl!("(a picture of the content)").to_string(),
+        _ => text.clone(),
+    };
+    st.say(Who::Designer, shown, vec![]);
     st.busy = true;
     let run = st.run.clone().unwrap_or_default();
     let outline_gate = st.gate.as_ref().is_some_and(|g| s(g, "kind") == "outline");
@@ -673,7 +831,7 @@ fn route(st: &mut State, text: String, asks: &mut Asks) {
     } else if st.running && accepts_notes(st) {
         asks.push(("decide", "POST", format!("/api/runs/{run}/decide"), Some(json!({"gate": "final", "decision": "change", "notes": text}))));
     } else if let Some(c) = st.client() {
-        let body = json!({"client": c.id, "content": text, "instruction": st.instruction});
+        let body = json!({"client": c.id, "content": text, "instruction": st.instruction, "image_path": st.attachment});
         asks.push(("start", "POST", "/api/runs/json".into(), Some(body)));
     }
 }
@@ -693,21 +851,51 @@ pub fn show(app: &mut VectorcraftApp, ui: &mut Ui) {
     }
     absorb(app, ui.ctx(), &mut st);
 
-    header(app, ui, &mut st, &t);
-    widgets::divider(ui);
+    tab_bar(ui, &mut st, &t);
+    ui.add_space(6.0);
+    match st.tab {
+        Tab::Chat => chat_tab(app, ui, &mut st, &mut asks, &t),
+        Tab::Clients => clients_tab(app, ui, &mut st, &t),
+        Tab::History => {
+            let id = st.client().map(|c| c.id.clone()).unwrap_or_default();
+            if !id.is_empty() && st.history_for != id {
+                st.history_for = id.clone();
+                st.history.clear();
+                asks.push(("history", "GET", format!("/api/history?client={id}"), None));
+            }
+            history_tab(app, ui, &st, &t);
+        }
+    }
+    if st.running || st.busy || !st.started {
+        ui.ctx().request_repaint_after(std::time::Duration::from_millis(250));
+    }
+    if let Some(a) = app.services.studio_agents.as_mut() {
+        for (tag, method, path, body) in asks {
+            a.request(tag, method, &path, body);
+        }
+    }
+    super::set_pstate(ui.ctx(), "studio-ai", st);
+}
+
+/// The Chat tab: the client, the conversation (or what to start with), and the message box.
+fn chat_tab(app: &mut VectorcraftApp, ui: &mut Ui, st: &mut State, asks: &mut Asks, t: &Tokens) {
+    header(app, ui, st, t);
+    ui.add_space(4.0);
     let thread_h = (ui.available_height() - COMPOSER_H - 12.0).max(120.0);
     let mut decision = None;
-    ScrollArea::vertical().max_height(thread_h).auto_shrink([false, false]).stick_to_bottom(true).show(ui, |ui| {
+    // Follow new messages; an empty thread starts at its top (the welcome).
+    let follow = !st.messages.is_empty() || st.running;
+    ScrollArea::vertical().max_height(thread_h).auto_shrink([false, false]).stick_to_bottom(follow).show(ui, |ui| {
         if st.messages.is_empty() && !st.running {
-            welcome(app, ui, &mut st, &t);
+            empty_state(app, ui, st, t);
         }
         for m in &st.messages {
-            bubble(ui, m, &t);
+            bubble(ui, m, t);
         }
-        if import_card(ui, &st, &mut asks, &t) {
+        if import_card(ui, st, asks, t) {
             st.import = None;
         }
-        decision = gate_card(ui, &st, &t);
+        decision = gate_card(ui, st, t);
         if st.running && st.gate.is_none() && !st.thinking.is_empty() {
             ui.horizontal(|ui| {
                 ui.add(egui::Spinner::new().size(12.0));
@@ -722,18 +910,9 @@ pub fn show(app: &mut VectorcraftApp, ui: &mut Ui) {
         asks.push(("decide", "POST", format!("/api/runs/{run}/decide"), Some(json!({"gate": gate, "decision": choice}))));
     }
     ui.add_space(6.0);
-    if let Some(text) = composer(ui, &mut st, &t) {
-        route(&mut st, text, &mut asks);
+    if let Some(text) = composer(app, ui, st, t) {
+        route(st, text, asks);
     }
-    if st.running || st.busy || !st.started {
-        ui.ctx().request_repaint_after(std::time::Duration::from_millis(250));
-    }
-    if let Some(a) = app.services.studio_agents.as_mut() {
-        for (tag, method, path, body) in asks {
-            a.request(tag, method, &path, body);
-        }
-    }
-    super::set_pstate(ui.ctx(), "studio-ai", st);
 }
 
 #[cfg(test)]

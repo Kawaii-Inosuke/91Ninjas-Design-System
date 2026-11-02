@@ -283,6 +283,17 @@ Format per entry: **Context → Decision → Alternatives → Consequences**. En
 - **This machine:** the saved accent was switched from coral to mint in `~/.config/vectorcraft/ui.json`. A backup is at `ui.json.before-mint`.
 - **Checked:** 2,884 ui-egui tests pass (3 updated for the wordmark and card); 71 engine prefs tests pass; clippy is clean; checked live in a screenshot.
 
+## D-026: AI panel layout after the user's mockup: tabs, hero and action rows (2026-11-03)
+- **Context:** The user shared a mockup of the AI panel: tabs, a large "Design with AI" empty state, action rows, and a composer with icons and a mint send button.
+- **Decision:**
+  - **Tabs:** **Chat · Clients · History**, underlined in the accent.
+  - **Chat when empty:** a mint icon tile, "Design with AI", a line for the selected client, and **action rows** (icon, label, chevron) for the things the agents really do: *Infographic from my text*, *As a timeline*, *As a comparison*, *Add a client*.
+  - **Composer:** "Describe what you want, or paste your content…", an **image button** to attach a picture of the content (sent as `image_path`, so the Brief Writer reads it), and a mint **send square**.
+  - **Clients tab:** the installed clients (a click picks one), import a `.91pack`, or add one from a brand folder.
+  - **History tab:** the client's designs, newest first (new endpoint `GET /api/history?client=`), with **Open SVG/PNG/PDF** buttons that open the files in the editor.
+- **Left out:** the mockup's *Recolor*, *Remove background* and *Convert to vector* rows. The agents can't do these yet, and fake rows would mislead.
+- **Checked:** 2,884 ui-egui tests and 60 Python tests pass; all three tabs checked live in screenshots.
+
 ## D-007: Every phase ends with a phase report and a docs update (2026-11-02)
 - **Decision:**
   - At the end of each phase, write `phases/PHASE-N.md` and update the PRD, TRD, ARCHITECTURE and SECURITY docs.

@@ -165,6 +165,14 @@ class History:
             self.db.commit()
         return rid
 
+    def list(self, client: str, limit: int = 50) -> list[dict]:
+        """A client's designs, newest first (approved, in progress, past work), with their files."""
+        rows = self.db.execute(
+            "select id, topic, angle, layout, status, created_at, approved_at, files from designs "
+            "where client = ? and status != 'abandoned' order by coalesce(approved_at, created_at) desc limit ?",
+            (client, limit)).fetchall()
+        return [{**dict(r), "files": json.loads(r["files"] or "{}")} for r in rows]
+
     def get(self, rid: str) -> dict | None:
         r = self.db.execute("select id, client, topic, angle, key_points, layout, status, created_at, approved_at, files "
                             "from designs where id = ?", (rid,)).fetchone()

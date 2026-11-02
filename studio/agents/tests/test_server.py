@@ -123,3 +123,18 @@ def test_clients_from_a_folder_and_a_pack_path(client, tmp_path):
     pv = client.post("/api/clients/import-path", headers=AUTH, json={"path": str(p)}).json()
     assert pv["client"] == "acme-bank" and pv["exists"]
     assert client.post(f"/api/clients/import/{pv['id']}/install", headers=AUTH, json={"mode": "replace"}).json()["client"] == "acme-bank"
+
+
+def test_history_lists_a_clients_designs_and_runs_take_an_image(client, tmp_path):
+    from PIL import Image
+    rid = client.post("/api/runs/json", headers=AUTH, json={"client": "demo", "content": "How to check a payment request..."}).json()["id"]
+    events(client, rid, {"gate"})
+    rows = client.get("/api/history", headers=AUTH, params={"client": "demo"}).json()
+    assert rows and rows[0]["status"] == "reserved" and rows[0]["topic"]
+    assert client.get("/api/history", headers=AUTH, params={"client": "../etc"}).status_code == 422
+    img = tmp_path / "content.png"
+    Image.new("RGB", (40, 30), "white").save(img)
+    assert client.post("/api/runs/json", headers=AUTH, json={"client": "demo", "image_path": str(img)}).status_code == 200
+    bad = tmp_path / "notes.txt"
+    bad.write_text("x")
+    assert client.post("/api/runs/json", headers=AUTH, json={"client": "demo", "image_path": str(bad)}).status_code == 422

@@ -52,6 +52,7 @@ class StartBody(BaseModel):
     client: str
     content: str = ""
     instruction: str = ""
+    image_path: str | None = None    # a picture of the content the designer attached in the panel
 
 
 def create_app(token: str, manager: RunManager | None = None) -> FastAPI:
@@ -205,11 +206,26 @@ def create_app(token: str, manager: RunManager | None = None) -> FastAPI:
     @app.post("/api/runs/json", dependencies=[api])
     def start_json(body: StartBody) -> dict:
         """The editor's AI panel starts runs with JSON (the test page uses the form above, for images)."""
+        images = []
+        if body.image_path:
+            p = Path(body.image_path).expanduser()
+            if p.suffix.lower() not in {".png", ".jpg", ".jpeg", ".webp"} or not p.is_file() or p.stat().st_size > MAX_UPLOAD:
+                raise HTTPException(422, "attach a PNG, JPEG or WebP image under 25 MB")
+            images.append(p)
         try:
-            run = runs.start(body.client, body.content, [], body.instruction)
+            run = runs.start(body.client, body.content, images, body.instruction)
         except (RunError, brandmod.BrandError) as e:
             raise HTTPException(422, str(e)) from None
         return {"id": run.id}
+
+    @app.get("/api/history", dependencies=[api])
+    def history(client: str, limit: int = 50) -> list[dict]:
+        """The panel's History tab: a client's designs and where their files are."""
+        try:
+            client = packs.check_client_id(client)
+        except packs.PackError as e:
+            raise HTTPException(422, str(e)) from None
+        return runs.history.list(client, min(max(limit, 1), 200))
 
     @app.get("/api/runs/{rid}", dependencies=[api])
     def get_run(rid: str) -> dict:
