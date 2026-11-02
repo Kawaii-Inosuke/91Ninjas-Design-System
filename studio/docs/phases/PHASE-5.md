@@ -12,6 +12,6 @@
 | 5a** | **Editor layout like the mockup** (D-028): 91Ninjas workspace (Control bar, three open panel columns, AI panel on the right), Share and Export at the top right, mint document tab, AI button in the Control bar, the AI panel waits for the agents to start. 2,885 ui-egui tests and clippy pass; checked with live screenshots. | ✅ done |
 | 5b | Usage and cost tracking per run and per agent | ⏭ dropped (D-029): designers will use their own Claude plans |
 | 5c | **Variants** (D-030): 2–3 versions with different layouts, side by side on their own artboards; Keep A/B/C; the others leave in one undo step. 74 Python and 2,886 ui-egui tests pass; checked live in the editor. | ✅ done |
-| 5d | Brand Onboarder: draft DESIGN.md and the rulebook from past work (vision); New-client flow in the panel | next |
-| 6 (moved up) | **Claude connector** (Mode B, D-029): our tools as an MCP server for Claude Desktop / Claude Code | after 5d |
+| 5d | **Brand Onboarder** (D-031): Clients → New client from past work: measure the past designs (exact colours, radii, sizes), the AI drafts DESIGN.md and the rulebook in fixed slots, the designer reviews/edits and saves. 8 new tests; 2,887 ui-egui and 72 Python tests pass. Live AI draft still to try (Gemini quota). | ✅ done |
+| 6 (moved up) | **Claude connector** (Mode B, D-029): our tools as an MCP server for Claude Desktop / Claude Code | next |
 | 5e | Installer: release build plus the bundled agents environment (Linux first). Needs about 10 GB free for a release build. | |

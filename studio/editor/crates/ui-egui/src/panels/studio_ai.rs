@@ -98,6 +98,23 @@ enum Tab {
 
 /// An image the designer picked to attach (the dialog answers outside the panel's frame).
 static ATTACHED: std::sync::Mutex<Option<String>> = std::sync::Mutex::new(None);
+/// The folder of past work picked for a new client (5d); taken into [`Onboarding::folder`] on the next frame.
+static PAST_FOLDER: std::sync::Mutex<Option<String>> = std::sync::Mutex::new(None);
+/// How often the panel asks how a client draft is going.
+const ONBOARD_POLL_S: f64 = 1.5;
+
+/// 5d: a new client drafted from past work (Clients tab): the form, then the draft job's state.
+#[derive(Clone, Default)]
+struct Onboarding {
+    open: bool,
+    name: String,
+    notes: String,
+    folder: Option<String>,
+    /// The draft job as the agents report it (`/api/onboard/<id>`).
+    job: Option<Value>,
+    poll_at: Option<f64>,
+    error: String,
+}
 
 #[derive(Clone, Default)]
 struct State {
@@ -129,6 +146,7 @@ struct State {
     busy: bool,
     /// A picture of the content, sent with the next design.
     attachment: Option<String>,
+    onboarding: Onboarding,
     /// The History tab: the client's designs, and which client they are for.
     history: Vec<Value>,
     history_for: String,
@@ -286,6 +304,11 @@ fn on_answer(st: &mut State, tag: &str, result: Result<Value, String>, follow: &
             st.status = format!("Agents not reachable: {e}");
             return;
         }
+        // The Clients tab shows onboarding problems in its own card.
+        Err(e) if tag.starts_with("onboard") => {
+            st.onboarding.error = e;
+            return;
+        }
         Err(e) => return st.say(Who::Assistant, format!("That didn't work: {e}"), vec![]),
     };
     match tag {
@@ -311,6 +334,19 @@ fn on_answer(st: &mut State, tag: &str, result: Result<Value, String>, follow: &
         "import" => {
             st.say(Who::Assistant, format!("“{}” v{} by {}: install it?", s(&v, "name"), s(&v, "version"), s(&v, "author")), vec![]);
             st.import = Some(v);
+            st.tab = Tab::Chat;
+        }
+        "onboard" => {
+            st.onboarding.error.clear();
+            st.onboarding.job = Some(v);
+            st.onboarding.poll_at = None;
+        }
+        "onboard-save" => {
+            st.onboarding = Onboarding::default();
+            st.say(Who::Assistant, format!("Added client {}. It's selected; paste your content to start.", s(&v, "name")), vec![]);
+            st.clients.push(Client { id: s(&v, "client"), name: s(&v, "name"), color: None });
+            st.client = st.clients.len().saturating_sub(1);
+            st.started = false;
             st.tab = Tab::Chat;
         }
         "install" | "folder" => {
@@ -444,6 +480,169 @@ fn import_pack(app: &mut VectorcraftApp) {
     });
 }
 
+/// 5d: "New client from past work": name, folder, notes → the agents measure and draft → the designer reviews
+/// (and may edit the draft files) → Save. Polls the job while it runs.
+fn onboarding(app: &mut VectorcraftApp, ui: &mut Ui, st: &mut State, asks: &mut Asks, t: &Tokens) {
+    if let Some(folder) = PAST_FOLDER.lock().ok().and_then(|mut f| f.take()) {
+        st.onboarding.folder = Some(folder);
+    }
+    let ob = &mut st.onboarding;
+    if !ob.open {
+        if action_row(ui, "sparkles", tl!("New client from past work…"), t) {
+            ob.open = true;
+        }
+        return;
+    }
+    let job_status = ob.job.as_ref().map(|j| s(j, "status")).unwrap_or_default();
+    let id = ob.job.as_ref().map(|j| s(j, "id")).unwrap_or_default();
+    // While the agents measure and draft, ask how it's going every ONBOARD_POLL_S seconds.
+    if matches!(job_status.as_str(), "measuring" | "drafting") {
+        let now = ui.input(|i| i.time);
+        let at = *ob.poll_at.get_or_insert(now + ONBOARD_POLL_S);
+        if now >= at {
+            ob.poll_at = None;
+            asks.push(("onboard", "GET", format!("/api/onboard/{id}"), None));
+        }
+        ui.ctx().request_repaint_after(std::time::Duration::from_millis(400));
+    }
+    Frame::new().fill(t.panel_darker).stroke(Stroke::new(1.0, t.accent)).corner_radius(CornerRadius::same(10)).inner_margin(Margin::same(10)).show(
+        ui,
+        |ui| {
+            ui.set_width(ui.available_width());
+            ui.label(RichText::new(tl!("New client from past work")).strong());
+            match job_status.as_str() {
+                "" | "failed" => {
+                    ui.label(
+                        RichText::new(tl!(
+                            "Pick a folder with 3 or more of the client's past designs (SVG, PNG, JPEG). Font files and a guidelines .md or .txt in it help too."
+                        ))
+                        .small()
+                        .color(t.text_dim),
+                    );
+                    ui.add_space(4.0);
+                    ui.add(TextEdit::singleline(&mut ob.name).hint_text(tl!("Client name, e.g. Acme Health")).desired_width(f32::INFINITY));
+                    ui.horizontal(|ui| {
+                        if can_pick_folder(app) && widgets::secondary_button(ui, tl!("Choose folder…")).clicked() {
+                            pick_past_folder(app);
+                        }
+                        let shown = ob.folder.as_deref().map_or_else(|| tl!("No folder yet").to_string(), short_path);
+                        ui.label(RichText::new(shown).small().color(t.text_dim));
+                    });
+                    ui.add(
+                        TextEdit::multiline(&mut ob.notes)
+                            .hint_text(tl!("Anything the designs don't show (optional), e.g. never use red"))
+                            .desired_rows(2)
+                            .desired_width(f32::INFINITY),
+                    );
+                    if job_status == "failed" {
+                        let err = ob.job.as_ref().map(|j| s(j, "error")).unwrap_or_default();
+                        ui.label(RichText::new(format!("{}: {err}", tl!("The draft failed"))).small().color(t.text_dim));
+                    }
+                    let ready = !ob.name.trim().is_empty() && ob.folder.is_some() && !st.busy;
+                    ui.horizontal(|ui| {
+                        if widgets::primary_button_enabled(ui, tl!("Draft the client"), ready).clicked()
+                            && let Some(folder) = ob.folder.clone()
+                        {
+                            ob.error.clear();
+                            asks.push(("onboard", "POST", "/api/onboard".into(), Some(json!({"name": ob.name.trim(), "folder": folder, "notes": ob.notes}))));
+                        }
+                        if widgets::secondary_button(ui, tl!("Cancel")).clicked() {
+                            *ob = Onboarding::default();
+                        }
+                    });
+                }
+                "measuring" | "drafting" => {
+                    ui.horizontal(|ui| {
+                        ui.add(egui::Spinner::new().size(12.0));
+                        let what = if job_status == "measuring" {
+                            tl!("Measuring the past designs: colours, sizes, corners…")
+                        } else {
+                            tl!("Drafting the design language and the rulebook…")
+                        };
+                        ui.label(RichText::new(what).small().color(t.text_dim));
+                    });
+                }
+                _ => {
+                    let job = ob.job.clone().unwrap_or(Value::Null);
+                    draft_review(ui, &job, t);
+                    if job_status == "ready" {
+                        let problems = job.pointer("/summary/problems").and_then(Value::as_array).map_or(0, Vec::len);
+                        ui.horizontal_wrapped(|ui| {
+                            if widgets::primary_button_enabled(ui, tl!("Save client"), problems == 0 && !st.busy).clicked() {
+                                asks.push(("onboard-save", "POST", format!("/api/onboard/{id}/save"), Some(json!({}))));
+                            }
+                            if widgets::secondary_button(ui, tl!("Edit the draft files")).clicked() {
+                                let _ = crate::io::open_in_app(app, &s(&job, "dir"));
+                            }
+                            if widgets::secondary_button(ui, tl!("Reload")).on_hover_text(tl!("Read the draft files again after editing them")).clicked() {
+                                asks.push(("onboard", "GET", format!("/api/onboard/{id}"), None));
+                            }
+                            if widgets::secondary_button(ui, tl!("Discard")).clicked() {
+                                asks.push(("onboard-discard", "DELETE", format!("/api/onboard/{id}"), None));
+                                *ob = Onboarding::default();
+                            }
+                        });
+                    }
+                }
+            }
+            if !ob.error.is_empty() {
+                ui.label(RichText::new(&ob.error).small().color(t.text_dim));
+            }
+        },
+    );
+}
+
+/// The draft as the designer checks it: name, description, colours by role, fonts, layouts, rules, problems.
+fn draft_review(ui: &mut Ui, job: &Value, t: &Tokens) {
+    let sum = job.get("summary").cloned().unwrap_or(Value::Null);
+    ui.label(RichText::new(s(&sum, "name")).font(crate::theme::semibold(15.0)).color(t.text_strong));
+    if !s(&sum, "description").is_empty() {
+        ui.label(RichText::new(s(&sum, "description")).small().color(t.text_dim));
+    }
+    ui.add_space(4.0);
+    ui.horizontal_wrapped(|ui| {
+        for (name, v) in sum.get("colors").and_then(Value::as_object).into_iter().flatten() {
+            let Some(c) = v.as_str().and_then(hex) else { continue };
+            let (r, resp) = ui.allocate_exact_size(vec2(18.0, 18.0), egui::Sense::hover());
+            ui.painter().rect_filled(r, CornerRadius::same(4), c);
+            ui.painter().rect_stroke(r, CornerRadius::same(4), Stroke::new(1.0, t.border), egui::StrokeKind::Inside);
+            resp.on_hover_text(format!("{name} {}", v.as_str().unwrap_or_default()));
+        }
+    });
+    let list = |key: &str| -> String {
+        sum.get(key).and_then(Value::as_array).map(|a| a.iter().filter_map(Value::as_str).collect::<Vec<_>>().join(", ")).unwrap_or_default()
+    };
+    ui.label(RichText::new(format!("{}: {}", tl!("Fonts"), list("fonts"))).small());
+    ui.label(RichText::new(format!("{}: {}", tl!("Layouts"), list("layouts"))).small());
+    let rules = sum.get("rules").and_then(Value::as_u64).unwrap_or(0);
+    ui.label(RichText::new(format!("{rules} {}", tl!("rules for the brand check"))).small());
+    for p in sum.get("problems").and_then(Value::as_array).into_iter().flatten().filter_map(Value::as_str) {
+        ui.label(RichText::new(format!("{}: {p}", tl!("Fix before saving"))).small().color(t.text_dim));
+    }
+    ui.label(
+        RichText::new(tl!(
+            "Check it against the client's work. Edit DESIGN.md and critic_rules.md in the draft folder if anything is off, then Reload."
+        ))
+        .small()
+        .color(t.text_dim),
+    );
+}
+
+fn short_path(p: &str) -> String {
+    let parts: Vec<&str> = p.trim_end_matches('/').rsplit('/').take(2).collect();
+    parts.into_iter().rev().collect::<Vec<_>>().join("/")
+}
+
+fn pick_past_folder(app: &mut VectorcraftApp) {
+    crate::picks::button(app, |app| {
+        if let Some(path) = crate::picks::folder(app)
+            && let Ok(mut slot) = PAST_FOLDER.lock()
+        {
+            *slot = Some(path);
+        }
+    });
+}
+
 fn add_folder(app: &mut VectorcraftApp) {
     crate::picks::button(app, |app| {
         if let Some(path) = crate::picks::folder(app)
@@ -565,8 +764,10 @@ fn tab_bar(ui: &mut Ui, st: &mut State, t: &Tokens) {
 }
 
 /// The Clients tab: the installed clients (a click picks one) and the ways to add one.
-fn clients_tab(app: &mut VectorcraftApp, ui: &mut Ui, st: &mut State, t: &Tokens) {
+fn clients_tab(app: &mut VectorcraftApp, ui: &mut Ui, st: &mut State, asks: &mut Asks, t: &Tokens) {
     ScrollArea::vertical().auto_shrink([false, false]).show(ui, |ui| {
+        onboarding(app, ui, st, asks, t);
+        ui.add_space(10.0);
         if st.clients.is_empty() {
             ui.label(RichText::new(tl!("No clients yet.")).color(t.text_dim));
         }
@@ -1009,7 +1210,7 @@ pub fn show(app: &mut VectorcraftApp, ui: &mut Ui) {
     ui.add_space(6.0);
     match st.tab {
         Tab::Chat => chat_tab(app, ui, &mut st, &mut asks, &t),
-        Tab::Clients => clients_tab(app, ui, &mut st, &t),
+        Tab::Clients => clients_tab(app, ui, &mut st, &mut asks, &t),
         Tab::History => {
             let id = st.client().map(|c| c.id.clone()).unwrap_or_default();
             if !id.is_empty() && st.history_for != id {
@@ -1178,6 +1379,24 @@ mod tests {
         assert!(!st.placed && st.messages.last().is_some_and(|m| m.text.contains("3 versions side by side")));
         on_event(&mut st, &json!({"type": "picked", "data": {"letter": "B", "placed": {"group_id": 7}}}), &mut fetch);
         assert!(st.placed && st.messages.last().is_some_and(|m| m.text.starts_with("Kept version B")));
+    }
+
+    /// 5d: the draft job reaches the Clients tab; saving adds and selects the client; failures stay in the card.
+    #[test]
+    fn a_client_draft_is_followed_and_saved() {
+        let mut st = State::default();
+        let mut follow = None;
+        on_answer(&mut st, "onboard", Ok(json!({"id": "j1", "status": "drafting"})), &mut follow);
+        assert_eq!(st.onboarding.job.as_ref().map(|j| s(j, "status")).as_deref(), Some("drafting"));
+        on_answer(&mut st, "onboard", Err("the folder needs at least 3 past designs".into()), &mut follow);
+        assert!(st.onboarding.error.contains("at least 3") && st.messages.is_empty(), "shown in the card, not the chat");
+        st.onboarding.open = true;
+        on_answer(&mut st, "onboard-save", Ok(json!({"client": "acme-health", "name": "Acme Health"})), &mut follow);
+        assert!(!st.onboarding.open && st.onboarding.job.is_none());
+        assert_eq!(st.clients.last().map(|c| c.id.as_str()), Some("acme-health"));
+        assert_eq!(st.client, 0);
+        assert!(matches!(st.tab, Tab::Chat) && !st.started);
+        assert_eq!(short_path("/home/u/work/acme/past"), "acme/past");
     }
 
     #[test]

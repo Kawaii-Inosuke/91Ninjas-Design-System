@@ -21,7 +21,7 @@ from fastapi.responses import FileResponse, HTMLResponse, StreamingResponse
 from pydantic import BaseModel, Field
 
 from studio_agents import brand as brandmod
-from studio_agents import config, packs
+from studio_agents import config, onboard, packs
 from studio_agents.runs import RunError, RunManager
 
 PAGE = Path(__file__).with_name("web") / "index.html"
@@ -49,6 +49,17 @@ class PathBody(BaseModel):
     client: str | None = None
 
 
+class OnboardBody(BaseModel):
+    name: str
+    folder: str
+    notes: str = ""
+
+
+class OnboardSave(BaseModel):
+    client: str | None = None
+    overwrite: bool = False
+
+
 class StartBody(BaseModel):
     client: str
     content: str = ""
@@ -57,9 +68,10 @@ class StartBody(BaseModel):
     variants: int = Field(1, ge=1, le=3)   # 5c: 2–3 versions with different layouts, side by side
 
 
-def create_app(token: str, manager: RunManager | None = None) -> FastAPI:
+def create_app(token: str, manager: RunManager | None = None, onboarder: onboard.OnboardManager | None = None) -> FastAPI:
     app = FastAPI(title="91 Studio agents", docs_url=None, redoc_url=None, openapi_url=None)
     runs = manager or RunManager()
+    drafts = onboarder or onboard.OnboardManager()
     previews: dict[str, packs.ImportPreview] = {}
 
     def auth(request: Request) -> None:
@@ -181,6 +193,36 @@ def create_app(token: str, manager: RunManager | None = None) -> FastAPI:
         except (OSError, packs.PackError, brandmod.BrandError) as e:
             raise HTTPException(422, str(e)) from None
         return {"client": b.client, "name": b.name, "problems": b.problems}
+
+    # ── Brand Onboarder (5d, D-031) ─────────────────────────────────────────────────────────────────
+    @app.post("/api/onboard", dependencies=[api])
+    def onboard_start(body: OnboardBody) -> dict:
+        """A new client drafted from a folder of past work: measure, then the onboarder agent drafts it."""
+        try:
+            return drafts.start(body.name, body.folder, body.notes).public()
+        except (OSError, onboard.OnboardError) as e:
+            raise HTTPException(422, str(e)) from None
+
+    @app.get("/api/onboard/{jid}", dependencies=[api])
+    def onboard_get(jid: str) -> dict:
+        try:
+            return drafts.refresh(jid).public()
+        except (OSError, onboard.OnboardError, brandmod.BrandError) as e:
+            raise HTTPException(422, str(e)) from None
+
+    @app.post("/api/onboard/{jid}/save", dependencies=[api])
+    def onboard_save(jid: str, body: OnboardSave) -> dict:
+        try:
+            cid = drafts.save(jid, body.client, body.overwrite)
+        except (OSError, onboard.OnboardError, packs.PackError) as e:
+            raise HTTPException(422, str(e)) from None
+        b = brandmod.load(cid)
+        return {"client": cid, "name": b.name, "problems": b.problems}
+
+    @app.delete("/api/onboard/{jid}", dependencies=[api])
+    def onboard_discard(jid: str) -> dict:
+        drafts.discard(jid)
+        return {"ok": True}
 
     @app.post("/api/clients/import/{pid}/install", dependencies=[api])
     def install(pid: str, body: InstallBody) -> dict:

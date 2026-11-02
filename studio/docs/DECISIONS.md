@@ -367,6 +367,32 @@ Format per entry: **Context → Decision → Alternatives → Consequences**. En
   - **Live with the AI:** outlines for 2 versions came back with different families (timeline, list). The rest of that run failed because the free Gemini key's daily quota and Groq's rate limit were used up.
   - **Live in the editor:** scripted answers stood in for the AI. 3 versions landed side by side, picking B removed A and C in one step, and "Version B" remained.
 
+## D-031: Brand Onboarder: a new client drafted from past work (2026-11-03)
+- **Context:** Adding a client meant writing DESIGN.md and a rulebook by hand. Designers have the client's past infographics, and sometimes a guidelines document.
+- **Decision:** `studio_agents/onboard.py` works in three steps:
+  1. **Measure, without AI:**
+     - **Files:** reads a folder and its subfolders: up to 30 past designs (SVG, PNG, JPEG, WebP), font files, and `.md`/`.txt` guidelines.
+     - **Rendering:** SVGs are drawn with the offline Chromium.
+     - **Colours:** colour coverage is measured on small copies, and then snapped to the exact colours the SVGs declare. Edge smoothing would otherwise invent in-between colours. Pure white and black are always candidates, since page backgrounds are often not declared.
+     - **Other facts:** corner radii (above 0), canvas sizes (`width`/`height` or `viewBox`), and the fonts named in the files.
+     - **Previews:** up to 6 preview images.
+  2. **Draft, with AI** (the `onboarder` role, vision): the AI fills **fixed slots**:
+     - the colour roles the templates read (primary, accent, ink, surface, tint, cell, line, on-primary, optional header-bar, plus other colours);
+     - the title, heading, body, label and marker type styles;
+     - radii, spacing, canvas width and layouts;
+     - a style guide and 5–40 rules.
+
+     Colours are checked and normalised after the answer, because not every model honours patterns in a schema. The measured numbers are given as facts; guideline documents and designer notes are passed as data, not instructions.
+  3. **Review and save, by the designer:** the draft is written to `drafts/<id>/DESIGN.md` and `critic_rules.md`. The designer can edit them (**Edit the draft files** opens the folder, then **Reload**), and **Save client** runs `packs.create_client` with the past designs, fonts and documents.
+- **Panel:** Clients → **New client from past work…**: name, folder, optional notes → progress → review card (swatches, fonts, layouts, number of rules, problems) → Save / Edit / Reload / Discard.
+- **API:** `POST /api/onboard`, `GET /api/onboard/{id}`, `POST /api/onboard/{id}/save`, `DELETE /api/onboard/{id}`.
+- **For the Claude connector:** measuring and saving are separate from drafting, so Claude can draft from the same facts.
+- **Text in outlined SVGs:** the font is judged from the images and the guide says so.
+- **Checked:**
+  - 8 onboarder tests (with a scripted model), including a drafted client rendering a real design. 1 new panel test. 2,887 ui-egui and 72 Python tests, clippy.
+  - Measuring FCC's real past work gave white 53.5%, #F2F2F2 34%, the FCC blues and #383838 for text, 1920 px wide.
+  - The form was checked on screen. **Not yet live with the AI:** the free Gemini key's daily quota was used up.
+
 ## D-007: Every phase ends with a phase report and a docs update (2026-11-02)
 - **Decision:**
   - At the end of each phase, write `phases/PHASE-N.md` and update the PRD, TRD, ARCHITECTURE and SECURITY docs.
