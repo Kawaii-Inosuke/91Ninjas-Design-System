@@ -1,0 +1,40 @@
+# Runbook: set up, build, run
+
+*Last updated: 2026-11-02 (Phase 0). Platform tested so far: Linux, the developer machine only.*
+
+## Prerequisites
+| Need | Why | Status on the dev machine (2026-11-02) |
+|---|---|---|
+| **Free disk ≥ 8 GB** (measured: ~4.5 GB for one dev build, plus headroom) | Rust toolchain plus **one** VectorCraft build at a time (see the disk policy below) | ✅ 16 GB freed. ~11 GB free after the build. |
+| **Rust ≥ 1.95** (edition 2024, see `editor/Cargo.toml`) | Builds the editor | ✅ 1.99.1 (`rustup --profile minimal`) |
+| Python 3.11+ (own venv in `studio/agents/.venv`) | Agents and renderer | ✅ Python present. The venv is created in Phase 1. |
+| Playwright Chromium + `all-MiniLM-L6-v2` | Renderer and duplicate search | Installed into our own venv (Phase 1 and 3) |
+| Node | Not needed. Optional for tooling. | ✅ |
+
+## 1. Install Rust (one time)
+```bash
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh   # choose the default install
+source "$HOME/.cargo/env"
+rustc --version   # must be >= 1.95
+```
+On Linux, the windowing and graphics stack may need system libraries such as X11/Wayland and Vulkan/GL. If the build fails, the error names the missing `-dev` package. Install it with your package manager and record it here.
+
+## 2. Build and run the editor
+```bash
+cd studio/editor
+cargo run --release -p vectorcraft                  # desktop app
+cargo run --release -p vectorcraft-cli -- --help    # headless CLI
+```
+**Disk policy: keep only one build at a time.**
+- Use the dev build (`cargo run -p vectorcraft`, output in `target/debug`) day to day.
+- Before a release build, delete the dev one (`rm -rf target/debug`). Delete `target/release` again once you no longer need it.
+- Install Rust with `--profile minimal`, and set `CARGO_INCREMENTAL=0` to shrink `target/`.
+- Build only `-p vectorcraft` and `-p vectorcraft-cli`.
+- **Measured (2026-11-02, dev build):** `target/` 3.2 GB + `~/.cargo` 0.7 GB + `~/.rustup` 0.6 GB = **~4.5 GB**. The first build takes ~6 minutes of compile time.
+- Linux system libraries needed (all were already present): gcc, pkg-config, x11, xkbcommon, wayland-client, fontconfig.
+
+## 3. Agent sidecar
+*(Phase 3. Not built yet.)*
+
+## Troubleshooting
+- **GPU or window problems on Linux:** see `editor/docs/development.md`, sections "Linux: Wayland and X11" and "Desktop graphics processor". `WGPU_POWER_PREF=high` and `WAYLAND_DISPLAY=` are the usual fixes.

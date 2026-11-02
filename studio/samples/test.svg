@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+ <g id="design-test">
+  <g id="background"><rect x="0" y="0" width="800" height="600" fill="#0B1F3A"/></g>
+  <g id="title"><text x="40" y="80" font-family="DejaVu Sans" font-size="48" font-weight="700" fill="#FFFFFF"><tspan x="40" y="80">Five steps to</tspan><tspan x="40" y="140">safer payments</tspan></text></g>
+  <g id="item-1"><rect x="40" y="200" width="340" height="160" rx="16" fill="#1E90FF"/><text x="60" y="260" font-family="DejaVu Sans" font-size="24" fill="#FFFFFF">Verify the sender</text></g>
+ </g>
+</svg>

@@ -1,0 +1,38 @@
+# ── Reference only, never committed (D-010) ──────────────────────────
+/Design skill/
+
+# ── Local Claude Code settings ───────────────────────────────────────
+/.claude/settings.local.json
+
+# ── Secrets ──────────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── Rust build output ────────────────────────────────────────────────
+target/
+
+# ── Python ───────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+
+# ── App runtime data (local only, may contain client material) ──────
+studio/agents/.sessions/
+studio/agents/output/
+*.db
+*.sqlite
+*.sqlite3
+*.91pack
+
+# ── OS / editors ─────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
