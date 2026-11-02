@@ -18,7 +18,7 @@ from pathlib import Path
 
 from fastapi import Depends, FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse, StreamingResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from studio_agents import brand as brandmod
 from studio_agents import config, packs
@@ -37,6 +37,7 @@ class Decision(BaseModel):
     gate: str
     decision: str
     notes: str = ""
+    choice: int | None = None        # the `pick` gate: which version (0 = A)
 
 
 class Message(BaseModel):
@@ -53,6 +54,7 @@ class StartBody(BaseModel):
     content: str = ""
     instruction: str = ""
     image_path: str | None = None    # a picture of the content the designer attached in the panel
+    variants: int = Field(1, ge=1, le=3)   # 5c: 2–3 versions with different layouts, side by side
 
 
 def create_app(token: str, manager: RunManager | None = None) -> FastAPI:
@@ -213,7 +215,7 @@ def create_app(token: str, manager: RunManager | None = None) -> FastAPI:
                 raise HTTPException(422, "attach a PNG, JPEG or WebP image under 25 MB")
             images.append(p)
         try:
-            run = runs.start(body.client, body.content, images, body.instruction)
+            run = runs.start(body.client, body.content, images, body.instruction, variants=body.variants)
         except (RunError, brandmod.BrandError) as e:
             raise HTTPException(422, str(e)) from None
         return {"id": run.id}
@@ -250,7 +252,7 @@ def create_app(token: str, manager: RunManager | None = None) -> FastAPI:
     def decide(rid: str, body: Decision) -> dict:
         run_or_404(rid)
         try:
-            runs.decide(rid, body.gate, body.decision, body.notes)
+            runs.decide(rid, body.gate, body.decision, body.notes, body.choice)
         except RunError as e:
             raise HTTPException(409, str(e)) from None
         return {"ok": True}

@@ -341,6 +341,32 @@ Format per entry: **Context → Decision → Alternatives → Consequences**. En
   - New test `studio_workspace_is_adopted_once_with_three_open_columns`.
   - 2,885 ui-egui tests and clippy pass. Checked live with screenshots at 1920×958.
 
+## D-029: Claude through a connector is the main AI; cost tracking dropped (2026-11-03)
+- **Context:** The user wants designers to use their own Claude subscriptions. Gemini gave decent results, but the free key runs out daily and is often overloaded. The chat panel also lost the thread of the conversation: after Ctrl+Z, "add it back" was taken as new content and refused. The panel is a fixed pipeline that files each message as new content, outline notes or an edit; it has no memory of the chat and doesn't see the editor's undo.
+- **Decision:**
+  - Order of work: **5c Variants, 5d Brand Onboarder, then the Claude connector** (Phase 6, Mode B), ahead of the installer.
+  - **5b (usage and cost tracking for our API keys) is dropped**: with Claude, designers use their own plans.
+  - The Gemini panel stays as it is and keeps working.
+  - New steps (variants, onboarding) are built as parts both the panel and Claude can call, so nothing is built twice.
+  - The connector will give Claude the conversation-level tools the panel lacks: look at the artboard, and place a saved version again ("add it back").
+- **Not allowed (unchanged, D-003):** our app signing in with a claude.ai subscription. Claude Desktop or Claude Code drives our app through an MCP server, which is the supported way.
+
+## D-030: Variants: 2–3 versions with different layouts, side by side (2026-11-03)
+- **Decision:**
+  - **Asking:** a run takes `variants` (1–3). In the panel, use "Versions 1 2 3" in the message box, or the "Three versions to choose from" row.
+  - **Layouts:** each version's outline must use a layout family the others don't. The layout agent is told which families are taken, and asked once more if it repeats one (the repeat is kept if the second answer fails).
+  - **Outline approval:** one approval covers all the outlines. Notes apply to every version.
+  - **Drawing and checking:** each version is drawn and checked by the critic on its own.
+  - **Placement:** in the editor, version A opens a document named after the design on artboard "Version A". B and C get artboards to its right ("Version B", "Version C", 80 pt apart), with the art aligned to each artboard.
+  - **New `pick` gate:** the panel shows each version's preview, layout, title and remaining issues, with **Keep A/B/C** buttons. Typing the letter also works.
+  - **After the pick:** the versions not kept leave the document (their layers and artboards) **in one undo step**; their files stay in the run folder. The run then continues as a single design (final approval, edits by chat).
+  - **Without the editor:** the versions are still offered as files.
+- **Also:** `run.json` is now written whole and then swapped in (a test showed a half-written file when the process stopped mid-write).
+- **Checked:**
+  - 4 new run tests, 74 Python tests and 1 new panel test pass (2,886 ui-egui tests, clippy).
+  - **Live with the AI:** outlines for 2 versions came back with different families (timeline, list). The rest of that run failed because the free Gemini key's daily quota and Groq's rate limit were used up.
+  - **Live in the editor:** scripted answers stood in for the AI. 3 versions landed side by side, picking B removed A and C in one step, and "Version B" remained.
+
 ## D-007: Every phase ends with a phase report and a docs update (2026-11-02)
 - **Decision:**
   - At the end of each phase, write `phases/PHASE-N.md` and update the PRD, TRD, ARCHITECTURE and SECURITY docs.

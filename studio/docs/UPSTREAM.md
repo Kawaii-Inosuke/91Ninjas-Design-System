@@ -35,6 +35,7 @@ The repo was about one month old at fork time, with about 7.5k commits and dozen
 
 | 91Ninjas look (D-025): `ui-egui` `theme.rs` (Mint accent, `on_accent`, tinted greys), `widgets/buttons.rs`, `widgets/toggles.rs`, `place.rs`, `chrome.rs` (wordmark), `canvas/home.rs` (welcome), `brand.rs`; tests `brand.rs`, `chrome/tests.rs`, `tests/home.rs`; engine `prefs.rs` (default `mint`), `cmd/prefscmds.rs` (Mint choice) | The product's own look | 2,884 ui-egui + 71 engine prefs tests |
 | Mockup layout (D-028): `ui-egui` `workspaces.rs` (91Ninjas workspace, `studio_docking`, `adopt_studio_workspace`), `state.rs` (`studio_workspace_adopted`), `panel_docking.rs` (`dock_columns` pub(crate)), `chrome.rs` and new `chrome/share_export.rs` (Share/Export), `chrome/control_bar.rs` (AI button), `chrome/tabs.rs` (mint tab), `app.rs` (no hint line in the 91Ninjas workspace), `panels/studio_ai.rs` (outlined AI button, retry while agents start); app `main.rs` (adopt once); tests `titlebar.rs`, `workspaces.rs` | The 91Ninjas mockup | 2,885 ui-egui tests, clippy |
+| Variants (D-030): `ui-egui` `panels/studio_ai.rs` only (versions picker, outline per version, Keep A/B/C, pick by letter, test) | 5c | 2,886 ui-egui tests, clippy |
 
 Our own new files: `assets/91studio/` (placeholder icon), `crates/studio-bridge/`, `apps/vectorcraft/src/studio_bridge.rs`, `apps/vectorcraft/src/studio_agents.rs`, `crates/ui-egui/src/studio.rs`, `crates/ui-egui/src/panels/studio_ai.rs`.
 

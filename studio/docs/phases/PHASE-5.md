@@ -10,7 +10,8 @@
 | 5a+++ | **AI panel after the user's mockup** (D-026): Chat / Clients / History tabs, a hero with action rows, a composer with image attach, history with Open buttons. | ✅ done |
 | 5a* | **Keys working, rotation and fallbacks** (D-027). The first complete real FCC design was made on the user's keys. | ✅ done |
 | 5a** | **Editor layout like the mockup** (D-028): 91Ninjas workspace (Control bar, three open panel columns, AI panel on the right), Share and Export at the top right, mint document tab, AI button in the Control bar, the AI panel waits for the agents to start. 2,885 ui-egui tests and clippy pass; checked with live screenshots. | ✅ done |
-| 5b | Usage and cost tracking per run and per agent, shown in the panel | next |
-| 5c | Variants: 2-3 layouts at once, each on its own artboard; pick one | |
-| 5d | Brand Onboarder: draft DESIGN.md and the rulebook from past work (vision); New-client flow in the panel | |
+| 5b | Usage and cost tracking per run and per agent | ⏭ dropped (D-029): designers will use their own Claude plans |
+| 5c | **Variants** (D-030): 2–3 versions with different layouts, side by side on their own artboards; Keep A/B/C; the others leave in one undo step. 74 Python and 2,886 ui-egui tests pass; checked live in the editor. | ✅ done |
+| 5d | Brand Onboarder: draft DESIGN.md and the rulebook from past work (vision); New-client flow in the panel | next |
+| 6 (moved up) | **Claude connector** (Mode B, D-029): our tools as an MCP server for Claude Desktop / Claude Code | after 5d |
 | 5e | Installer: release build plus the bundled agents environment (Linux first). Needs about 10 GB free for a release build. | |

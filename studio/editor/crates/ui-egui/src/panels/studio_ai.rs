@@ -116,6 +116,8 @@ struct State {
     draft: String,
     /// A layout hint from a suggestion chip ("use a timeline"), sent with the next design.
     instruction: String,
+    /// How many versions the next design makes (5c): 1, or 2–3 with different layouts side by side (0 counts as 1).
+    versions: u8,
     run: Option<String>,
     running: bool,
     /// What the agents are doing now ("drawing version 2").
@@ -183,6 +185,25 @@ fn on_event(st: &mut State, e: &Value, fetch: &mut Vec<(String, String)>) {
         }
         "decision" => st.gate = None,
         "version" => on_version(st, &d, fetch),
+        // 5c: the versions side by side; nothing is editable by chat until one is picked.
+        "placed" if d.get("variants").is_some() => {
+            st.placed = false;
+            let n = d.get("variants").and_then(Value::as_array).map_or(0, Vec::len);
+            let text = if d.get("editor").and_then(Value::as_bool).unwrap_or(false) {
+                format!("Here are {n} versions side by side, each on its own artboard. Pick the one to keep.")
+            } else {
+                format!("Here are {n} versions (the editor isn't connected, so they're files for now). Pick the one to keep.")
+            };
+            st.say(Who::Assistant, text, vec![]);
+        }
+        "picked" => {
+            st.placed = d.get("placed").is_some_and(|p| !p.is_null());
+            let text = format!(
+                "Kept version {}. The others left the document in one step (Ctrl+Z brings them back); their files stay saved. Edit it by hand, or tell me what to change.",
+                s(&d, "letter")
+            );
+            st.say(Who::Assistant, text, vec![]);
+        }
         "placed" => {
             st.placed = d.get("editor").and_then(Value::as_bool).unwrap_or(false);
             let text = if st.placed {
@@ -488,14 +509,16 @@ fn empty_state(app: &mut VectorcraftApp, ui: &mut Ui, st: &mut State, t: &Tokens
         ui.add(egui::Label::new(RichText::new(line).color(t.text_dim)).wrap());
     });
     ui.add_space(16.0);
-    let rows: [(&str, &str, Option<&str>); 3] = [
-        ("wand-sparkles", tl!("Infographic from my text"), None),
-        ("history", tl!("As a timeline"), Some("use a timeline")),
-        ("layout-grid", tl!("As a comparison"), Some("compare the options side by side")),
+    let rows: [(&str, &str, Option<&str>, u8); 4] = [
+        ("wand-sparkles", tl!("Infographic from my text"), None, 1),
+        ("copy", tl!("Three versions to choose from"), None, 3),
+        ("history", tl!("As a timeline"), Some("use a timeline"), 1),
+        ("layout-grid", tl!("As a comparison"), Some("compare the options side by side"), 1),
     ];
-    for (icon, label, instruction) in rows {
+    for (icon, label, instruction, versions) in rows {
         if action_row(ui, icon, label, t) {
             st.instruction = instruction.map(|i| tl!(i).to_string()).unwrap_or_default();
+            st.versions = versions;
             ui.memory_mut(|m| m.request_focus(ui.make_persistent_id("studio-ai-draft")));
         }
     }
@@ -633,7 +656,8 @@ fn initials(name: &str) -> String {
 }
 
 /// The approval card at the end of the thread; the designer's choice comes back.
-fn gate_card(ui: &mut Ui, st: &State, t: &Tokens) -> Option<(String, String)> {
+/// The gate's card; a click returns (gate, decision, choice): `choice` is the version picked at the `pick` gate.
+fn gate_card(ui: &mut Ui, st: &State, t: &Tokens) -> Option<(String, String, Option<usize>)> {
     let gate = st.gate.as_ref()?;
     let kind = s(gate, "kind");
     let p = gate.get("payload").cloned().unwrap_or(Value::Null);
@@ -643,6 +667,11 @@ fn gate_card(ui: &mut Ui, st: &State, t: &Tokens) -> Option<(String, String)> {
         |ui| {
             ui.set_width(ui.available_width());
             gate_body(ui, &kind, &p, t);
+            if kind == "pick"
+                && let Some(k) = pick_versions(ui, st, &p, t)
+            {
+                chosen = Some((kind.clone(), "pick".to_string(), Some(k)));
+            }
             let options: Vec<String> = gate
                 .get("options")
                 .and_then(Value::as_array)
@@ -650,7 +679,7 @@ fn gate_card(ui: &mut Ui, st: &State, t: &Tokens) -> Option<(String, String)> {
                 .unwrap_or_default();
             ui.add_space(6.0);
             ui.horizontal_wrapped(|ui| {
-                for o in options.iter().filter(|o| o.as_str() != "change") {
+                for o in options.iter().filter(|o| o.as_str() != "change" && o.as_str() != "pick") {
                     let label = match o.as_str() {
                         "approve" => tl!("Approve"),
                         "abandon" => tl!("Stop"),
@@ -663,7 +692,7 @@ fn gate_card(ui: &mut Ui, st: &State, t: &Tokens) -> Option<(String, String)> {
                         widgets::secondary_button(ui, label).clicked()
                     };
                     if clicked && !st.busy {
-                        chosen = Some((kind.clone(), o.clone()));
+                        chosen = Some((kind.clone(), o.clone(), None));
                     }
                 }
             });
@@ -691,7 +720,21 @@ fn gate_body(ui: &mut Ui, kind: &str, p: &Value, t: &Tokens) {
                 }
             }
         }
-        "outline" => outline(ui, p.get("spec").unwrap_or(&Value::Null), t),
+        "outline" => match p.get("variants").and_then(Value::as_array) {
+            // 5c: one outline per version.
+            Some(vs) => {
+                ui.label(RichText::new(format!("{} versions with different layouts:", vs.len())).strong());
+                for v in vs {
+                    ui.add_space(4.0);
+                    ui.label(RichText::new(format!("{} {}", tl!("Version"), s(v, "letter"))).color(t.accent));
+                    outline(ui, v.get("spec").unwrap_or(&Value::Null), t);
+                }
+            }
+            None => outline(ui, p.get("spec").unwrap_or(&Value::Null), t),
+        },
+        "pick" => {
+            ui.label(RichText::new(tl!("Which version do you want to keep?")).strong());
+        }
         "final" => {
             ui.label(RichText::new(tl!("Happy with it? Approve to export and save it; your edits on the artboard are included.")).strong());
             for f in p.get("unresolved").and_then(Value::as_array).into_iter().flatten() {
@@ -702,6 +745,35 @@ fn gate_body(ui: &mut Ui, kind: &str, p: &Value, t: &Tokens) {
             ui.label(other);
         }
     }
+}
+
+/// 5c: one row per version (preview, letter, layout, title) with its Keep button. Returns the version clicked.
+fn pick_versions(ui: &mut Ui, st: &State, p: &Value, t: &Tokens) -> Option<usize> {
+    let mut picked = None;
+    for (i, v) in p.get("variants").and_then(Value::as_array).into_iter().flatten().enumerate() {
+        ui.add_space(4.0);
+        ui.horizontal(|ui| {
+            let key = format!("v{}", v.get("version").and_then(Value::as_u64).unwrap_or(0));
+            if let Some(tex) = st.messages.iter().find(|m| m.image_key.as_deref() == Some(key.as_str())).and_then(|m| m.image.as_ref()) {
+                let size = tex.size_vec2();
+                let h = 72.0;
+                let w = if size.y > 0.0 { (size.x / size.y * h).min(110.0) } else { h };
+                ui.add(egui::Image::new(tex).fit_to_exact_size(vec2(w, h)).corner_radius(CornerRadius::same(4)));
+            }
+            ui.vertical(|ui| {
+                ui.label(RichText::new(format!("{} {} · {}", tl!("Version"), s(v, "letter"), s(v, "layout"))).strong());
+                ui.label(RichText::new(s(v, "title")).small().color(t.text_dim));
+                let n = v.get("unresolved").and_then(Value::as_array).map_or(0, Vec::len);
+                if n > 0 {
+                    ui.label(RichText::new(format!("{n} {}", tl!("brand check issue(s) left"))).small().color(t.text_dim));
+                }
+                if widgets::primary_button(ui, &format!("{} {}", tl!("Keep"), s(v, "letter"))).clicked() && !st.busy {
+                    picked = Some(i);
+                }
+            });
+        });
+    }
+    picked
 }
 
 fn outline(ui: &mut Ui, spec: &Value, t: &Tokens) {
@@ -766,6 +838,8 @@ fn composer(app: &mut VectorcraftApp, ui: &mut Ui, st: &mut State, t: &Tokens) -
     }
     let hint = if st.gate.as_ref().is_some_and(|g| s(g, "kind") == "outline") {
         tl!("What should change in the outline?")
+    } else if st.gate.as_ref().is_some_and(|g| s(g, "kind") == "pick") {
+        tl!("Type A, B or C, or press Keep above")
     } else if st.placed {
         tl!("Ask for an edit, e.g. make the title bigger")
     } else if st.running {
@@ -774,7 +848,8 @@ fn composer(app: &mut VectorcraftApp, ui: &mut Ui, st: &mut State, t: &Tokens) -
         tl!("Describe what you want, or paste your content…")
     };
     let has_input = !st.draft.trim().is_empty() || (st.attachment.is_some() && !st.running);
-    let can_send = !st.busy && has_input && (!st.running || st.placed || accepts_notes(st)) && st.client().is_some();
+    let picking = st.gate.as_ref().is_some_and(|g| s(g, "kind") == "pick");
+    let can_send = !st.busy && has_input && (!st.running || st.placed || accepts_notes(st) || picking) && st.client().is_some();
     let mut send = false;
     Frame::new().fill(t.input).stroke(Stroke::new(1.0, t.input_border)).corner_radius(CornerRadius::same(12)).inner_margin(Margin::same(10)).show(
         ui,
@@ -793,6 +868,10 @@ fn composer(app: &mut VectorcraftApp, ui: &mut Ui, st: &mut State, t: &Tokens) -
                     ui.add_enabled_ui(can_attach, |ui| widgets::icon_button(ui, "image", tl!("Attach a picture of the content"), false, 26.0)).inner;
                 if attach.clicked() {
                     attach_picture(app);
+                }
+                // 5c: how many versions the next design makes.
+                if !st.running {
+                    versions_picker(ui, st, t);
                 }
                 if let Some(a) = st.attachment.clone() {
                     let name = std::path::Path::new(&a).file_name().map(|n| n.to_string_lossy().to_string()).unwrap_or(a);
@@ -817,6 +896,25 @@ fn composer(app: &mut VectorcraftApp, ui: &mut Ui, st: &mut State, t: &Tokens) -
     None
 }
 
+/// "Versions 1 2 3": how many versions the next design makes (5c).
+fn versions_picker(ui: &mut Ui, st: &mut State, t: &Tokens) {
+    ui.label(RichText::new(tl!("Versions")).small().color(t.text_dim)).on_hover_text(tl!("Make 2 or 3 versions with different layouts and pick one"));
+    for n in 1..=3u8 {
+        let on = st.versions.max(1) == n;
+        let (r, resp) = ui.allocate_exact_size(vec2(20.0, 20.0), egui::Sense::click());
+        if on {
+            ui.painter().rect_filled(r, CornerRadius::same(5), t.accent_strong);
+        } else if resp.hovered() {
+            ui.painter().rect_filled(r, CornerRadius::same(5), t.hover);
+        }
+        let color = if on { t.on_accent } else { t.text };
+        ui.painter().text(r.center(), egui::Align2::CENTER_CENTER, n.to_string(), crate::theme::semibold(11.5), color);
+        if resp.clicked() {
+            st.versions = n;
+        }
+    }
+}
+
 /// Pick a picture of the content (PNG, JPEG, WebP) through [`crate::picks`]; it reaches the panel by [`ATTACHED`].
 fn attach_picture(app: &mut VectorcraftApp) {
     crate::picks::button(app, |app| {
@@ -833,6 +931,17 @@ fn accepts_notes(st: &State) -> bool {
     st.gate.as_ref().is_some_and(|g| g.get("options").and_then(Value::as_array).is_some_and(|o| o.iter().any(|x| x == "change")))
 }
 
+/// The version a typed reply picks at the `pick` gate: its letter alone or after "version"/"keep" (`n` versions).
+fn picked_letter(text: &str, n: usize) -> Option<usize> {
+    let t = text.trim().trim_end_matches(['.', '!']).to_ascii_lowercase();
+    let t = t.strip_prefix("keep ").unwrap_or(&t);
+    let t = t.strip_prefix("version ").unwrap_or(t).trim();
+    let mut chars = t.chars();
+    let (Some(c), None) = (chars.next(), chars.next()) else { return None };
+    let k = (c as usize).checked_sub('a' as usize)?;
+    (k < n).then_some(k)
+}
+
 /// Where a sent message goes: a new design, notes for the outline, or an edit on the artboard.
 fn route(st: &mut State, text: String, asks: &mut Asks) {
     let shown = match (&st.attachment, text.is_empty(), st.running) {
@@ -843,7 +952,20 @@ fn route(st: &mut State, text: String, asks: &mut Asks) {
     st.busy = true;
     let run = st.run.clone().unwrap_or_default();
     let outline_gate = st.gate.as_ref().is_some_and(|g| s(g, "kind") == "outline");
-    if st.running && outline_gate {
+    let pick_gate = st.gate.as_ref().is_some_and(|g| s(g, "kind") == "pick");
+    if st.running && pick_gate {
+        // "B", "b", "version b", "keep B": the letter picks; anything else asks for a pick.
+        let n = st.gate.as_ref().and_then(|g| g.pointer("/payload/variants")).and_then(Value::as_array).map_or(0, Vec::len);
+        match picked_letter(&text, n) {
+            Some(k) => {
+                asks.push(("decide", "POST", format!("/api/runs/{run}/decide"), Some(json!({"gate": "pick", "decision": "pick", "choice": k}))))
+            }
+            None => {
+                st.busy = false;
+                st.say(Who::Assistant, tl!("Pick a version first: press Keep under the one you want, or type its letter."), vec![]);
+            }
+        }
+    } else if st.running && outline_gate {
         asks.push(("decide", "POST", format!("/api/runs/{run}/decide"), Some(json!({"gate": "outline", "decision": "change", "notes": text}))));
     } else if st.running && st.placed {
         st.thinking = tl!("editing the artboard").into();
@@ -851,7 +973,8 @@ fn route(st: &mut State, text: String, asks: &mut Asks) {
     } else if st.running && accepts_notes(st) {
         asks.push(("decide", "POST", format!("/api/runs/{run}/decide"), Some(json!({"gate": "final", "decision": "change", "notes": text}))));
     } else if let Some(c) = st.client() {
-        let body = json!({"client": c.id, "content": text, "instruction": st.instruction, "image_path": st.attachment});
+        let body =
+            json!({"client": c.id, "content": text, "instruction": st.instruction, "image_path": st.attachment, "variants": st.versions.clamp(1, 3)});
         asks.push(("start", "POST", "/api/runs/json".into(), Some(body)));
     }
 }
@@ -934,11 +1057,11 @@ fn chat_tab(app: &mut VectorcraftApp, ui: &mut Ui, st: &mut State, asks: &mut As
             });
         }
     });
-    if let Some((gate, choice)) = decision
+    if let Some((gate, decision, choice)) = decision
         && let Some(run) = st.run.clone()
     {
         st.busy = true;
-        asks.push(("decide", "POST", format!("/api/runs/{run}/decide"), Some(json!({"gate": gate, "decision": choice}))));
+        asks.push(("decide", "POST", format!("/api/runs/{run}/decide"), Some(json!({"gate": gate, "decision": decision, "choice": choice}))));
     }
     ui.add_space(6.0);
     if let Some(text) = composer(app, ui, st, t) {
@@ -1020,6 +1143,41 @@ mod tests {
         route(&mut st, "make the title bigger".into(), &mut asks);
         assert_eq!(asks[0].2, "/api/runs/r1/messages");
         assert_eq!(st.messages[0].who as u8, Who::Designer as u8);
+    }
+
+    /// 5c: asking for versions, the pick by letter, and what the thread says about them.
+    #[test]
+    fn versions_are_asked_for_picked_by_letter_and_told() {
+        let client = Client { id: "fcc".into(), name: "FCC".into(), color: None };
+        let mut st = State { clients: vec![client], versions: 3, ..Default::default() };
+        let mut asks = vec![];
+        route(&mut st, "Five steps to pay safely".into(), &mut asks);
+        assert_eq!(asks[0].3.as_ref().map(|b| b["variants"].clone()), Some(json!(3)));
+        // No choice made: one version.
+        let mut st = State { clients: st.clients.clone(), ..Default::default() };
+        let mut asks = vec![];
+        route(&mut st, "Five steps".into(), &mut asks);
+        assert_eq!(asks[0].3.as_ref().map(|b| b["variants"].clone()), Some(json!(1)));
+
+        assert_eq!(picked_letter("B", 3), Some(1));
+        assert_eq!(picked_letter(" keep version c. ", 3), Some(2));
+        assert_eq!(picked_letter("c", 2), None);
+        assert_eq!(picked_letter("add it back", 3), None);
+        let gate = json!({"kind": "pick", "options": ["pick", "abandon"], "payload": {"variants": [{"letter": "A"}, {"letter": "B"}]}});
+        let mut st = State { run: Some("r1".into()), running: true, gate: Some(gate), ..Default::default() };
+        let mut asks = vec![];
+        route(&mut st, "b".into(), &mut asks);
+        assert_eq!(asks[0].3.as_ref().map(|b| (b["gate"].clone(), b["choice"].clone())), Some((json!("pick"), json!(1))));
+        let mut asks = vec![];
+        route(&mut st, "the second one please".into(), &mut asks);
+        assert!(asks.is_empty() && !st.busy, "anything else asks for a pick");
+
+        let mut st = State::default();
+        let mut fetch = vec![];
+        on_event(&mut st, &json!({"type": "placed", "data": {"editor": true, "variants": [{}, {}, {}]}}), &mut fetch);
+        assert!(!st.placed && st.messages.last().is_some_and(|m| m.text.contains("3 versions side by side")));
+        on_event(&mut st, &json!({"type": "picked", "data": {"letter": "B", "placed": {"group_id": 7}}}), &mut fetch);
+        assert!(st.placed && st.messages.last().is_some_and(|m| m.text.starts_with("Kept version B")));
     }
 
     #[test]

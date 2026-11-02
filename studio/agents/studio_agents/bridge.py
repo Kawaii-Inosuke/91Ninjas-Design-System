@@ -138,22 +138,41 @@ class Bridge:
             params["name"] = name
         return self.call("file.new", **params)["index"]
 
-    def place_svg(self, svg: str, *, name: str, width: float, height: float, new_document: bool = True) -> Placed:
+    def add_artboard(self, x: float, y: float, width: float, height: float, name: str) -> int:
+        """A new artboard in the active document (5c variants: one per variant, side by side) → its index."""
+        return self.call("artboard.new", x=x, y=y, width=width, height=height, name=name)["index"]
+
+    def name_artboard(self, index: int, name: str) -> None:
+        self.call("artboard.setProps", index=index, name=name)
+
+    def remove(self, ids: list[int], artboards: list[int], label: str) -> None:
+        """Delete objects and artboards as ONE undo step (Ctrl+Z brings them back)."""
+        calls: list[dict[str, Any]] = []
+        if ids:
+            calls.append({"command": "layer.delete", "params": {"ids": ids}})
+        if artboards:
+            calls.append({"command": "artboard.delete", "params": {"indices": sorted(artboards)}})
+        if calls:
+            self.batch(calls, label)
+
+    def place_svg(self, svg: str, *, name: str, width: float, height: float, new_document: bool = True,
+                  origin: tuple[float, float] = (0.0, 0.0), document_name: str | None = None) -> Placed:
         """Place a layered SVG (Phase 1 output) so it sits exactly on the artboard, as one undo step.
 
         Procedure D-014: a new RGB document of the design's size, `file.place` (it centres the art on
         the artboard; the editor measures centred type correctly since the Phase 2 fix), then a
         corrective move only if `background` isn't at the artboard's origin."""
         if new_document:
-            self.new_document(width, height, name=name)
+            self.new_document(width, height, name=document_name or name)
         data = base64.b64encode(svg.encode()).decode()
         placed = self.batch([{"command": "file.place", "params": {"name": name, "dataBase64": data}}], f"Place {name}")[0]
         gid = placed["ids"][0]
         tree = self.node(gid)
         nodes = _names(tree)
         bg = _node_named(tree, "background")
-        if bg and (abs(bg["bounds"]["x"]) > 0.01 or abs(bg["bounds"]["y"]) > 0.01):
-            self.batch([{"command": "object.move", "params": {"ids": [gid], "dx": -bg["bounds"]["x"], "dy": -bg["bounds"]["y"]}}],
+        ox, oy = origin   # the artboard's top-left corner (another artboard than the first for a variant)
+        if bg and (abs(bg["bounds"]["x"] - ox) > 0.01 or abs(bg["bounds"]["y"] - oy) > 0.01):
+            self.batch([{"command": "object.move", "params": {"ids": [gid], "dx": ox - bg["bounds"]["x"], "dy": oy - bg["bounds"]["y"]}}],
                        f"Align {name}")
         return Placed(gid, nodes, placed.get("warnings", []))
 

@@ -112,9 +112,14 @@ def search_icons(query: str) -> list[str]:
 
 
 def design_spec(brand: Brand, brief: Brief, avoid: list[str] = (), notes: str = "", previous: Spec | None = None,
-                findings: list[Finding] = ()) -> Spec:
+                findings: list[Finding] = (), taken: list[str] = ()) -> Spec:
+    """`taken`: layout families the other variants of this design already use (5c): this one must differ."""
     parts = [_brand_text(brand), _layouts_text(brand, avoid),
              "Brief:\n" + brief.model_dump_json(indent=1)]
+    if taken:
+        parts.append(f"This is one of several versions the designer will choose from. The other versions use: {', '.join(taken)}. "
+                     "Use a DIFFERENT layout family from those (not just another variant of the same family), and ignore the "
+                     "brief's suggested layout if it is one of them.")
     if notes:
         parts.append(f"Designer's notes on the outline (apply them): {notes}")
     if previous is not None:
@@ -123,12 +128,20 @@ def design_spec(brand: Brand, brief: Brief, avoid: list[str] = (), notes: str = 
         parts.append("Critic findings to fix:\n" + "\n".join(f"- {f.rule} | {f.problem} | {f.fix}" for f in findings))
     text = "\n\n".join(parts)
     last_error = ""
-    for _ in range(2):  # one retry with the validation error shown to the model
+    same: Spec | None = None   # a valid answer that repeats another version's family: kept if the retry fails
+    for _ in range(2):  # one retry with the validation error (or the repeated family) shown to the model
         try:
             spec = models.ask("layout", prompt("layout"), text + last_error, Spec, tools=[search_icons])
-            return Spec.model_validate(spec.model_dump())
+            spec = Spec.model_validate(spec.model_dump())
         except ValidationError as e:
             last_error = f"\n\nYour previous spec was invalid, fix this: {e.errors()[:3]}"
+            continue
+        if spec.family in taken and spec.family != "custom" and same is None:
+            same, last_error = spec, f"\n\nSame layout family as another version ({spec.family}); pick a different family."
+            continue
+        return spec
+    if same is not None:
+        return same
     raise models.ModelError("the layout agent could not produce a valid spec" + last_error)
 
 

@@ -28,7 +28,10 @@ from studio_agents.render.layered_svg import layered_svg
 from studio_agents.render.spec import Spec
 
 GATES = {"similar_exists": ("generate", "abandon"), "outline": ("approve", "change", "abandon"),
-         "final": ("approve", "change", "abandon")}
+         "pick": ("pick", "abandon"), "final": ("approve", "change", "abandon")}
+MAX_VARIANTS = 3
+LETTERS = "ABC"
+VARIANT_GAP = 80.0   # points between the variants' artboards
 TERMINAL = {"done", "abandoned", "failed", "not_usable"}
 
 
@@ -44,6 +47,7 @@ class Run:
     images: list[str]
     instruction: str
     dir: Path
+    variants: int = 1
     status: str = "running"
     stage: str = "starting"
     brief: dict | None = None
@@ -52,6 +56,7 @@ class Run:
     versions: list[dict] = field(default_factory=list)
     best: int | None = None
     placed: dict | None = None
+    options: list[dict] = field(default_factory=list)   # 5c: the versions to pick from (letter, preview, artboard…)
     final_files: dict = field(default_factory=dict)
     gate: dict | None = None
     events: list[dict] = field(default_factory=list)
@@ -59,7 +64,8 @@ class Run:
     _wake: threading.Condition = field(default_factory=threading.Condition)
 
     def public(self) -> dict:
-        keys = ("id", "client", "status", "stage", "brief", "spec", "history_id", "versions", "best", "placed", "final_files", "gate")
+        keys = ("id", "client", "status", "stage", "variants", "brief", "spec", "history_id", "versions", "best", "placed",
+                "options", "final_files", "gate")
         return {k: getattr(self, k) for k in keys}
 
 
@@ -77,12 +83,14 @@ class RunManager:
 
     # ── public API ──────────────────────────────────────────────────────────────────────────────────
     def start(self, client: str, content: str = "", images: list[Path] = (), instruction: str = "",
-              run_async: bool = True) -> Run:
+              run_async: bool = True, variants: int = 1) -> Run:
+        """`variants`: 1 design, or 2–3 versions with different layouts side by side to pick from (5c)."""
         brandmod.load(client)  # fails early when the client isn't installed
         if not content.strip() and not images:
             raise RunError("give some content: text or an image")
         rid = datetime.now().strftime("%Y%m%d-%H%M%S-") + uuid.uuid4().hex[:6]
-        run = Run(rid, client, content, [str(p) for p in images], instruction, config.runs_dir() / rid)
+        run = Run(rid, client, content, [str(p) for p in images], instruction, config.runs_dir() / rid,
+                  variants=max(1, min(MAX_VARIANTS, int(variants))))
         run.dir.mkdir(parents=True, exist_ok=True)
         with self._lock:
             self.runs[rid] = run
@@ -98,14 +106,17 @@ class RunManager:
             raise RunError(f"no run {rid}")
         return run
 
-    def decide(self, rid: str, gate: str, decision: str, notes: str = "") -> None:
+    def decide(self, rid: str, gate: str, decision: str, notes: str = "", choice: int | None = None) -> None:
+        """`choice`: for the `pick` gate, which version (0 = A)."""
         run = self.get(rid)
         with run._wake:
             if not run.gate or run.gate["kind"] != gate:
                 raise RunError(f"run {rid} is not waiting for {gate!r}")
             if decision not in GATES[gate]:
                 raise RunError(f"{gate}: decide one of {', '.join(GATES[gate])}")
-            run._decision = {"decision": decision, "notes": notes}
+            if decision == "pick" and (choice is None or not 0 <= choice < len(run.options)):
+                raise RunError(f"pick one of the versions: choice 0–{len(run.options) - 1}")
+            run._decision = {"decision": decision, "notes": notes, "choice": choice}
             run.gate, run.status = None, "running"   # cleared now: callers waiting for the next gate don't see this one
             run._wake.notify_all()
 
@@ -139,7 +150,10 @@ class RunManager:
             run.events.append({"seq": len(run.events), "type": kind, "at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
                                "data": data})
             run._wake.notify_all()
-        (run.dir / "run.json").write_text(json.dumps(run.public() | {"events": run.events}, indent=1, default=str))
+        # Written whole, then swapped in: a run.json is never half written.
+        tmp = run.dir / f"run.json.{threading.get_ident()}.tmp"   # per thread: chat edits write from another one
+        tmp.write_text(json.dumps(run.public() | {"events": run.events}, indent=1, default=str))
+        tmp.replace(run.dir / "run.json")
 
     def _stage(self, run: Run, stage: str, note: str = "") -> None:
         # A key or model that failed and what took over (D-027), told once.
@@ -194,24 +208,36 @@ class RunManager:
                                               brief.suggested_layout or None, brand.version)
         avoid = check.avoid_layouts
 
-        self._stage(run, "outline", "designing the layout")
-        spec = steps.design_spec(brand, brief, avoid)
+        n = run.variants
+        self._stage(run, "outline", "designing the layout" if n == 1 else f"designing {n} versions with different layouts")
+        specs = self._design(brand, brief, avoid, n)
         while True:
-            run.spec = spec.model_dump(exclude_none=True)
-            d = self._gate(run, "outline", {"spec": run.spec})
+            run.spec = specs[0].model_dump(exclude_none=True)
+            payload: dict[str, Any] = {"spec": run.spec}
+            if len(specs) > 1:
+                payload["variants"] = [{"letter": LETTERS[i], "spec": sp.model_dump(exclude_none=True)} for i, sp in enumerate(specs)]
+            d = self._gate(run, "outline", payload)
             if d["decision"] == "approve":
                 break
             if d["decision"] == "abandon":
                 self.history.release(run.history_id)
                 return self._finish(run, "abandoned")
             self._stage(run, "outline", "applying your notes")
-            spec = steps.design_spec(brand, brief, avoid, notes=d["notes"], previous=spec)
+            specs = self._design(brand, brief, avoid, len(specs), notes=d["notes"], previous=specs)
 
+        best: RenderResult | None = None
+        spec = specs[0]
+        if len(specs) > 1:
+            picked = self._variants(run, brand, brief, specs, avoid)
+            if picked is None:
+                return
+            best, spec = picked
         while True:
-            best = self._render_and_critique(run, brand, brief, spec, avoid)
-            self._place(run, best)
+            if best is None:
+                best = self._render_and_critique(run, brand, brief, spec, avoid)
+                self._place(run, best)
             d = self._gate(run, "final", {"version": run.best, "png": str(best.png), "preview": str(best.preview),
-                                          "unresolved": run.versions[-1].get("fails", []), "placed": run.placed})
+                                          "unresolved": self._fails(run, run.best), "placed": run.placed})
             if d["decision"] == "abandon":
                 self.history.release(run.history_id)
                 return self._finish(run, "abandoned")
@@ -219,11 +245,95 @@ class RunManager:
                 return self._approve(run, best)
             self._stage(run, "revise", "applying your notes")
             spec = steps.design_spec(brand, brief, avoid, notes=d["notes"], previous=Spec(**run.spec))
+            best = None
 
-    def _render_and_critique(self, run: Run, brand: brandmod.Brand, brief: steps.Brief, spec: Spec, avoid: list[str]) -> RenderResult:
+    def _design(self, brand: brandmod.Brand, brief: steps.Brief, avoid: list[str], n: int, notes: str = "",
+                previous: list[Spec] | None = None) -> list[Spec]:
+        """`n` outlines; with more than one, each takes a layout family the others don't use (5c)."""
+        out: list[Spec] = []
+        for i in range(n):
+            prev = previous[i] if previous and i < len(previous) else None
+            taken = [s.family for s in out] if n > 1 else []
+            out.append(steps.design_spec(brand, brief, avoid, notes=notes, previous=prev, taken=taken))
+        return out
+
+    @staticmethod
+    def _fails(run: Run, version: int | None) -> list[dict]:
+        return next((v.get("fails", []) for v in run.versions if v["version"] == version), [])
+
+    def _variants(self, run: Run, brand: brandmod.Brand, brief: steps.Brief, specs: list[Spec],
+                  avoid: list[str]) -> tuple[RenderResult, Spec] | None:
+        """5c: draw and check every version, put them side by side, and wait for the designer's pick. The versions
+        not picked leave the document in one undo step; their files stay in the run folder."""
+        results: list[tuple[RenderResult, Spec]] = []
+        for i, sp in enumerate(specs):
+            best = self._render_and_critique(run, brand, brief, sp, avoid, tag=f" {LETTERS[i]}")
+            results.append((best, Spec(**run.spec)))
+        run.options = self._place_variants(run, results)
+        d = self._gate(run, "pick", {"variants": run.options})
+        if d["decision"] == "abandon":
+            self.history.release(run.history_id)
+            self._finish(run, "abandoned")
+            return None
+        k = int(d.get("choice") or 0)
+        best, spec = results[k]
+        run.best, run.spec = best.version, spec.model_dump(exclude_none=True)
+        self._keep_variant(run, k)
+        return best, spec
+
+    def _place_variants(self, run: Run, results: list[tuple[RenderResult, Spec]]) -> list[dict]:
+        self._stage(run, "place", "putting the versions side by side")
+        bridge = self.bridge_factory()
+        options: list[dict] = []
+        x = 0.0
+        for i, (best, sp) in enumerate(results):
+            letter = LETTERS[i]
+            name = f"design-{slug(sp.title)}-{letter.lower()}"
+            ls = layered_svg(best.html, name=name)
+            svg_path = run.dir / f"v{best.version}-layered.svg"
+            svg_path.write_text(ls.svg)
+            opt: dict[str, Any] = {"index": i, "letter": letter, "title": sp.title, "layout": sp.layout, "version": best.version,
+                                   "png": str(best.png), "preview": str(best.preview), "svg": str(svg_path),
+                                   "unresolved": self._fails(run, best.version)}
+            if bridge:
+                try:
+                    if i == 0:
+                        doc = f"design-{slug((run.brief or {}).get('title') or sp.title)}"
+                        p = bridge.place_svg(ls.svg, name=name, width=ls.width, height=ls.height, document_name=doc)
+                        artboard = 0
+                        bridge.name_artboard(0, f"Version {letter}")
+                    else:
+                        artboard = bridge.add_artboard(x, 0.0, ls.width, ls.height, f"Version {letter}")
+                        p = bridge.place_svg(ls.svg, name=name, width=ls.width, height=ls.height, new_document=False,
+                                             origin=(x, 0.0))
+                    opt.update(group_id=p.group_id, artboard=artboard, layers=len(p.nodes))
+                except BridgeError as e:
+                    opt["note"] = f"could not place: {e.error}"
+                    bridge = None   # the rest stay as files
+            x += ls.width + VARIANT_GAP
+            options.append(opt)
+        self._emit(run, "placed", {"editor": any("group_id" in o for o in options), "variants": options})
+        return options
+
+    def _keep_variant(self, run: Run, k: int) -> None:
+        chosen = run.options[k]
+        others = [o for o in run.options if o is not chosen and "group_id" in o]
+        if others and (bridge := self.bridge_factory()):
+            try:
+                bridge.remove([o["group_id"] for o in others], [o["artboard"] for o in others], f"Keep version {chosen['letter']}")
+            except BridgeError as e:
+                self._emit(run, "warning", {"remove_versions": e.error})
+        run.placed = ({"group_id": chosen["group_id"], "layers": chosen.get("layers", 0), "svg": chosen["svg"]}
+                      if "group_id" in chosen else None)
+        self.editors.pop(run.id, None)
+        self._emit(run, "picked", {"letter": chosen["letter"], "version": chosen["version"], "placed": run.placed})
+
+    def _render_and_critique(self, run: Run, brand: brandmod.Brand, brief: steps.Brief, spec: Spec, avoid: list[str],
+                             tag: str = "") -> RenderResult:
+        """`tag`: which of the versions this is (" A"), for the progress notes."""
         results: list[tuple[int, RenderResult, Spec]] = []
         for round_ in range(config.MAX_REVISIONS + 1):
-            self._stage(run, "render", f"drawing version {len(run.versions) + 1}")
+            self._stage(run, "render", f"drawing{tag or ''} draft {len(run.versions) + 1}" if tag else f"drawing version {len(run.versions) + 1}")
             r = render(spec, brand, run.dir / "versions")
             self._stage(run, "critic", "checking it against the brand rules")
             report = steps.critique(brand, spec, r)
@@ -234,7 +344,7 @@ class RunManager:
             results.append((len(report.fails), r, spec))
             if report.passes or round_ == config.MAX_REVISIONS:
                 break
-            self._stage(run, "fix", f"fixing {len(report.fails)} finding(s)")
+            self._stage(run, "fix", f"fixing {len(report.fails)} finding(s){tag}")
             spec = steps.design_spec(brand, brief, avoid, previous=spec, findings=report.fails)
         _, best, best_spec = min(results, key=lambda t: t[0])
         run.best, run.spec = best.version, best_spec.model_dump(exclude_none=True)
