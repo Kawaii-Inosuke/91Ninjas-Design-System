@@ -393,6 +393,54 @@ Format per entry: **Context → Decision → Alternatives → Consequences**. En
   - Measuring FCC's real past work gave white 53.5%, #F2F2F2 34%, the FCC blues and #383838 for text, 1920 px wide.
   - The form was checked on screen. **Not yet live with the AI:** the free Gemini key's daily quota was used up.
 
+## D-032: Every AI action names its document (2026-11-03)
+- **Context:** The user switched tabs while a design was being made. The AI's later steps landed in the tab in front: a new design seemed to replace an old one, and an approval exported an empty Untitled-1 as the final files. Cause: the bridge acted on whichever document was active, and each step was a separate request.
+- **Decision:**
+  - **Editor:** three new control methods:
+    - `studio.documents` lists the open documents with their stable `uid`;
+    - `studio.newDocument` creates one and returns its uid;
+    - `studio.inDocument {uid, method, params}` runs one call in that document within a single request (switch to it, run, switch back), so the designer's tab stays in front and can't be redirected.
+  - **Bridge:** `/v1/call` and `/v1/batch` take an optional `document` (uid). Every step of a batch, its undo-group begin and end included, then goes through `studio.inDocument`. Agents can't call `studio.inDocument` themselves.
+  - **Python:** `Bridge.in_document(uid)`; `new_document` returns the uid and aims the bridge at it; `Placed.document`. Each design remembers the document of each placed version.
+- **Checked:** a Rust bridge test, an editor test (the rectangle lands in the AI's document while the designer's stays in front), Python tests against a fake editor, and live through the connector.
+
+## D-033: Claude is the only AI; Gemini and Groq removed (2026-11-03)
+- **Context:** The chat panel misread follow-ups ("another one with icons" was taken as new content; "add it back" after Ctrl+Z was refused). It was a fixed pipeline that filed each message as new content, outline notes or an edit, with no memory of the conversation and no view of the editor. The user chose to work only with Claude, through the designers' own Claude plans (D-029).
+- **Decision:**
+  - **The connector** (`studio_agents/mcp_server.py`, an MCP server over stdio, MCP Python SDK 2.x) is how Claude Desktop or Claude Code drives the app. Claude does the thinking (brief, outline, layout, critique, edits) inside its own conversation. The tools need no model:
+
+    | Tool | Does |
+    |---|---|
+    | `list_clients`, `get_brand` | brand, layouts, spec guide and rules |
+    | `check_similar` | the similar-topic check (never blocks) |
+    | `start_design`, `render_design` | render a version; returns the preview image and machine checks |
+    | `place_design` | its own document, or `beside` for versions |
+    | `remove_versions` | one undo step |
+    | `look_at_editor` | is each version still there after Ctrl+Z, deletion or a closed tab; layers; preview |
+    | `edit_design` | one undo step |
+    | `approve_design`, `abandon_design`, `list_designs` | finish or drop a design; find earlier ones |
+    | `search_icons` | icon names |
+    | `measure_past_work`, `save_new_client` | new clients |
+
+    Claude gets the 91Ninjas workflow as the server's instructions (`claude/workflow.md`): one piece of content is one design in its own document, follow-ups refer to the work in progress, look before editing, and approve only when the designer says so.
+  - **`designs.py`** (no AI) keeps each design's versions and placements in `designs/<id>/design.json`.
+  - **Removed:**
+    - `models.py`, `models.yaml`, `steps.py`, `runs.py`, `editor_agent.py`, the prompts, and the test page;
+    - the Strands, google-genai, openai and dotenv dependencies (the environment shrank by about 80 MB);
+    - the `.env` keys are no longer read.
+
+    The onboarder's AI draft step went with them; measuring stays and Claude drafts.
+  - **The editor's panel** became Claude's companion, with three tabs:
+    - **Claude:** status; how to connect Claude (the Claude Code command and the Claude Desktop config, with Copy buttons; paths filled in by `/api/connect`); a live feed of what Claude is doing, read from `activity.jsonl`, which the connector writes.
+    - **Clients:** list, import, brand folder, and "New client from past work", which prepares the request to Claude.
+    - **History.**
+  - **The local service** (`server.py`) serves only clients, packs, history, designs, activity and connect: no runs.
+  - **The connector's environment:** Claude starts it with a minimal environment. Without `XDG_RUNTIME_DIR` it looks for the bridge file in `/run/user/<uid>/91studio`.
+- **Consequences:**
+  - Designers need Claude Code (Linux, Mac, Windows) or Claude Desktop (Mac, Windows) on a Pro or Max plan. Nothing is charged to 91Ninjas per design.
+  - The Gemini-era steps (5b dropped; 5c and 5d were built on Gemini) live on as connector tools and in Claude's instructions: versions side by side (D-030) and new clients from past work (D-031).
+- **Checked:** 55 Python tests (13 new for designs, the connector, the server and onboarding), 2,885 ui-egui tests, clippy. Live: the connector started over stdio (as Claude starts it) rendered, placed in its own document, placed a version beside it, looked, removed one version in one step, and edited the other, in the real editor.
+
 ## D-007: Every phase ends with a phase report and a docs update (2026-11-02)
 - **Decision:**
   - At the end of each phase, write `phases/PHASE-N.md` and update the PRD, TRD, ARCHITECTURE and SECURITY docs.

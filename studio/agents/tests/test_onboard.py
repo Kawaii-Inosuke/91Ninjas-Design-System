@@ -1,19 +1,11 @@
-"""Brand Onboarder (5d): measuring past work, the draft as a pack, the job flow and saving (scripted model)."""
-import json
-import shutil
+"""New clients from past work (D-031, D-033): measuring, and Claude's DESIGN.md installed through the connector."""
+import asyncio
 from pathlib import Path
 
 import pytest
-from fastapi.testclient import TestClient
 
 from studio_agents import brand as brandmod
-from studio_agents import models, onboard
-from studio_agents.render.build import render
-from studio_agents.render.spec import Spec
-from studio_agents.server import create_app
-
-FIX = Path(__file__).parent / "fixtures"
-SPEC = json.loads((FIX / "specs.json").read_text())["vertical_list"]
+from studio_agents import onboard
 
 
 def svg(w, h, blocks):
@@ -39,26 +31,10 @@ def folder(tmp_path):
 def data(tmp_path, monkeypatch):
     d = tmp_path / "data"
     monkeypatch.setenv("STUDIO_DATA_DIR", str(d))
-    yield d
-    models.set_backend(None)
+    return d
 
 
-def a_draft(**over) -> onboard.BrandDraft:
-    style = lambda size, weight: {"fontFamily": "Poppins", "fontSize": size, "fontWeight": weight, "lineHeight": 1.3}
-    d = {
-        "name": "Acme Health", "description": "Green and calm.",
-        "palette": {"primary": "#0a7a5a", "accent": "#F5A623", "ink": "#222", "surface": "#FFFFFF", "tint": "#E3F4EE",
-                    "cell": "#F2F2F2", "line": "#999999", "on_primary": "#FFFFFF", "header_bar": "#0A7A5A1A",
-                    "others": [{"name": "Warm Sand", "hex": "#F4E9D8"}]},
-        "typography": {"title": style(44, 600), "heading": style(30, 600), "body": style(26, 400), "label": style(26, 600),
-                       "marker": style(40, 700)},
-        "radius_sm": 12, "radius_md": 18, "radius_lg": 28, "space_page": 72, "space_section": 60, "space_item": 24,
-        "canvas_width": 1080, "layouts": ["vertical_list/icon", "card_list/check", "pyramid"],
-        "icon_note": "Line icons in accent.", "guide": "Calm, airy cards on white.",
-        "rules": [{"section": "Locked", "text": f"Rule {i}"} for i in range(6)],
-    }
-    d.update(over)
-    return onboard.BrandDraft.model_validate(d)
+DESIGN_MD = (Path(onboard.__file__).with_name("claude") / "new_client.md").read_text().split("```\n")[1].split("```")[0]
 
 
 def test_measuring_finds_the_files_and_the_real_colours(folder, tmp_path):
@@ -83,97 +59,24 @@ def test_too_few_designs_or_no_folder_is_refused(tmp_path):
         onboard.collect(tmp_path / "missing")
 
 
-def test_colours_are_checked_after_the_answer():
-    d = a_draft()
-    assert d.palette.primary == "#0A7A5A" and d.palette.ink == "#222222" and d.palette.header_bar == "#0A7A5A1A"
-    with pytest.raises(ValueError):
-        a_draft(palette={**d.palette.model_dump(), "accent": "orange"})
-
-
-def test_a_draft_becomes_a_pack_that_loads_and_renders(data, tmp_path):
-    md = onboard.to_design_md(a_draft(), "acme-health")
-    tokens, guide = brandmod.parse_design_md(md)
+def test_the_template_claude_fills_is_a_valid_pack(folder, data):
+    """The DESIGN.md example Claude is shown is itself valid, and save_new_client installs it with the folder's files."""
+    tokens, _ = brandmod.parse_design_md(DESIGN_MD)
     assert brandmod.validate_tokens(tokens) == []
-    assert tokens["colors"]["on-primary"] == "#FFFFFF" and tokens["colors"]["warm-sand"] == "#F4E9D8"
-    assert tokens["typography"]["marker"]["fontSize"] == "40px" and tokens["infographic"]["canvas"]["width"] == 1080
-    assert "Calm, airy cards" in guide and "## Icons" in guide
-    rules = onboard.to_rules_md(a_draft())
-    assert "## Locked" in rules and "R6. Rule 5" in rules
-    client = data / "clients" / "acme-health"
-    (client / "past").mkdir(parents=True)
-    (client / "DESIGN.md").write_text(md)
-    (client / "critic_rules.md").write_text(rules)
+    from studio_agents import mcp_server
+    out = mcp_server.save_new_client("Acme Health", str(folder), DESIGN_MD, "# rules\n## Locked\nR1. White page.")
+    assert '"client": "acme-health"' in out, out
     b = brandmod.load("acme-health")
-    r = render(Spec(**SPEC), b, tmp_path / "out")
-    assert r.png.exists() and "--color-tint: #E3F4EE" in b.css_vars()
+    assert len(b.past_work()) == 3 and (b.dir / "source" / "brand.md").exists()
+    assert "error" in mcp_server.save_new_client("Acme Health", str(folder), DESIGN_MD, "# rules"), "exists: not replaced unasked"
+    assert "error" in mcp_server.save_new_client("Bad", str(folder), "no front matter", "# rules")
+    s = onboard.summarize(DESIGN_MD, "R1. x\nR2. y")
+    assert s["rules"] == 2 and s["fonts"] == ["Poppins"] and s["problems"] == []
 
 
-def test_the_job_drafts_the_designer_edits_and_saves(folder, data):
-    seen = {}
-
-    def backend(role, system, prompt, output, images, tools):
-        seen.update(role=role, prompt=prompt, images=images)
-        return a_draft()
-
-    models.set_backend(backend)
-    m = onboard.OnboardManager()
-    job = m.start("Acme Health", str(folder), notes="They like orange accents", run_async=False)
-    assert job.status == "ready", job.error
-    assert seen["role"] == "onboarder" and len(seen["images"]) == 3
-    assert "#E3F4EE" in seen["prompt"] and "<designer_notes>" in seen["prompt"] and "Never use red" in seen["prompt"]
-    assert job.summary["fonts"] == ["Poppins"] and job.summary["rules"] == 6 and job.summary["problems"] == []
-    # The designer edits the draft by hand before saving: the edit is what gets saved.
-    design = job.dir / "DESIGN.md"
-    design.write_text(design.read_text().replace("name: Acme Health", "name: Acme Health Group"))
-    assert m.refresh(job.id).summary["name"] == "Acme Health Group"
-    cid = m.save(job.id)
-    assert cid == "acme-health" and job.status == "saved"
-    b = brandmod.load(cid)
-    assert b.name == "Acme Health Group" and len(b.past_work()) == 3
-    assert (b.dir / "source" / "brand.md").exists()
-    with pytest.raises(onboard.OnboardError, match="not ready"):
-        m.save(job.id)
-
-
-def test_a_broken_edit_is_reported_and_not_saved(folder, data):
-    models.set_backend(lambda *a: a_draft())
-    m = onboard.OnboardManager()
-    job = m.start("Acme", str(folder), run_async=False)
-    (job.dir / "DESIGN.md").write_text("no front matter")
-    assert m.refresh(job.id).summary["problems"]
-    with pytest.raises(onboard.OnboardError):
-        m.save(job.id)
-    m.discard(job.id)
-    assert not job.dir.exists()
-
-
-def test_a_model_failure_ends_the_job_with_a_reason(folder, data):
-    def boom(*a):
-        raise models.ModelError("every key and fallback failed")
-
-    models.set_backend(boom)
-    job = onboard.OnboardManager().start("Acme", str(folder), run_async=False)
-    assert job.status == "failed" and "every key" in job.error and job.facts is not None
-
-
-def test_the_server_runs_the_onboarding(folder, data):
-    models.set_backend(lambda *a: a_draft())
-    m = onboard.OnboardManager()
-    client = TestClient(create_app("t", onboarder=m))
-    h = {"Authorization": "Bearer t"}
-    assert client.post("/api/onboard", json={"name": "Acme", "folder": "/nope"}, headers=h).status_code == 422
-    r = client.post("/api/onboard", json={"name": "Acme Health", "folder": str(folder)}, headers=h)
-    assert r.status_code == 200
-    jid = r.json()["id"]
-    for t in m.jobs.values():   # the thread may still be working
-        import time
-        for _ in range(100):
-            if t.status in ("ready", "failed"):
-                break
-            time.sleep(0.1)
-    got = client.get(f"/api/onboard/{jid}", headers=h).json()
-    assert got["status"] == "ready" and got["summary"]["colors"]["primary"] == "#0A7A5A"
-    assert got["design_md"].endswith("DESIGN.md")
-    saved = client.post(f"/api/onboard/{jid}/save", json={}, headers=h).json()
-    assert saved["client"] == "acme-health"
-    assert "acme-health" in [c["client"] for c in client.get("/api/clients", headers=h).json()]
+def test_measure_past_work_gives_claude_the_facts_the_images_and_the_template(folder, data):
+    from studio_agents import mcp_server
+    out = mcp_server.measure_past_work(str(folder))
+    assert "#E3F4EE" in out[0] and "DESIGN.md: YAML front matter" in out[0] and "Never use red" in out[0]
+    assert len(out) == 4, "the text and three previews"
+    assert mcp_server.measure_past_work(str(folder / "nope"))[0].startswith("error:")

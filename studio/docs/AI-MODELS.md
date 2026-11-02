@@ -1,45 +1,35 @@
 # AI models
 
-*Last updated: 2026-11-02 (Phase 0). Decision: D-003. Exact model IDs are pinned in Phase 3.*
+*Last updated: 2026-11-03. Decisions: D-029, D-033 (D-003 and D-027 are history).*
 
-## Model map (draft)
-| Agent | Provider | Tier | Needs vision? | Why |
-|---|---|---|---|---|
-| Critic | Gemini | Pro | **yes** (preview PNG) | Strongest judgement on visual rule checks |
-| Layout Designer | Gemini | Pro | no | Long brand context and structured `spec.json` output |
-| Brief Writer | Gemini | Flash | sometimes (image input) | Cheap, fast and good with structured output |
-| Art Director (chat) | Gemini | Flash | no | Low latency in the panel |
-| Canvas Editor | Gemini | Flash | optional | Small, precise edit plans |
-| Brand Onboarder: tagging past work | Groq | an open model, e.g. Llama or Qwen | no | Very fast and cheap for bulk text |
-| Similar-design search | local | `all-MiniLM-L6-v2` | no | Already in the skill, free and offline |
+## Claude, through the designer's own Claude plan
+91Ninjas Studio has **no AI model and no API keys of its own**. Designers use **Claude Code** (Linux, Mac,
+Windows) or **Claude Desktop** (Mac, Windows) with their own Claude Pro or Max plan. Claude connects to the app
+through the **91Ninjas Studio connector**, an MCP server on the designer's computer (`studio_agents/mcp_server.py`).
+Claude holds the conversation and does the thinking: the brief, the outline, the layout, checking the render
+against the client's rules, and the edits. The connector's tools do the rest without any model:
 
-All of this is configured in `agents/models.yaml`. Code never hard-codes a model ID.
+| Work | Done by |
+|---|---|
+| Brief, outline, layout, copy, critique, edits, new clients' DESIGN.md and rules | Claude (in its own conversation) |
+| Brand packs, the spec guide, the rules | the connector (`get_brand`) |
+| The similar-design check | local embeddings (`all-MiniLM-L6-v2`, offline) |
+| Rendering in the brand, machine checks, layered SVG | local Chromium (Playwright) |
+| Placing, editing, approving in the editor | the Studio Bridge (D-008, D-032) |
+| Measuring past work for a new client | local image analysis (`onboard.measure`) |
 
-## How each provider plugs into Strands
-- **Gemini:** Strands' built-in **Google** model provider. Confirm the class name, import path and pip extra from the Strands docs when Phase 3 starts.
-- **Groq:** no native Strands provider. It works through Groq's OpenAI-compatible endpoint:
-  ```python
-  from strands.models.openai import OpenAIModel
-  OpenAIModel(client_args={"api_key": GROQ_API_KEY, "base_url": "https://api.groq.com/openai/v1"},
-              model_id="<groq model id>")
-  ```
-  It can also go through `LiteLLMModel` with a `groq/<model>` ID. Check this against the docs before relying on it.
-- **Claude (later, config only):** `strands.models.anthropic.AnthropicModel` (Anthropic API) or `BedrockModel`.
+**Cost to 91Ninjas per design:** none. Usage counts against each designer's Claude plan limits.
 
-## Keys, rotation and fallbacks (D-027)
-- Put keys in `studio/agents/.env` or `studio/.env`. Add more keys as `GEMINI_API_KEY_2` … or `GEMINI_API_KEYS=k1,k2` (the same for `GROQ_`).
-- `uv run python -m studio_agents.models --list` checks every key and lists its models.
-- When a key or model fails, the next key is tried, then the `fallbacks` in `models.yaml`. The chat shows a note when this happens.
-- **Observed 2026-11-03 on the user's free-tier Gemini key:** no quota for Pro, and Flash and 2.5 Flash were "high demand". Flash Lite carried the whole run. A paid Gemini key, or a second key, would let the Pro and Flash models do the layout and critique.
+**Allowed use:** our app never signs in with a claude.ai account. Claude's own apps use the connector as a local
+tool, which is how MCP servers are meant to be used.
 
-## Keys
-- `GEMINI_API_KEY` and `GROQ_API_KEY` go in `studio/agents/.env`. That file is gitignored and never pasted into chat.
-- Phase 5 adds a company gateway so keys are no longer stored on designer machines.
+## Connecting Claude
+The AI panel's **Claude** tab shows the exact command and config, with Copy buttons. For Claude Code:
+```bash
+claude mcp add --scope user 91ninjas-studio -- uv --directory "<repo>/studio/agents" run python -m studio_agents.mcp_server
+```
+For Claude Desktop: add the `mcpServers` entry the panel shows (Settings › Developer › Edit Config) and restart Claude.
 
-## Using Claude without an API key
-See D-006. A custom app can't use a designer's claude.ai subscription limits; as understood, that is allowed only in Anthropic's own apps. The allowed route is **Mode B**: designers run Claude Code and point it at our bridge exposed as an MCP server.
-
-## Risks
-- **Prompt quality.** The skill was developed on Claude, so the Gemini output must be compared against the skill's results on the same FCC content (Phase 3 eval).
-- **Rate limits.** Groq free and dev tiers have tight per-minute limits. Throttle bulk onboarding jobs.
-- **Cost.** Log tokens per run and per agent (Strands `AgentResult.metrics`) and report cost per design.
+## History
+- Phases 3–5 used Gemini and Groq through Strands Agents (D-003, D-027), with key rotation and fallbacks.
+- They were removed in D-033: the panel's fixed pipeline couldn't follow a conversation, and the free keys ran out daily.

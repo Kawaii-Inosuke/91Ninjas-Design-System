@@ -2,6 +2,9 @@
 
 *Status: draft v0.1 · Owner: Shrikant · Last updated: 2026-11-02*
 
+## How the AI works (D-033)
+Designers work with **Claude** (Claude Code or Claude Desktop, on their own Claude plan), connected to the app by the 91Ninjas Studio connector. They talk to Claude about the design; Claude builds it on the artboard in the client's brand, and they finish it by hand or by asking. The app has no AI keys of its own.
+
 ## Product principle (D-012)
 **The AI is the product.** The app exists so that AI agents can create on-brand designs for designers. **The editor is the workbench**: it gives designers the Illustrator feel and tools to refine what the AI made. When priorities conflict, AI output quality wins.
 

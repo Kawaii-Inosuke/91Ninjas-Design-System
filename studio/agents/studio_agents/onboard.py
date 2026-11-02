@@ -1,38 +1,27 @@
-"""Brand Onboarder (5d, D-031): a new client from a folder of past work.
+"""New clients from past work (5d, D-031; Claude drafts since D-033).
 
-    measure(folder)  → Facts      no AI: the colours actually used (pixel coverage and SVG counts), corner radii,
-                                   canvas sizes, declared fonts, guideline text, and preview images
-    draft(...)       → BrandDraft the onboarder agent (vision) fills fixed slots: colour roles, type styles, radii,
-                                   spacing, layouts, a style guide and a rulebook
-    to_design_md / to_rules_md     the draft as the pack's DESIGN.md and critic_rules.md
-    OnboardManager                 jobs for the panel: measure → draft → the designer reviews (and may edit the
-                                   files) → save as a client with packs.create_client
+    collect(folder) → Inputs     the usable files: past designs, fonts, guideline documents
+    measure(folder) → Facts      no AI: the colours actually used (pixel coverage snapped to the colours the SVGs
+                                 declare), corner radii, canvas sizes, declared fonts, guideline text, previews
 
-The slots are the ones the templates read (--color-primary, --font-title-*, --radius-sm…), so every drafted client
-renders. Measuring and saving are separate from drafting so another AI (Claude through the connector) can draft.
+Claude reads the facts and previews through the connector (`measure_past_work`), writes DESIGN.md and the rules,
+and `save_new_client` installs them with packs.create_client.
 """
 from __future__ import annotations
 
 import json
 import re
-import shutil
-import threading
-import traceback
 import uuid
 from collections import Counter
-from dataclasses import asdict, dataclass, field
+from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-import yaml
 from PIL import Image
-from pydantic import BaseModel, Field, field_validator
 
 from studio_agents import brand as brandmod
-from studio_agents import config, models, packs
-from studio_agents.render.spec import LAYOUTS, LAYOUT_GUIDE
-from studio_agents.steps import fenced, prompt
+from studio_agents import config, packs
 
 MAX_INPUT_FILES = 80
 MAX_PAST = 30
@@ -269,174 +258,7 @@ def measure(folder: Path, work: Path) -> tuple[Inputs, Facts]:
     return inputs, facts
 
 
-# ── drafting (AI) ───────────────────────────────────────────────────────────────────────────────────
-
-def _color(v: Any) -> str:
-    h = _hex(str(v or ""))
-    if not h:
-        raise ValueError(f"{v!r} is not a colour: use #RRGGBB")
-    return h
-
-
-class NamedColor(BaseModel):
-    name: str
-    hex: str
-
-    @field_validator("hex")
-    @classmethod
-    def _c(cls, v: str) -> str:
-        return _color(v)
-
-
-class Palette(BaseModel):
-    """Colours as #RRGGBB (checked after the answer: not every model honours patterns in a schema)."""
-    primary: str = Field(description="main brand colour: titles, filled pills, connectors")
-    accent: str = Field(description="second brand colour: markers, outlines, icons")
-    ink: str = Field(description="body text")
-    surface: str = Field(description="page background")
-    tint: str = Field(description="light card / panel fill")
-    cell: str = Field(description="neutral table / card cell fill")
-    line: str = Field(description="neutral outlines and dividers")
-    on_primary: str = Field(description="text on primary fills")
-    header_bar: str | None = Field(None, description="title band fill if the designs have one, #RRGGBB or #RRGGBBAA")
-    others: list[NamedColor] = Field(default_factory=list, description="other brand colours")
-
-    @field_validator("primary", "accent", "ink", "surface", "tint", "cell", "line", "on_primary")
-    @classmethod
-    def _c(cls, v: str) -> str:
-        return _color(v)
-
-    @field_validator("header_bar")
-    @classmethod
-    def _bar(cls, v: str | None) -> str | None:
-        if not v:
-            return None
-        raw = v.strip().lstrip("#")
-        if len(raw) == 8 and all(ch in "0123456789abcdefABCDEF" for ch in raw):
-            return f"#{raw.upper()}"
-        return _color(v)
-
-
-class TypeStyle(BaseModel):
-    fontFamily: str
-    fontSize: int = Field(ge=8, le=200, description="px at the canvas width")
-    fontWeight: int = Field(ge=100, le=900)
-    lineHeight: float = Field(ge=0.8, le=2.5)
-
-
-class Typography(BaseModel):
-    title: TypeStyle
-    heading: TypeStyle
-    body: TypeStyle
-    label: TypeStyle
-    marker: TypeStyle
-
-
-class Rule(BaseModel):
-    section: str = Field(description="Locked, Typography, Components, Layout…")
-    text: str
-
-
-class BrandDraft(BaseModel):
-    name: str
-    description: str = Field(max_length=300)
-    palette: Palette
-    typography: Typography
-    radius_sm: int = Field(ge=0, le=200)
-    radius_md: int = Field(ge=0, le=200)
-    radius_lg: int = Field(ge=0, le=200)
-    space_page: int = Field(ge=0, le=400)
-    space_section: int = Field(ge=0, le=400)
-    space_item: int = Field(ge=0, le=200)
-    canvas_width: int = Field(ge=320, le=6000)
-    content_max_width: int | None = Field(None, ge=200, le=6000)
-    layouts: list[str] = Field(min_length=1, description="family/variant entries the designs use")
-    icon_note: str = Field("", description="icon style: line or filled, colour, stroke")
-    guide: str = Field(description="markdown style guide: look and feel, composition, components, do's and don'ts")
-    rules: list[Rule] = Field(min_length=5, max_length=40)
-
-
-def _layouts_menu() -> str:
-    return "\n".join(f"- {fam}{' (' + '|'.join(v) + ')' if v else ''}: {LAYOUT_GUIDE[fam]}" for fam, v in LAYOUTS.items())
-
-
-def draft(name: str, facts: Facts, notes: str = "") -> BrandDraft:
-    text = "\n\n".join(p for p in [
-        f"New client: {name}",
-        "Measured from the past designs (exact; trust these numbers over impressions):\n" + facts.summary(),
-        "Layout families our templates make (use family/variant names from here; other shapes the client uses may "
-        "be listed by their own name and are made by `custom`):\n" + _layouts_menu(),
-        fenced("guideline_documents", facts.guidelines) if facts.guidelines else "",
-        fenced("designer_notes", notes) if notes.strip() else "",
-        f"{len(facts.previews)} of the past designs are attached as images.",
-    ] if p)
-    out = models.ask("onboarder", prompt("onboarder"), text, BrandDraft, images=[Path(p) for p in facts.previews])
-    return BrandDraft.model_validate(out.model_dump())
-
-
-def to_design_md(d: BrandDraft, client: str) -> str:
-    p = d.palette
-    colors: dict[str, str] = {"primary": p.primary, "accent": p.accent, "tint": p.tint, "ink": p.ink, "surface": p.surface,
-                              "cell": p.cell, "line": p.line, "on-primary": p.on_primary}
-    if p.header_bar:
-        colors["header-bar"] = p.header_bar
-    for c in p.others:
-        key = re.sub(r"[^a-z0-9-]+", "-", c.name.lower()).strip("-")
-        if key and key not in colors:
-            colors[key] = c.hex
-    typo = {}
-    for role in ("title", "heading", "body", "label", "marker"):
-        st: TypeStyle = getattr(d.typography, role)
-        typo[role] = {"fontFamily": st.fontFamily, "fontSize": f"{st.fontSize}px", "fontWeight": st.fontWeight, "lineHeight": st.lineHeight}
-    infographic: dict[str, Any] = {"canvas": {"width": d.canvas_width, "height": "auto"}, "layouts": d.layouts}
-    if d.content_max_width:
-        infographic["content_max_width"] = d.content_max_width
-    tokens = {
-        "version": "alpha", "name": d.name, "client": client, "brand_version": "0.1.0",
-        "updated": datetime.now().date().isoformat(),
-        "description": d.description,
-        "drafted_by": "91Ninjas Studio Brand Onboarder: check before relying on it",
-        "colors": colors, "typography": typo,
-        "rounded": {"sm": f"{d.radius_sm}px", "md": f"{d.radius_md}px", "lg": f"{d.radius_lg}px", "full": "999px"},
-        "spacing": {"page": f"{d.space_page}px", "section": f"{d.space_section}px", "item": f"{d.space_item}px"},
-        "infographic": infographic,
-    }
-    front = yaml.safe_dump(tokens, sort_keys=False, allow_unicode=True, width=120)
-    icon = f"\n\n## Icons\n{d.icon_note.strip()}" if d.icon_note.strip() else ""
-    return f"---\n{front}---\n\n# {d.name}: design language\n\n{d.guide.strip()}{icon}\n"
-
-
-def to_rules_md(d: BrandDraft) -> str:
-    out = [f"# {d.name} critic rules", "Drafted by the Brand Onboarder from past work; the designer checked them.", ""]
-    n = 0
-    for section in dict.fromkeys(r.section.strip() or "Rules" for r in d.rules):
-        out.append(f"## {section}")
-        for r in (r for r in d.rules if (r.section.strip() or "Rules") == section):
-            n += 1
-            out.append(f"R{n}. {r.text.strip()}")
-        out.append("")
-    return "\n".join(out)
-
-
-# ── jobs for the panel ──────────────────────────────────────────────────────────────────────────────
-
-@dataclass
-class Job:
-    id: str
-    name: str
-    folder: str
-    dir: Path
-    notes: str = ""
-    status: str = "measuring"           # measuring → drafting → ready | failed | saved
-    error: str = ""
-    facts: dict | None = None
-    summary: dict | None = None         # what the panel shows: swatches, fonts, layouts, rules
-    client: str | None = None
-
-    def public(self) -> dict:
-        return {k: v for k, v in asdict(self).items() if k != "dir"} | {"dir": str(self.dir),
-                "design_md": str(self.dir / "DESIGN.md"), "rules_md": str(self.dir / "critic_rules.md")}
-
+# ── helpers ──────────────────────────────────────────────────────────────────────────────
 
 def client_id_for(name: str) -> str:
     base = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")[:40].strip("-")
@@ -455,74 +277,3 @@ def summarize(design_md: str, rules_md: str) -> dict:
         "rules": sum(1 for line in rules_md.splitlines() if re.match(r"^[A-Z]?\d+\.", line.strip())),
         "problems": brandmod.validate_tokens(tokens),
     }
-
-
-class OnboardManager:
-    def __init__(self) -> None:
-        self.jobs: dict[str, Job] = {}
-
-    def start(self, name: str, folder: str, notes: str = "", run_async: bool = True) -> Job:
-        name = name.strip()
-        if not name:
-            raise OnboardError("give the client a name")
-        collect(Path(folder))   # fails early: not a folder, too few past designs
-        jid = datetime.now().strftime("%Y%m%d-%H%M%S-") + uuid.uuid4().hex[:6]
-        job = Job(jid, name, str(Path(folder).expanduser()), config.data_dir() / "drafts" / jid, notes)
-        job.dir.mkdir(parents=True, exist_ok=True)
-        self.jobs[jid] = job
-        if run_async:
-            threading.Thread(target=self._run, args=(job,), name=f"onboard-{jid}", daemon=True).start()
-        else:
-            self._run(job)
-        return job
-
-    def get(self, jid: str) -> Job:
-        job = self.jobs.get(jid)
-        if not job:
-            raise OnboardError(f"no draft {jid}")
-        return job
-
-    def _run(self, job: Job) -> None:
-        try:
-            _, facts = measure(Path(job.folder), job.dir)
-            job.facts = asdict(facts)
-            (job.dir / "facts.json").write_text(json.dumps(job.facts, indent=1))
-            job.status = "drafting"
-            d = draft(job.name, facts, job.notes)
-            (job.dir / "DESIGN.md").write_text(to_design_md(d, client_id_for(job.name)))
-            (job.dir / "critic_rules.md").write_text(to_rules_md(d))
-            job.summary = summarize((job.dir / "DESIGN.md").read_text(), (job.dir / "critic_rules.md").read_text())
-            job.status = "ready"
-        except Exception as e:  # a draft ends with a reason, never hangs
-            job.status, job.error = "failed", str(e)
-            (job.dir / "error.txt").write_text(traceback.format_exc()[-4000:])
-
-    def refresh(self, jid: str) -> Job:
-        """Re-read the draft files (the designer may have edited them) for the summary."""
-        job = self.get(jid)
-        if job.status == "ready":
-            try:
-                job.summary = summarize((job.dir / "DESIGN.md").read_text(), (job.dir / "critic_rules.md").read_text())
-            except (OSError, brandmod.BrandError) as e:   # an edit broke the file: say so, keep the job
-                job.summary = {**(job.summary or {}), "problems": [str(e)]}
-        return job
-
-    def save(self, jid: str, client: str | None = None, overwrite: bool = False) -> str:
-        """The (possibly edited) draft becomes a client: DESIGN.md, the rulebook, the past designs, fonts and documents."""
-        job = self.refresh(jid)
-        if job.status != "ready":
-            raise OnboardError(f"the draft is {job.status}, not ready")
-        cid = packs.check_client_id(client or client_id_for(job.name))
-        inputs = collect(Path(job.folder))
-        try:
-            packs.create_client(cid, design_md=(job.dir / "DESIGN.md").read_text(), critic_rules=(job.dir / "critic_rules.md").read_text(),
-                                past=inputs.past, fonts=inputs.fonts, sources=inputs.docs, overwrite=overwrite)
-        except (packs.PackError, brandmod.BrandError) as e:
-            raise OnboardError(str(e)) from None
-        job.status, job.client = "saved", cid
-        return cid
-
-    def discard(self, jid: str) -> None:
-        job = self.jobs.pop(jid, None)
-        if job:
-            shutil.rmtree(job.dir, ignore_errors=True)

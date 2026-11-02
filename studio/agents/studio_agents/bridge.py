@@ -37,6 +37,11 @@ def bridge_dir() -> Path:
         return Path(d)
     if d := os.environ.get("XDG_RUNTIME_DIR"):
         return Path(d) / "91studio"
+    # Claude Desktop / Claude Code start the connector with a minimal environment (no XDG_RUNTIME_DIR): use the
+    # runtime folder the session has anyway, where the editor (started from the desktop) put the file (D-033).
+    run = Path(f"/run/user/{os.getuid()}") if hasattr(os, "getuid") else None
+    if run and (run / "91studio" / "bridge.json").is_file():
+        return run / "91studio"
     return Path(tempfile.gettempdir()) / f"91studio-{os.environ.get('USER') or getpass.getuser()}"
 
 
@@ -45,6 +50,7 @@ class Placed:
     group_id: int
     nodes: dict[str, int] = field(default_factory=dict)     # layer name → node id, for the whole design
     warnings: list[str] = field(default_factory=list)
+    document: int | None = None   # the uid of the document it is in (D-032)
 
 
 class Turn:
@@ -60,8 +66,22 @@ class Turn:
 
 
 class Bridge:
-    def __init__(self, port: int, token: str, timeout: float = 90.0):
-        self.port, self.token, self.timeout = port, token, timeout
+    """The editor, through the Studio Bridge. `document`: the uid of the document every call goes to (D-032);
+    None means the tab in front, which only creating a document should rely on."""
+
+    def __init__(self, port: int, token: str, timeout: float = 90.0, document: int | None = None):
+        self.port, self.token, self.timeout, self.document = port, token, timeout, document
+
+    def in_document(self, uid: int) -> "Bridge":
+        """This bridge, aimed at document `uid`: its calls land there whichever tab the designer has in front."""
+        return Bridge(self.port, self.token, self.timeout, uid)
+
+    def documents(self) -> list[dict]:
+        """Open documents: uid, title, dirty, active."""
+        return self._request("POST", "/v1/call", {"method": "studio.documents", "params": {}})
+
+    def is_open(self) -> bool:
+        return self.document is not None and any(d["uid"] == self.document for d in self.documents())
 
     @classmethod
     def connect(cls, info_file: Path | None = None) -> "Bridge":
@@ -95,17 +115,20 @@ class Bridge:
     def health(self) -> dict:
         return self._request("GET", "/v1/health")
 
+    def _aimed(self, body: dict) -> dict:
+        return body | {"document": self.document} if self.document is not None else body
+
     def call(self, command: str, **params: Any) -> Any:
         """One engine command. Edits made this way are their own undo step; prefer `turn()` for edits."""
-        return self._request("POST", "/v1/call", {"command": command, "params": params})
+        return self._request("POST", "/v1/call", self._aimed({"command": command, "params": params}))
 
     def method(self, method: str, **params: Any) -> Any:
         """One control method (`ui.render`, `app.export`, `engine.commands`)."""
-        return self._request("POST", "/v1/call", {"method": method, "params": params})
+        return self._request("POST", "/v1/call", self._aimed({"method": method, "params": params}))
 
     def batch(self, calls: list[dict[str, Any]], label: str = "AI edit") -> list[Any]:
         """Run calls as one undo step; any failure undoes all of them and raises BridgeError."""
-        return self._request("POST", "/v1/batch", {"label": label, "calls": calls})["results"]
+        return self._request("POST", "/v1/batch", self._aimed({"label": label, "calls": calls}))["results"]
 
     @contextmanager
     def turn(self, label: str) -> Iterator[Turn]:
@@ -132,11 +155,14 @@ class Bridge:
         return self.call("edit.redo")
 
     def new_document(self, width: float, height: float, name: str | None = None) -> int:
-        """A new RGB document the size of the design (D-014: brand colours are RGB hex)."""
+        """A new RGB document the size of the design (D-014: brand colours are RGB hex) → its uid. This bridge
+        is aimed at it from now on (D-032)."""
         params: dict[str, Any] = {"width": width, "height": height, "units": "Pixels", "colorMode": "rgb"}
         if name:
             params["name"] = name
-        return self.call("file.new", **params)["index"]
+        uid = self._request("POST", "/v1/call", {"method": "studio.newDocument", "params": params})["uid"]
+        self.document = int(uid)
+        return self.document
 
     def add_artboard(self, x: float, y: float, width: float, height: float, name: str) -> int:
         """A new artboard in the active document (5c variants: one per variant, side by side) → its index."""
@@ -174,7 +200,7 @@ class Bridge:
         if bg and (abs(bg["bounds"]["x"] - ox) > 0.01 or abs(bg["bounds"]["y"] - oy) > 0.01):
             self.batch([{"command": "object.move", "params": {"ids": [gid], "dx": ox - bg["bounds"]["x"], "dy": oy - bg["bounds"]["y"]}}],
                        f"Align {name}")
-        return Placed(gid, nodes, placed.get("warnings", []))
+        return Placed(gid, nodes, placed.get("warnings", []), self.document)
 
     def render_preview(self, artboard: int = 0, scale: float = 0.5) -> bytes:
         """PNG of an artboard as the editor draws it (for the critic agent)."""

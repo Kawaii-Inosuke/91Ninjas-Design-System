@@ -194,3 +194,29 @@ fn the_allow_list() {
         assert!(!command_allowed(no), "{no}");
     }
 }
+
+/// 91studio (D-032): a call or batch that names its document runs there, every step of it, whichever tab is in front.
+#[test]
+fn calls_naming_a_document_run_inside_it() {
+    let f = fixture(ok_app());
+    let (status, _) = post(&f, "/v1/call", json!({"command": "object.move", "params": {"ids": [1]}, "document": 42}));
+    assert_eq!(status, 200);
+    let (status, _) = post(
+        &f,
+        "/v1/batch",
+        json!({"label": "Place", "document": 42, "calls": [{"command": "layer.delete", "params": {"ids": [3]}}, {"method": "ui.render"}]}),
+    );
+    assert_eq!(status, 200);
+    let seen = f.seen.lock().unwrap().clone();
+    assert_eq!(seen.len(), 5, "{seen:?}");
+    assert!(seen.iter().all(|(m, p)| m == "studio.inDocument" && p["uid"] == 42), "{seen:?}");
+    assert_eq!(seen[1].1["params"]["command"], "edit.undoGroup.begin");
+    assert_eq!(seen[3].1["method"], "ui.render");
+    assert_eq!(seen[4].1["params"]["command"], "edit.undoGroup.end");
+    // A new document is not "in" one; nor can an agent call studio.inDocument itself.
+    let (status, _) = post(&f, "/v1/call", json!({"method": "studio.newDocument", "params": {"width": 100, "height": 100}, "document": 42}));
+    assert_eq!(status, 200);
+    assert_eq!(f.seen.lock().unwrap().last().map(|(m, _)| m.clone()).as_deref(), Some("studio.newDocument"));
+    assert_eq!(post(&f, "/v1/call", json!({"method": "studio.inDocument", "params": {"uid": 1, "method": "app.export"}})).0, 403);
+    assert_eq!(post(&f, "/v1/call", json!({"command": "object.move", "document": "x"})).0, 400);
+}

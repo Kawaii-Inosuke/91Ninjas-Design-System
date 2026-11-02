@@ -50,6 +50,16 @@ cd studio/editor && ./target/debug/vectorcraft
 ```
 The app starts the agents and the bridge by itself (log: `91 Studio agents starting on 127.0.0.1:<port>`; agents' log `$XDG_RUNTIME_DIR/91studio/agents.log`). Open **Window › 91 Studio AI**, or the wand icon in the panel column. Requirements: `uv` installed and `studio/agents` set up (step 3). To turn it off, use `STUDIO_AGENTS=0`. To use another agents folder or `uv`, use `STUDIO_AGENTS_DIR` / `STUDIO_UV`.
 
+## 2d. Connect Claude (once per computer, D-033)
+The AI panel's **Claude** tab shows the exact command with this computer's paths, and a Copy button. For Claude Code:
+```bash
+claude mcp add --scope user 91ninjas-studio -- uv --directory "<repo>/studio/agents" run python -m studio_agents.mcp_server
+claude mcp list        # 91ninjas-studio: ✓ Connected
+```
+Then, with 91Ninjas Studio open, start `claude` in any folder and ask, for example: "Make an FCC infographic from this
+text: …". Claude Desktop (Mac, Windows): paste the `mcpServers` entry from the panel into Settings › Developer ›
+Edit Config, then restart Claude. No API keys or `.env` are needed.
+
 ## 3. Agents project (Python)
 ```bash
 cd studio/agents

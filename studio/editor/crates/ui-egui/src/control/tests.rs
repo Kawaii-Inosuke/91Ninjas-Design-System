@@ -381,3 +381,32 @@ fn dialog_set_refuses_a_field_the_dialog_does_not_have() {
     app.ui.dialog = None;
     assert_eq!(input_request(&mut app, "ui.dialog.set", json!({"field": "name", "value": "A"}))["error"], "no dialog open");
 }
+
+/// 91studio (D-032): the AI's calls land in the document they name and the designer's tab stays in front.
+#[test]
+fn studio_calls_run_in_their_document_and_leave_the_designers_tab_in_front() {
+    let mut app = VectorcraftApp::new(Session::new(), Services::default());
+    let r = input_request(&mut app, "studio.newDocument", json!({"width": 200, "height": 100}));
+    let ai_doc = r["result"]["uid"].as_u64().unwrap();
+    app.session.execute("file.new", &json!({"width": 300, "height": 300})).unwrap();
+    let designer_doc = app.session.active().unwrap().uid;
+    assert_ne!(ai_doc, designer_doc);
+    let r = input_request(
+        &mut app,
+        "studio.inDocument",
+        json!({"uid": ai_doc, "method": "engine.execute",
+        "params": {"command": "shape.rectangle", "params": {"x": 0, "y": 0, "width": 10, "height": 10}}}),
+    );
+    assert_eq!(r["ok"], true, "{r}");
+    assert_eq!(app.session.active().unwrap().uid, designer_doc, "the designer's tab stays in front");
+    let mut count = |uid: u64| {
+        let r = input_request(&mut app, "studio.inDocument", json!({"uid": uid, "method": "document.inspect"}));
+        r["result"]["layers"].as_array().unwrap().iter().map(|l| l["children"].as_array().map_or(0, Vec::len)).sum::<usize>()
+    };
+    assert_eq!((count(ai_doc), count(designer_doc)), (1, 0), "the rectangle went to the AI's document");
+    let docs = input_request(&mut app, "studio.documents", json!({}));
+    assert_eq!(docs["result"].as_array().unwrap().iter().filter(|d| d["active"] == true).count(), 1);
+    // Only some methods, and a closed document is an error.
+    assert_eq!(input_request(&mut app, "studio.inDocument", json!({"uid": ai_doc, "method": "app.quit"}))["ok"], false);
+    assert_eq!(input_request(&mut app, "studio.inDocument", json!({"uid": 999_999, "method": "document.inspect"}))["ok"], false);
+}

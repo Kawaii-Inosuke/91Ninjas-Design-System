@@ -1,60 +1,49 @@
 # Architecture: 91 Studio
 
-*Last updated: 2026-11-02 (Phase 0). Decisions referenced as D-xxx are in `DECISIONS.md`.*
+*Last updated: 2026-11-03 (D-033: Claude through the connector). Decisions referenced as D-xxx are in `DECISIONS.md`.*
 
 91 Studio is a **standalone, fully local** desktop app (D-009, D-010). The `Design skill/` folder is a reference for *how* good infographics are made. The app does not use its code, folders or Supabase.
 
 ## Components
 ```
-┌──────────── 91 Studio desktop app (VectorCraft fork, Rust/egui) ─────────────┐
-│  Editor engine (upstream, unchanged): artboards, tools, layers, undo,        │
-│  SVG/PDF/AI import + export                                                  │
-│  + crates/studio-bridge (ours, D-002/D-008): token-auth localhost JSON API   │
-│  + AI panel (ours, egui): chat, approval cards, progress, clients, packs     │
-└───────────────▲──────────────────────────────────────────▲───────────────────┘
-                │ Bridge API (JSON, 127.0.0.1, token)       │ HTTP + SSE (127.0.0.1)
-┌───────────────┴──────────────────────────────────────────┴───────────────────┐
-│  studio/agents: Python sidecar, FastAPI + Strands Agents (D-004)             │
-│  agents graph · tools · renderer (HTML→PNG→layered SVG) · clients & packs    │
-│  local store: clients/ folder + SQLite history (+ local embeddings)          │
-└───────┬──────────────────────────────────────────────────────────────────────┘
-        │ Gemini / Groq APIs (company keys, D-003): the only network traffic
+ Claude Code / Claude Desktop (the designer's own Claude plan): the conversation and the thinking
+        │ MCP over stdio (started by Claude)
+┌───────┴──────────────────────────────────────────────────────────────────────┐
+│  studio/agents · connector (mcp_server.py, D-033): tools, no model           │
+│  designs · renderer (HTML→PNG→layered SVG) · clients & packs · history       │
+│  local store: clients/, designs/, SQLite history (+ local embeddings)        │
+└───────┬───────────────────────────────────────────────▲──────────────────────┘
+        │ Bridge API (JSON, 127.0.0.1, token, document uid D-032)
+┌───────▼─────────────── 91Ninjas Studio (VectorCraft fork, Rust/egui) ─────────┐
+│  Editor engine (upstream): artboards, tools, layers, undo, SVG/PDF/AI I/O     │
+│  + crates/studio-bridge (ours): allow-listed engine calls, per document       │
+│  + AI panel (ours): Claude status, connect, live activity, clients, history   │
+└──────────────────────────────────────────────┬───────────────────────────────┘
+                                               │ HTTP (127.0.0.1, token): the panel's local service (server.py)
 ```
+No network traffic of our own: Claude's app talks to Anthropic; everything here is local.
 
 | Component | Language | Responsibility |
 |---|---|---|
 | Editor engine | Rust (upstream VectorCraft) | Document model, ~710 commands, undo history, rendering, file I/O |
-| `studio-bridge` | Rust (ours) | Turns authenticated JSON requests into engine commands on the UI thread. One AI turn is one undo step. |
-| AI panel | Rust/egui (ours) | Chat, streamed agent events, approval cards, client wizard, pack import and export |
-| Agent sidecar | Python (ours) | Orchestration (Strands Graph), model calls, tools |
-| Renderer | Python (ours; approach learned from the skill) | Spec → Jinja HTML (brand tokens as CSS variables) → Playwright Chromium → PNG preview and `auto_checks` → layered SVG |
-| Local store | files + SQLite | `clients/<client>/` brand packs, design history and similar-design index |
+| `studio-bridge` | Rust (ours) | Authenticated JSON calls → engine commands on the UI thread, in the document they name (D-032); a batch is one undo step |
+| AI panel | Rust/egui (ours) | Connection status and setup, Claude's live activity, clients and packs, history |
+| Connector | Python (ours) | MCP tools for Claude: brand, similar check, render, place, look, edit, approve, new clients |
+| Local service | Python (ours) | The panel's API: clients, packs, history, designs, activity, connect |
+| Renderer | Python (ours) | Spec → Jinja HTML (brand tokens as CSS variables) → Chromium → PNG preview and `auto_checks` → layered SVG |
+| Local store | files + SQLite | `clients/<client>/` packs, `designs/<id>/` versions and placements, design history and similar-design index |
 
-## New-design data flow
-1. **Panel → sidecar:** `POST /runs {client, content, image?, instruction?}`. The sidecar opens an SSE stream.
-2. **Brief Writer:** produces a brief (topic, angle, key points, layout family) as structured output.
-3. **Similar-design check:** compares the brief against the local history using embeddings. If anything similar exists, the run pauses (gate `similar_exists`) and shows each match with its status and **file locations**. The designer chooses *generate again* or *abandon*. It never blocks (D-020).
-4. **Layout Designer:** produces `spec.json` (layout, items, icons, copy).
-5. **Interrupt "outline":** the designer chooses approve, change (notes go back to step 4), or abandon.
-6. **Renderer:** builds HTML, then PNG, then runs `auto_checks` (canvas size, fonts, off-palette colours, overflow, minimum text size).
-7. **Critic:** checks the preview PNG against the client's `critic_rules.md` and our base rules. On fail, the fixes go back to step 4, for at most 3 rounds.
-8. **Layered SVG:** named groups, live text, one outer group (TRD "Rules for the SVG we place").
-9. **Bridge `place_svg`:** places the design on a new artboard as one undo step.
-10. **Designer edits:** by hand, or by chat through the Canvas Editor agent (`inspect`, then a turn wrapped in an undo group).
-11. **Interrupt "final":** bridge `export` (SVG/PNG/PDF), then the design is recorded in the local history.
+## New-design data flow (D-033)
+1. The designer pastes content into Claude ("make an FCC infographic from this").
+2. Claude: `get_brand` (once per client), writes the brief, `check_similar` (shows what exists and where; never blocks), shows the outline and waits for the designer.
+3. `start_design`, then `render_design` (spec → PNG preview + machine checks). Claude looks at the preview against the rules and renders again to fix (≤ 3 rounds).
+4. `place_design`: layered SVG in a **new document of its own**; versions go `beside` on new artboards; `remove_versions` takes the others out in one undo step.
+5. Edits: by hand, or by asking Claude (`look_at_editor`, then `edit_design` as one undo step). Claude checks the editor first, so Ctrl+Z, deletions and tab switches are seen.
+6. Approval: `approve_design` exports SVG/PNG/PDF from the design's own document (the designer's edits included) and records it in the history.
 
-## Agent graph (Strands)
-```
-Art Director ──► Brief Writer ──► Dup check ──► Layout Designer ──► [outline gate]
-                                                    ▲                  │
-                                                    │ fixes            ▼
-                                                  Critic ◄──── Renderer
-                                                    │ pass
-                                                    ▼
-                                             Place on artboard ──► [final gate] ──► Export + record
-Chat edits:   Art Director ──► Canvas Editor (bridge tools)
-New client:   Art Director ──► Brand Onboarder (drafts DESIGN.md + rulebook from past work)
-```
+## Claude's workflow
+The connector gives Claude its instructions (`studio_agents/claude/workflow.md`), the spec guide (`spec.md`) and the
+new-client guide (`new_client.md`). The Strands agent graph of Phases 3–5 was removed (D-033).
 
 ## Clients: local packs (D-009)
 ```

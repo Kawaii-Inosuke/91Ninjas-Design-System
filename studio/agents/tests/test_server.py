@@ -1,17 +1,14 @@
-"""The sidecar API: token and origin checks, client packs over HTTP, a whole run driven through the API."""
+"""The panel's API (D-033): token and origin checks, client packs over HTTP, history, Claude's activity, connecting Claude."""
 import json
 import shutil
-import time
 from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
 
-from studio_agents import models, packs
+from studio_agents.designs import Studio
 from studio_agents.history import History
-from studio_agents.runs import RunManager
 from studio_agents.server import create_app
-from test_runs import Script
 
 FIX = Path(__file__).parent / "fixtures"
 TOKEN = "t" * 64
@@ -25,10 +22,8 @@ def client(tmp_path, monkeypatch):
     monkeypatch.setenv("XDG_DATA_HOME", str(tmp_path / "xdg"))
     monkeypatch.setenv("STUDIO_MODELS_DIR", str(Path.home() / ".cache" / "91studio" / "models"))
     shutil.copytree(FIX / "brands" / "demo", data / "clients" / "demo")
-    models.set_backend(Script())
-    app = create_app(TOKEN, RunManager(History(data / "history.db"), bridge_factory=lambda: None))
+    app = create_app(TOKEN, Studio(History(data / "history.db"), bridge_factory=lambda: None))
     yield TestClient(app)
-    models.set_backend(None)
 
 
 def test_token_and_origin_are_required(client):
@@ -36,8 +31,7 @@ def test_token_and_origin_are_required(client):
     assert client.get("/api/health", headers={"Authorization": "Bearer wrong"}).status_code == 401
     assert client.get("/api/health", headers={**AUTH, "Origin": "https://evil.example"}).status_code == 403
     r = client.get("/api/health", headers=AUTH)
-    assert r.status_code == 200 and r.json()["editor"] is False and "critic" in r.json()["models"]
-    assert client.get("/").status_code == 200                          # the page itself holds no data
+    assert r.status_code == 200 and r.json() == {"ok": True, "editor": False, "ai": "claude"}
 
 
 def test_clients_export_import_install(client, tmp_path):
@@ -64,47 +58,6 @@ def test_clients_export_import_install(client, tmp_path):
     assert client.get("/api/clients/acme/samples/..%2F..%2Fhistory.db", headers=AUTH).status_code == 404
 
 
-def events(client, rid, until):
-    """Read the event stream until an event of type `until` (gate/done) arrives."""
-    out = []
-    with client.stream("GET", f"/api/runs/{rid}/events", headers=AUTH) as s:
-        for line in s.iter_lines():
-            if line.startswith("data: "):
-                e = json.loads(line[6:])
-                out.append(e)
-                if e["type"] in until:
-                    return out
-    return out
-
-
-def test_the_panel_starts_runs_with_json(client):
-    r = client.post("/api/runs/json", headers=AUTH, json={"client": "demo", "content": "How to check a payment request..."})
-    assert r.status_code == 200 and r.json()["id"]
-    assert client.post("/api/runs/json", headers=AUTH, json={"client": "nobody", "content": "x"}).status_code == 422
-
-
-def test_a_run_through_the_api(client):
-    rid = client.post("/api/runs", headers=AUTH, data={"client": "demo", "content": "How to check a payment request..."}).json()["id"]
-    ev = events(client, rid, {"gate"})
-    assert ev[-1]["data"]["kind"] == "outline" and any(e["type"] == "brief" for e in ev)
-    assert client.post(f"/api/runs/{rid}/decide", headers=AUTH, json={"gate": "final", "decision": "approve"}).status_code == 409
-    assert client.post(f"/api/runs/{rid}/decide", headers=AUTH, json={"gate": "outline", "decision": "approve"}).json()["ok"]
-    for _ in range(100):
-        run = client.get(f"/api/runs/{rid}", headers=AUTH).json()
-        if run["gate"]:
-            break
-        time.sleep(0.1)
-    assert run["gate"]["kind"] == "final"
-    preview = run["versions"][-1]["preview"].split(f"/runs/{rid}/")[1]
-    img = client.get(f"/api/runs/{rid}/files/{preview}", params={"token": TOKEN})
-    assert img.status_code == 200 and img.content[:4] == b"\x89PNG"
-    assert client.get(f"/api/runs/{rid}/files/../../history.db", headers=AUTH).status_code == 404
-    client.post(f"/api/runs/{rid}/decide", headers=AUTH, json={"gate": "final", "decision": "approve"})
-    done = [e for e in events(client, rid, {"done"}) if e["type"] == "done"][0]
-    assert done["data"]["status"] == "done" and set(done["data"]["files"]) >= {"png", "svg"}
-    assert client.post(f"/api/runs/{rid}/messages", headers=AUTH, json={"text": "bigger"}).status_code == 409   # not in the editor
-
-
 def test_clients_from_a_folder_and_a_pack_path(client, tmp_path):
     from PIL import Image
     folder = tmp_path / "Acme Bank"
@@ -125,16 +78,32 @@ def test_clients_from_a_folder_and_a_pack_path(client, tmp_path):
     assert client.post(f"/api/clients/import/{pv['id']}/install", headers=AUTH, json={"mode": "replace"}).json()["client"] == "acme-bank"
 
 
-def test_history_lists_a_clients_designs_and_runs_take_an_image(client, tmp_path):
-    from PIL import Image
-    rid = client.post("/api/runs/json", headers=AUTH, json={"client": "demo", "content": "How to check a payment request..."}).json()["id"]
-    events(client, rid, {"gate"})
-    rows = client.get("/api/history", headers=AUTH, params={"client": "demo"}).json()
-    assert rows and rows[0]["status"] == "reserved" and rows[0]["topic"]
-    assert client.get("/api/history", headers=AUTH, params={"client": "../etc"}).status_code == 422
-    img = tmp_path / "content.png"
-    Image.new("RGB", (40, 30), "white").save(img)
-    assert client.post("/api/runs/json", headers=AUTH, json={"client": "demo", "image_path": str(img)}).status_code == 200
-    bad = tmp_path / "notes.txt"
-    bad.write_text("x")
-    assert client.post("/api/runs/json", headers=AUTH, json={"client": "demo", "image_path": str(bad)}).status_code == 422
+def test_history_activity_designs_and_connecting_claude(client, tmp_path):
+    from studio_agents import mcp_server
+    assert client.get("/api/history", headers=AUTH, params={"client": "demo"}).json() == []
+    assert client.get("/api/history", headers=AUTH, params={"client": "../x"}).status_code == 422
+    # What Claude did through the connector reaches the panel, newest last, and `after` skips what was shown.
+    mcp_server.log("start_design", "x: loyalty")
+    mcp_server.log("render_design", "x v1", ok=False)
+    rows = client.get("/api/activity", headers=AUTH).json()
+    assert [r["tool"] for r in rows] == ["start_design", "render_design"] and rows[1]["ok"] is False
+    assert client.get("/api/activity", headers=AUTH, params={"after": rows[1]["at"]}).json() == []
+    c = client.get("/api/connect", headers=AUTH).json()
+    assert c["claude_code"].startswith("claude mcp add --scope user 91ninjas-studio -- ")
+    assert c["claude_code"].endswith("run python -m studio_agents.mcp_server")
+    assert c["claude_desktop"]["mcpServers"]["91ninjas-studio"]["args"][-1] == "studio_agents.mcp_server"
+    assert client.get("/api/designs", headers=AUTH).json() == []
+    assert client.get("/api/designs/nope/files/x.png", headers=AUTH).status_code == 404
+
+
+def test_the_panel_knows_which_claude_apps_are_connected(tmp_path):
+    from studio_agents.server import connected_apps
+    assert connected_apps(tmp_path) == []
+    (tmp_path / ".claude.json").write_text(json.dumps({"mcpServers": {"91ninjas-studio": {}}}))
+    assert connected_apps(tmp_path) == ["Claude Code"]
+    (tmp_path / ".claude.json").write_text(json.dumps({"projects": {"/x": {"mcpServers": {"91ninjas-studio": {}}}}}))
+    (tmp_path / ".config" / "Claude").mkdir(parents=True)
+    (tmp_path / ".config" / "Claude" / "claude_desktop_config.json").write_text(json.dumps({"mcpServers": {"91ninjas-studio": {}}}))
+    assert connected_apps(tmp_path) == ["Claude Code", "Claude Desktop"]
+    (tmp_path / ".claude.json").write_text("not json")
+    assert connected_apps(tmp_path) == ["Claude Desktop"]

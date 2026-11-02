@@ -3,6 +3,8 @@
 //! - `GET  /v1/health`: `{bridge: "91studio", api: 1}`
 //! - `POST /v1/call {command, params?}`: one engine command (`engine.execute`)
 //! - `POST /v1/call {method, params?}`: one of [`CONTROL_METHODS`] (rendering, export, discovery)
+//! - `document` (optional, on both): the uid of the document the call belongs to (91studio, D-032): it
+//!   runs there whichever tab is in front (`studio.inDocument`); `studio.newDocument` returns a new one's uid
 //! - `POST /v1/batch {label, calls: [{command|method, params?}…]}`: the calls as **one undo step**
 //!   (`edit.undoGroup.begin/end`). A call may use the results of earlier ones (`"$0.ids.0"`,
 //!   `"$last.id"`: `vectorcraft_engine::steps`). The first failure cancels the group, undoing
@@ -68,7 +70,7 @@ const DENIED_WORDS: &[&str] = &["save", "open", "export", "import", "script", "p
 /// Parameter keys that name files; a call carrying one is refused.
 const PATH_KEYS: &[&str] = &["path", "paths", "file", "files", "dir", "directory", "folder", "url", "uri"];
 /// Control methods (beyond engine commands) agents may call.
-pub(crate) const CONTROL_METHODS: &[&str] = &["ui.render", "app.export", "engine.commands"];
+pub(crate) const CONTROL_METHODS: &[&str] = &["ui.render", "app.export", "engine.commands", "studio.documents", "studio.newDocument"];
 
 pub(crate) fn route(req: &Request, forward: &Forward) -> Response {
     match (req.method.as_str(), req.path.as_str()) {
@@ -137,9 +139,32 @@ fn path_key(v: &Value, depth: usize) -> Option<String> {
 }
 
 fn call(body: &Value, forward: &Forward) -> Response {
+    let document = match document_of(body) {
+        Ok(d) => d,
+        Err(e) => return Response::error(400, e),
+    };
     match resolve_call(body) {
-        Ok((method, params)) => reply(forward(&method, params)),
+        Ok((method, params)) => reply(send(forward, document, &method, params)),
         Err(e) => Response::error(403, e),
+    }
+}
+
+/// 91studio: the document a call or batch names (`document`: its uid), if any (D-032).
+fn document_of(body: &Value) -> Result<Option<u64>, String> {
+    match body.get("document") {
+        None | Some(Value::Null) => Ok(None),
+        Some(v) => v.as_u64().map(Some).ok_or_else(|| "`document` must be a document uid (a number)".to_string()),
+    }
+}
+
+/// Forward a resolved call, inside `document` when one is named: the app runs it there and brings the
+/// designer's tab back in the same request, so switching tabs meanwhile can't redirect it.
+fn send(forward: &Forward, document: Option<u64>, method: &str, params: Value) -> Value {
+    match document {
+        Some(uid) if method != "studio.documents" && method != "studio.newDocument" && method != "engine.commands" => {
+            forward("studio.inDocument", json!({"uid": uid, "method": method, "params": params}))
+        }
+        _ => forward(method, params),
     }
 }
 
@@ -163,33 +188,37 @@ fn batch(body: &Value, forward: &Forward) -> Response {
             return Response(403, json!({"ok": false, "error": e, "failedCall": i}));
         }
     }
+    let document = match document_of(body) {
+        Ok(d) => d,
+        Err(e) => return Response::error(400, e),
+    };
     let label = body.get("label").and_then(Value::as_str).unwrap_or("AI edit");
-    let begin = forward("engine.execute", json!({"command": "edit.undoGroup.begin", "params": {"label": label}}));
+    let begin = send(forward, document, "engine.execute", json!({"command": "edit.undoGroup.begin", "params": {"label": label}}));
     if begin.get("ok").and_then(Value::as_bool) != Some(true) {
         return reply(begin);
     }
     let mut results: Vec<Value> = Vec::with_capacity(calls.len());
     for (i, c) in calls.iter().enumerate() {
-        match run_step(c, &results, forward) {
+        match run_step(c, &results, forward, document) {
             Ok(result) => results.push(result),
             Err(error) => {
-                let end = forward("engine.execute", json!({"command": "edit.undoGroup.end", "params": {"cancel": true}}));
+                let end = send(forward, document, "engine.execute", json!({"command": "edit.undoGroup.end", "params": {"cancel": true}}));
                 let undone = end.get("ok").and_then(Value::as_bool) == Some(true);
                 return Response(422, json!({"ok": false, "error": error, "failedCall": i, "undone": undone}));
             }
         }
     }
-    let end = forward("engine.execute", json!({"command": "edit.undoGroup.end", "params": {}}));
+    let end = send(forward, document, "engine.execute", json!({"command": "edit.undoGroup.end", "params": {}}));
     if end.get("ok").and_then(Value::as_bool) != Some(true) {
         return reply(end);
     }
     Response(200, json!({"ok": true, "result": {"results": results}}))
 }
 
-fn run_step(call: &Value, results: &[Value], forward: &Forward) -> Result<Value, String> {
+fn run_step(call: &Value, results: &[Value], forward: &Forward, document: Option<u64>) -> Result<Value, String> {
     let resolved = vectorcraft_engine::steps::resolve(call, results)?;
     let (method, params) = resolve_call(&resolved)?;
-    let r = forward(&method, params);
+    let r = send(forward, document, &method, params);
     if r.get("ok").and_then(Value::as_bool) == Some(true) {
         Ok(r.get("result").cloned().unwrap_or(Value::Null))
     } else {

@@ -409,6 +409,14 @@ pub fn handle(app: &mut VectorcraftApp, ctx: &egui::Context, req: &ControlReques
                 None => ok(with_data(json!({"width": img.width, "height": img.height}), Some(&png))),
             }
         }
+        // 91studio: the AI's calls name the document they belong to (D-032), so a designer who
+        // switches tabs while the AI works never gets its changes, deletions or exports.
+        "studio.documents" => ok(studio_documents(app)),
+        "studio.newDocument" => match app.run("file.new", p.clone()) {
+            Ok(r) => ok(json!({"uid": app.session.active().map(|d| d.uid), "index": r.get("index")})),
+            Err(e) => err(e),
+        },
+        "studio.inDocument" => in_document(app, ctx, p),
         "app.open" => wrap(app.run("file.open", json!({"path": s("path")}))),
         "app.save" | "app.export" => {
             let mut p = if p.is_object() { p.clone() } else { json!({}) };
@@ -429,6 +437,47 @@ pub fn handle(app: &mut VectorcraftApp, ctx: &egui::Context, req: &ControlReques
         "app.quit" => wrap(app.run("app.quit", json!({}))),
         other => err(format!("unknown method `{other}`")),
     }
+}
+
+/// 91studio: the open documents with their stable `uid` (D-032).
+fn studio_documents(app: &VectorcraftApp) -> Value {
+    let active = app.session.active_index();
+    json!(
+        app.session
+            .documents()
+            .iter()
+            .enumerate()
+            .map(|(i, d)| json!({"uid": d.uid, "title": d.title(), "dirty": d.is_dirty(), "active": active == Some(i)}))
+            .collect::<Vec<_>>()
+    )
+}
+
+/// Methods `studio.inDocument` may run.
+const IN_DOCUMENT: &[&str] = &["engine.execute", "document.inspect", "ui.render", "app.export"];
+
+/// 91studio: `studio.inDocument {uid, method, params}` runs one call in the document `uid`, whichever
+/// tab the designer has in front, all within this request: switch to it, run, switch back (D-032).
+fn in_document(app: &mut VectorcraftApp, ctx: &egui::Context, p: &Value) -> Outcome {
+    let Some(uid) = p.get("uid").and_then(Value::as_u64) else { return err("missing `uid`") };
+    let Some(method) = p.get("method").and_then(Value::as_str).filter(|m| IN_DOCUMENT.contains(m)) else {
+        return err(format!("`method` must be one of {}", IN_DOCUMENT.join(", ")));
+    };
+    let Some(target) = app.session.documents().iter().position(|d| d.uid == uid) else {
+        return err("that document is no longer open (it was closed)");
+    };
+    let before = app.session.active().map(|d| d.uid);
+    if app.session.active_index() != Some(target) {
+        app.session.set_active(target);
+    }
+    let (req, _rx) = ControlRequest::new(method, p.get("params").cloned().unwrap_or_else(|| json!({})));
+    let out = handle(app, ctx, &req);
+    // Back to the designer's document (unless the call closed it).
+    if let Some(i) = before.and_then(|u| app.session.documents().iter().position(|d| d.uid == u))
+        && app.session.active_index() != Some(i)
+    {
+        app.session.set_active(i);
+    }
+    out
 }
 
 /// `app.save` (`method`) or `app.export` with params `p`.
