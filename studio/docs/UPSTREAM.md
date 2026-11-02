@@ -19,6 +19,16 @@ The repo was about one month old at fork time, with about 7.5k commits and dozen
   4. Record the new pin here and in a phase report.
 - **Rebranding (Phase 4)** removes the ArtCraft and VectorCraft names and logos from the UI, the app name and the icons, as required by the upstream README trademark note. Licence and NOTICE files stay.
 
+## Our changes to upstream files (D-016)
+| File | Change | Why | Test |
+|---|---|---|---|
+| `crates/engine/src/cmd/place.rs` | `Session::refresh_text_bounds(&mut doc)` before measuring placed art | Centred or right-aligned type was measured left-aligned, so placed designs landed off-centre | `tests/place.rs::placed_svg_with_centred_type_is_measured_by_its_layout` |
+| `apps/vectorcraft/src/main.rs` | Control server and bridge share one request queue; `STUDIO_BRIDGE=1` starts the bridge | The bridge (D-008) | `studio/agents/tests/test_bridge_live.py` |
+| `apps/vectorcraft/src/control_server.rs` | `start` becomes `start_on(port, ctx, tx)`; test-only imports | Shared queue | upstream control-server tests unchanged |
+| `apps/vectorcraft/Cargo.toml`, `Cargo.toml`, `xtask/src/layers.rs` | Bridge dependency, workspace entry, layer row | New crate | `cargo xtask layers` |
+
+Our own new files: `crates/studio-bridge/`, `apps/vectorcraft/src/studio_bridge.rs`.
+
 ## Git setup
 - Our repo is https://github.com/Kawaii-Inosuke/91Ninjas-Design-System.git. The repo root is `Design system/`.
 - The user makes all commits. Claude only provides the commands (D-011).

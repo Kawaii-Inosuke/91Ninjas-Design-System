@@ -1,8 +1,8 @@
 """Place a layered SVG in the editor headlessly (vectorcraft-cli run) and read back what it built.
 
-Test-only stand-in for the Phase 2 bridge `place_svg`: new RGB document the size of the design, place, then
-move the design so its `background` sits at (0, 0). The move is needed because file.place centres the
-design's bounds and the editor over-measures multi-line centred text (PHASE-1 known issue).
+Headless counterpart of `Bridge.place_svg` (the live app is tested in test_bridge_live.py): a new RGB
+document the size of the design, place, then move the design so its `background` sits at (0, 0) if it
+doesn't already (since the Phase 2 engine fix it does).
 """
 from __future__ import annotations
 

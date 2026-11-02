@@ -160,6 +160,28 @@ Format per entry: **Context → Decision → Alternatives → Consequences**. En
   - The desktop app defaults new documents to CMYK.
   - `file.place` centres the design's *bounds*, and the editor over-measures multi-line centred text (to be fixed in our fork in Phase 2; the reference move stays as a safety net).
 
+## D-015: A thin Rust bridge; the logic lives in Python (2026-11-02)
+- **Context:** The team has no Rust experience. The bridge must be secure and must make AI turns undoable.
+- **Decision:**
+  - The Rust crate does only what has to happen inside the app:
+    - HTTP, the token, and Origin/Host checks;
+    - an **allow-list** (art editing, inspect, select, new document, place from inline data, undo; never files, scripts or plug-ins, and never a parameter naming a path);
+    - an **atomic batch** that wraps calls in `edit.undoGroup.begin/end`, cancels on the first failure, and supports `$N` references.
+  - Everything else (the placement procedure, name→id mapping, turns) is Python in `studio_agents/bridge.py`.
+  - The bridge is enabled by `STUDIO_BRIDGE=1` until Phase 4.
+- **Alternatives:** One Rust endpoint per tool (`place_svg`, `set_text`, …) as sketched in the research. Rejected: more Rust to maintain, with no gain in safety.
+- **Consequences:**
+  - New agent tools need no Rust change if their commands are in an allowed family.
+  - The allow-list must be widened deliberately, with a test, when a needed command is refused.
+
+## D-016: Minimal upstream engine fixes are allowed (2026-11-02)
+- **Context:** `file.place` mis-measured centred type, which made designs land off-centre.
+- **Decision:**
+  - Fixes in upstream crates are allowed when the agents need them.
+  - Each fix is kept minimal, marked `// 91studio:`, covered by a regression test, and listed in `UPSTREAM.md`.
+  - Worth offering upstream as a PR later. That would be outward-facing, so it needs the user's go-ahead.
+- **Consequences:** Upstream merges must re-apply or drop each listed fix.
+
 ## D-007: Every phase ends with a phase report and a docs update (2026-11-02)
 - **Decision:**
   - At the end of each phase, write `phases/PHASE-N.md` and update the PRD, TRD, ARCHITECTURE and SECURITY docs.

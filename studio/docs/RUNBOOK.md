@@ -33,6 +33,15 @@ cargo run --release -p vectorcraft-cli -- --help    # headless CLI
 - **Measured (2026-11-02, dev build):** `target/` 3.2 GB + `~/.cargo` 0.7 GB + `~/.rustup` 0.6 GB = **~4.5 GB**. The first build takes ~6 minutes of compile time.
 - Linux system libraries needed (all were already present): gcc, pkg-config, x11, xkbcommon, wayland-client, fontconfig.
 
+## 2b. Run the editor with the AI bridge
+```bash
+cd studio/editor
+STUDIO_BRIDGE=1 ./target/debug/vectorcraft --new-instance   # --new-instance: a separate window even if one is open
+```
+The log prints `91 Studio bridge listening on 127.0.0.1:<port>`. The agents find it through `$XDG_RUNTIME_DIR/91studio/bridge.json`.
+
+**Disk:** the test builds leave large binaries in `target/debug/deps` (the engine's test binary alone is ~430 MB). Deleting them is safe; they are rebuilt when needed.
+
 ## 3. Agents project (Python)
 ```bash
 cd studio/agents

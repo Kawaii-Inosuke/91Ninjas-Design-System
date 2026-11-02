@@ -29,7 +29,19 @@ Every request carries `Authorization: Bearer <SIDECAR_TOKEN>`. The app generates
 Runs persist through a Strands `FileSessionManager` under `studio/agents/.sessions/<run_id>`.
 
 ## Bridge API (agents → editor)
-Designed from `research/vectorcraft-mcp.md` and implemented in Phase 2 (D-008).
+Implemented in Phase 2 (D-008, D-015). The code is in `editor/crates/studio-bridge/` and the Python client is `agents/studio_agents/bridge.py`.
+
+**Endpoints (as built):**
+- `GET /v1/health`
+- `POST /v1/call {command, params}`: one engine command.
+- `POST /v1/call {method, params}`: one of `ui.render`, `app.export`, `engine.commands`.
+- `POST /v1/batch {label, calls: [{command|method, params}]}`: one undo group, with `$N` references and a full rollback on the first failure (the reply carries `failedCall`).
+
+Responses are `{ok, result|error}`. Status codes: 200 OK, 401 token, 403 refused by policy or origin/host, 422 the app refused the call, 400/404/405/411/413 malformed.
+
+**Turning it on:** `STUDIO_BRIDGE=1`. Optional settings: `STUDIO_BRIDGE_PORT`, `STUDIO_BRIDGE_DIR`, and `STUDIO_BRIDGE_TOKEN` (≥ 32 characters, for CI).
+
+*Original design notes, kept for reference:*
 
 **Transport and placement**
 - JSON over HTTP on `127.0.0.1:<random port>`, with `Authorization: Bearer <token>`.
@@ -43,7 +55,7 @@ Designed from `research/vectorcraft-mcp.md` and implemented in Phase 2 (D-008).
 | Bridge call | Engine path |
 |---|---|
 | `inspect {artboard?, ids?}` | `document.inspect`, `document.find` (by name, kind or text) |
-| `place_svg {svg, name, artboard?, x, y}` | Create an artboard of the design's size (when none is given), then `file.place {name: "design-<slug>", dataBase64, at}` (it centres on the current artboard), then a corrective `object.move` if needed. **Verified headless (PHASE-0 test 6):** groups, names, live text and colours survive, and it is one undo step. |
+| `place_svg {svg, name, artboard?, x, y}` | Python `Bridge.place_svg`: `file.new` (RGB, design size), then a batch with `file.place {name, dataBase64}`, then `document.node {summary}` to build the name→id map. A corrective move runs only if `background` isn't at (0,0); since the Phase 2 engine fix it isn't needed. **Verified live (PHASE-2).** |
 | `select {ids}` | selection commands |
 | `set_text {id, text}` | `text.setText` for single-style text, or `text.editRange` per run to keep mixed styles |
 | `set_fill {ids, color}` | paint commands |
