@@ -182,6 +182,55 @@ Format per entry: **Context → Decision → Alternatives → Consequences**. En
   - Worth offering upstream as a PR later. That would be outward-facing, so it needs the user's go-ahead.
 - **Consequences:** Upstream merges must re-apply or drop each listed fix.
 
+## D-017: Design runs are driven in code; agents do the thinking (2026-11-02)
+- **Context:** The plan (Phase 0) said to use a Strands `GraphBuilder` graph with interrupts for the approvals. After reading the real Strands 1.63 API, a fixed sequence with long, untimed pauses for the designer is simpler as our own state machine.
+- **Decision:**
+  - `studio_agents/runs.py` runs the steps in order: brief → duplicate check → layout → [outline approval] → render ⇄ critic (≤ 3 rounds, best kept) → layered SVG → place → [final approval] → export → history.
+  - Approvals are pauses in the run, which waits with no time limit.
+  - Each thinking step is one Strands agent call with a validated, structured answer (`models.ask`).
+  - The Canvas Editor is a Strands agent with two tools (`inspect_design`, `apply_edits`), and each request is one undo step.
+- **Alternatives:** Strands Graph + interrupts. Not chosen: harder to test and resume, with no benefit for a fixed sequence.
+- **Consequences:**
+  - Every path is tested with a scripted model (no API cost).
+  - Runs live in memory while the sidecar runs (each is also written to `runs/<id>/run.json`); resuming after a restart is not supported yet.
+
+## D-018: Local embeddings through fastembed (ONNX), not PyTorch (2026-11-02)
+- **Decision:** The duplicate check uses `all-MiniLM-L6-v2` (the skill's model) through `fastembed`'s ONNX runtime. The model is 87 MB, downloaded once, and then works offline.
+- **Why:** The same vectors without PyTorch, about 800 MB less per designer install.
+
+## D-019: Our own templates and an icon bundle (2026-11-02)
+- **Decision:**
+  - Seven layout families (`vertical_list`, `horizontal_timeline`, `comparison_cards`, `card_list`, `cell_table`, `column_grid`, `custom`) in our own Jinja templates.
+  - Every meaningful element has a `data-layer` name, so the agents get stable names (`item-2`, `heading-2`, `marker-2`).
+  - The templates use only CSS that layered SVG converts.
+  - Icons come from the official Tabler package 3.50.0 (MIT, sha256 pinned in `scripts/build_icons.py`), bundled as one 2 MB JSON file with search tags.
+  - The skill's `brand.css` files are not used; a client may add its own `assets/brand.css`.
+- **Safety:**
+  - Agent-written markup and CSS are sanitised.
+  - The render browser is blocked from the network.
+  - Templates get the icon helper per render, never as a Jinja global. A global caused a real bug: the first brand's settings stuck for the life of the process.
+
+## D-020: Similar designs are shown, never blocked (2026-11-02)
+- **Context:** The user said designers often ask for several versions of one topic, so "don't repeat a topic" must not stop them.
+- **Decision:**
+  - The history check never blocks.
+  - When anything similar exists (similarity ≥ 0.65), the run pauses on a `similar_exists` gate. It shows each match with its status (approved, in progress, past work), its layout, and **where its files are**, and asks *generate again?* (generate / abandon).
+  - Visually similar approved designs are only mentioned when a design is approved; no confirmation is needed.
+  - Recently used layouts become a *preference* for the layout agent: a designer asking for "another timeline" gets one.
+- **Supersedes:** the blocking parts of D-010 (local registry) and the PRD's "No repeats" requirement and metric.
+- **Consequences:** The `0.80 block` threshold and the `dedup_warn` and `visual_duplicate` gates are removed.
+
+## D-021: The editor starts the agents; the AI panel talks to them through a host service (2026-11-02)
+- **Context:** Designers should open one app. The editor's UI crate must stay free of networking: it is also built for the web, and its panels "only draw and ask".
+- **Decision:**
+  - **Launch:** at start-up the desktop app finds `studio/agents` (`STUDIO_AGENTS_DIR`, else next to its install) and `uv`. It starts the sidecar on a free loopback port with a fresh random token, and turns the bridge on. When the window closes, it stops the sidecar. The sidecar also exits by itself if the app is gone (`STUDIO_PARENT_PID`), so a crash or kill leaves nothing running. `STUDIO_AGENTS=0` turns all of this off.
+  - **Panel:** `ui-egui/src/panels/studio_ai.rs` ("91 Studio AI", icon `wand-sparkles`, Window menu and icon column) only draws and polls.
+  - **Service:** I/O goes through a `StudioAgents` trait (`ui-egui/src/studio.rs`) that the app implements (`apps/vectorcraft/src/studio_agents.rs`). It is a std-only HTTP client on background threads, with an SSE event reader and no new dependencies. Without it (web, tests) the panel says the agents aren't available.
+  - **Endpoint:** the sidecar gains `POST /api/runs/json` for the panel.
+- **Consequences:**
+  - Designer machines need `uv` and the agents' Python environment until Phase 5 packages them.
+  - The panel works with any backend that implements the trait, so it can be tested with a fake one.
+
 ## D-007: Every phase ends with a phase report and a docs update (2026-11-02)
 - **Decision:**
   - At the end of each phase, write `phases/PHASE-N.md` and update the PRD, TRD, ARCHITECTURE and SECURITY docs.

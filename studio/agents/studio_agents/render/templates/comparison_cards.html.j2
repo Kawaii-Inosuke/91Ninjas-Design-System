@@ -1,0 +1,13 @@
+{% extends "base.html.j2" %}
+{# variants: outline (default) | tint #}
+{% block body %}
+<div class="cmp cmp-{{ variant or 'outline' }}" data-layer="comparison" style="grid-template-columns: repeat({{ spec.columns | length }}, 1fr)">
+{% for c in spec.columns %}
+  <section class="card" data-layer="card">
+    <p class="card-title" data-layer="card-title">{{ c.title }}</p>
+    {% if c.body %}<p class="b" data-layer="body">{{ c.body }}</p>{% endif %}
+    {% if c["items"] %}<ul class="bullets" data-layer="points">{% for x in c["items"] %}<li data-layer="point">{{ x }}</li>{% endfor %}</ul>{% endif %}
+  </section>
+{% endfor %}
+</div>
+{% endblock %}

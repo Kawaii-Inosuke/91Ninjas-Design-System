@@ -207,6 +207,8 @@ pub const ICON_PANELS: &[(&str, &str, &str)] = &[
     (crate::addons::pathtools::ID, "Anchor Inspector", "dc-anchor-smooth"),
     (crate::addons::pathtools::shape::ID, "Parametric Shape", "hexagon"),
     (crate::addons::pen::ID, "Smart Pen", "spline-pointer"),
+    // 91studio: the AI panel (D-021).
+    (crate::panels::studio_ai::ID, "91 Studio AI", "wand-sparkles"),
 ];
 
 /// Groups of icon panels separated by dividers in the collapsed column.
@@ -224,6 +226,7 @@ pub const ICON_PANEL_GROUPS: &[&[&str]] = &[
     &["character", "paragraph", "glyphs"],
     &["history", "actions", "info", "navigator"],
     &["variables"],
+    &[crate::panels::studio_ai::ID], // 91studio
 ];
 
 #[derive(Clone, Debug, Serialize, Deserialize)]

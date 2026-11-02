@@ -27,7 +27,11 @@ The repo was about one month old at fork time, with about 7.5k commits and dozen
 | `apps/vectorcraft/src/control_server.rs` | `start` becomes `start_on(port, ctx, tx)`; test-only imports | Shared queue | upstream control-server tests unchanged |
 | `apps/vectorcraft/Cargo.toml`, `Cargo.toml`, `xtask/src/layers.rs` | Bridge dependency, workspace entry, layer row | New crate | `cargo xtask layers` |
 
-Our own new files: `crates/studio-bridge/`, `apps/vectorcraft/src/studio_bridge.rs`.
+| `crates/ui-egui/src/lib.rs`, `services.rs` | `pub mod studio;` and `Services::studio_agents` | The AI panel's host service (D-021) | 2,882 ui-egui tests pass |
+| `crates/ui-egui/src/panels.rs`, `state.rs`, `menus/tree.rs` | Register the `studioAi` panel (module, dispatch, `ICON_PANELS` + group, Window menu) | The AI panel | same |
+| `apps/vectorcraft/src/main.rs` | Launch the agents before the window, give the panel its client, stop the agents after the window closes | D-021 | live check (PHASE-4) |
+
+Our own new files: `crates/studio-bridge/`, `apps/vectorcraft/src/studio_bridge.rs`, `apps/vectorcraft/src/studio_agents.rs`, `crates/ui-egui/src/studio.rs`, `crates/ui-egui/src/panels/studio_ai.rs`.
 
 ## Git setup
 - Our repo is https://github.com/Kawaii-Inosuke/91Ninjas-Design-System.git. The repo root is `Design system/`.

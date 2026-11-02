@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>91 Studio agents</title>
+<style>
+:root { --bg:#f6f7f9; --panel:#fff; --ink:#1d2330; --mute:#667085; --line:#e3e6eb; --accent:#2563eb; --ok:#16794c; --warn:#a15c07; --bad:#b42318; }
+* { box-sizing: border-box; } body { margin:0; font: 14px/1.45 system-ui, sans-serif; background: var(--bg); color: var(--ink); }
+header { padding: 14px 20px; border-bottom: 1px solid var(--line); background: var(--panel); display:flex; gap:16px; align-items:center; }
+header h1 { font-size: 16px; margin: 0; } #health { color: var(--mute); font-size: 12px; }
+main { display:grid; grid-template-columns: 340px 1fr; gap: 16px; padding: 16px; max-width: 1400px; margin: 0 auto; }
+section { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px; margin-bottom: 16px; }
+h2 { font-size: 13px; text-transform: none; margin: 0 0 10px; color: var(--mute); font-weight: 600; }
+label { display:block; font-size: 12px; color: var(--mute); margin: 8px 0 4px; }
+textarea, input[type=text], select { width:100%; padding: 8px; border:1px solid var(--line); border-radius: 6px; font: inherit; }
+textarea { min-height: 140px; resize: vertical; }
+button { padding: 7px 12px; border-radius: 6px; border: 1px solid var(--line); background: #fff; cursor: pointer; font: inherit; }
+button.primary { background: var(--accent); color: #fff; border-color: var(--accent); } button:disabled { opacity: .5; cursor: default; }
+.row { display:flex; gap:8px; align-items:center; flex-wrap: wrap; margin-top: 10px; }
+#events { display:grid; gap:8px; } .ev { border-left: 3px solid var(--line); padding: 4px 10px; }
+.ev.stage { color: var(--mute); border-color: transparent; padding-left: 13px; } .ev.error { border-color: var(--bad); }
+.ev.gate { border-color: var(--accent); background: #f3f6ff; padding: 10px; border-radius: 0 8px 8px 0; }
+.ev.done { border-color: var(--ok); font-weight: 600; } .ev.message { border-color: #8b5cf6; }
+.versions img, .ev img { max-width: 100%; border: 1px solid var(--line); border-radius: 6px; display:block; margin-top:6px; }
+.fail { color: var(--bad); font-size: 12px; } .pass { color: var(--ok); font-size: 12px; }
+.chip { display:inline-block; padding: 1px 8px; border-radius: 99px; background: #eef2f7; font-size: 12px; margin: 2px 4px 2px 0; }
+.sw { display:inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: -2px; border: 1px solid #0002; }
+pre { white-space: pre-wrap; font-size: 12px; background: #f8f9fb; padding: 8px; border-radius: 6px; max-height: 260px; overflow: auto; }
+.client { padding: 6px 0; border-top: 1px solid var(--line); } .client:first-child { border-top: 0; }
+@media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+</style></head>
+<body>
+<header><h1>91 Studio · agents (test page)</h1><span id="health">connecting…</span></header>
+<main>
+  <div>
+    <section>
+      <h2>New design</h2>
+      <label for="client">Client</label><select id="client"></select>
+      <label for="content">Content (text)</label><textarea id="content" placeholder="Paste the article section, notes or copy to turn into an infographic"></textarea>
+      <label for="image">…or an image of the content (optional)</label><input id="image" type="file" accept="image/*">
+      <label for="instruction">Instruction (optional)</label><input id="instruction" type="text" placeholder="e.g. use a timeline, keep it to 4 steps">
+      <div class="row"><button class="primary" id="start">Make the infographic</button></div>
+    </section>
+    <section>
+      <h2>Clients</h2>
+      <div id="clients"></div>
+      <label for="pack">Import a client pack (.91pack)</label><input id="pack" type="file" accept=".91pack">
+      <div id="importPreview"></div>
+    </section>
+  </div>
+  <div>
+    <section><h2>Run</h2><div id="runInfo" style="color:var(--mute)">No run yet.</div><div id="events"></div></section>
+    <section id="chatBox" hidden>
+      <h2>Edit the placed design by chat</h2>
+      <div class="row"><input id="chat" type="text" placeholder="e.g. make the title 20% bigger"><button id="send">Send</button></div>
+    </section>
+  </div>
+</main>
+<script>
+const token = new URLSearchParams(location.hash.slice(1)).get('token') || '';
+const H = { Authorization: 'Bearer ' + token };
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let runId = null;
+
+async function api(path, opts = {}) {
+  const r = await fetch(path, { ...opts, headers: { ...H, ...(opts.headers || {}) } });
+  if (!r.ok) { let m = r.statusText; try { m = (await r.json()).detail || m; } catch {} throw new Error(m); }
+  return r.headers.get('content-type')?.includes('json') ? r.json() : r;
+}
+const fileUrl = (p) => runId && p ? `/api/runs/${runId}/files/${encodeURIComponent(p.split('/runs/' + runId + '/')[1] || '')}?token=${token}` : '';
+
+async function loadHealth() {
+  try { const h = await api('/api/health');
+    $('health').textContent = (h.editor ? 'editor connected' : 'editor not open (designs are saved as files)') + ' · ' + Object.entries(h.models).map(([k,v]) => `${k}: ${v}`).join(' · ');
+  } catch (e) { $('health').textContent = 'not connected: ' + e.message + ' (open the link the server printed)'; }
+}
+
+async function loadClients() {
+  const list = await api('/api/clients');
+  $('client').innerHTML = list.filter(c => !c.error).map(c => `<option value="${esc(c.client)}">${esc(c.name)} (${esc(c.client)})</option>`).join('');
+  $('clients').innerHTML = list.map(c => c.error ? `<div class="client fail">${esc(c.client)}: ${esc(c.error)}</div>` : `<div class="client">
+    <b>${esc(c.name)}</b> <span class="chip">v${esc(c.version)}</span> <span class="chip">${c.samples.length} samples</span><br>
+    ${Object.entries(c.colors).map(([k,v]) => `<span class="sw" title="${esc(k)} ${esc(v)}" style="background:${esc(v)}"></span>`).join(' ')} <span style="color:var(--mute)">${esc(c.fonts.join(', '))}</span>
+    ${c.problems.map(p => `<div class="fail">${esc(p)}</div>`).join('')}
+    <div class="row"><button data-export="${esc(c.client)}">Export pack</button></div></div>`).join('') || '<div style="color:var(--mute)">No clients yet. Import a pack below.</div>';
+  document.querySelectorAll('[data-export]').forEach(b => b.onclick = async () => {
+    const r = await api(`/api/clients/${b.dataset.export}/export`, { method: 'POST' });
+    const url = URL.createObjectURL(await r.blob()); const a = document.createElement('a');
+    a.href = url; a.download = (r.headers.get('content-disposition') || '').split('filename=')[1]?.replaceAll('"','') || 'client.91pack'; a.click();
+  });
+}
+
+$('pack').onchange = async () => {
+  const f = $('pack').files[0]; if (!f) return;
+  const fd = new FormData(); fd.append('pack', f);
+  try {
+    const p = await api('/api/clients/import', { method: 'POST', body: fd });
+    $('importPreview').innerHTML = `<div class="client"><b>${esc(p.name)}</b> v${esc(p.version)} by ${esc(p.author)}<br>
+      ${Object.entries(p.colors).map(([k,v]) => `<span class="sw" title="${esc(k)}" style="background:${esc(v)}"></span>`).join(' ')} ${esc(p.fonts.join(', '))} · ${p.samples.length} samples
+      <details><summary>Rulebook</summary><pre>${esc(p.rules)}</pre></details>
+      <div class="row">${p.exists ? `<button data-mode="replace">Replace existing</button><button data-mode="keep_both">Keep both</button>` : `<button class="primary" data-mode="replace">Install</button>`}</div></div>`;
+    document.querySelectorAll('[data-mode]').forEach(b => b.onclick = async () => {
+      const r = await api(`/api/clients/import/${p.id}/install`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ mode: b.dataset.mode }) });
+      $('importPreview').innerHTML = `<div class="pass">Installed as ${esc(r.client)}</div>`; loadClients();
+    });
+  } catch (e) { $('importPreview').innerHTML = `<div class="fail">Refused: ${esc(e.message)}</div>`; }
+};
+
+$('start').onclick = async () => {
+  const fd = new FormData(); fd.append('client', $('client').value); fd.append('content', $('content').value);
+  fd.append('instruction', $('instruction').value); if ($('image').files[0]) fd.append('image', $('image').files[0]);
+  $('start').disabled = true;
+  try { const r = await api('/api/runs', { method: 'POST', body: fd }); runId = r.id; $('events').innerHTML = ''; $('chatBox').hidden = true;
+    $('runInfo').textContent = 'Run ' + runId; follow(runId); }
+  catch (e) { alert(e.message); } finally { $('start').disabled = false; }
+};
+
+async function follow(id) {
+  const r = await fetch(`/api/runs/${id}/events`, { headers: H });
+  const reader = r.body.getReader(); const dec = new TextDecoder(); let buf = '';
+  for (;;) { const { value, done } = await reader.read(); if (done) break; buf += dec.decode(value, { stream: true });
+    let i; while ((i = buf.indexOf('\n\n')) >= 0) { const chunk = buf.slice(0, i); buf = buf.slice(i + 2);
+      const data = chunk.split('\n').find(l => l.startsWith('data: ')); if (data) show(JSON.parse(data.slice(6))); } }
+}
+
+function show(e) {
+  const d = e.data || {}; const div = document.createElement('div'); div.className = 'ev ' + e.type; let html = '';
+  if (e.type === 'stage') html = `${esc(d.stage)} · ${esc(d.note)}`;
+  else if (e.type === 'brief') html = `<b>Brief</b>: ${esc(d.topic)}, <i>${esc(d.angle)}</i><br>${(d.key_points||[]).map(k => `<span class="chip">${esc(k)}</span>`).join('')}<br>Suggested layout: ${esc(d.suggested_layout)} (${esc(d.layout_reason)})`;
+  else if (e.type === 'check') html = `<b>Similar designs</b>: ${d.verdict === 'ok' ? 'none' : d.matches.length + ' found'}${d.matches?.length ? ` · closest: “${esc(d.matches[0].topic)}” (${d.matches[0].similarity}, ${esc(d.matches[0].status)})` : ''}${d.avoid_layouts?.length ? ` · avoid ${esc(d.avoid_layouts.join(', '))}` : ''}`;
+  else if (e.type === 'version') html = `<b>Version ${d.version}</b> ${d.passes ? '<span class="pass">passes the critic</span>' : `<span class="fail">${d.fails.length} finding(s)</span>`}
+      ${d.fails.map(f => `<div class="fail">${esc(f.rule)} · ${esc(f.problem)} → ${esc(f.fix)}</div>`).join('')}<img src="${fileUrl(d.preview)}" alt="version ${d.version}">`;
+  else if (e.type === 'placed') { html = d.editor ? `<b>Placed in the editor</b> (${d.layers} named layers). You can edit it by hand or by chat.` : `<b>${esc(d.note)}</b>`; if (d.editor) $('chatBox').hidden = false; }
+  else if (e.type === 'gate') html = gate(d);
+  else if (e.type === 'decision') html = `You chose: ${esc(d.decision)}${d.notes ? ` (“${esc(d.notes)}”)` : ''}`;
+  else if (e.type === 'message') html = `<b>${d.from === 'designer' ? 'You' : 'Editor agent'}</b>: ${esc(d.text)}`;
+  else if (e.type === 'done') html = `Finished: ${esc(d.status)}${d.reason ? ' · ' + esc(d.reason) : ''}${d.error ? ' · ' + esc(d.error) : ''}${d.files ? '<br>' + Object.entries(d.files).map(([k,v]) => `<span class="chip">${esc(k)}: ${esc(v)}</span>`).join('') : ''}${d.looks_like?.length ? ` · looks like: ${esc(d.looks_like.map(v => v.topic).join(', '))}` : ''}`;
+  else if (e.type === 'error') html = `<b>Error</b>: ${esc(d.error)}`;
+  else html = `${esc(e.type)}: <pre>${esc(JSON.stringify(d, null, 1))}</pre>`;
+  div.innerHTML = html; $('events').appendChild(div); div.scrollIntoView({ block: 'nearest' });
+  div.querySelectorAll('[data-decision]').forEach(b => b.onclick = async () => {
+    const notes = div.querySelector('textarea')?.value || '';
+    if (b.dataset.decision === 'change' && !notes.trim()) { alert('Write what to change first.'); return; }
+    div.querySelectorAll('button').forEach(x => x.disabled = true);
+    try { await api(`/api/runs/${runId}/decide`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ gate: d.kind, decision: b.dataset.decision, notes }) }); }
+    catch (err) { alert(err.message); div.querySelectorAll('button').forEach(x => x.disabled = false); }
+  });
+}
+
+function gate(g) {
+  const p = g.payload || {}; let body = '';
+  if (g.kind === 'outline') { const s = p.spec; body = `<b>Outline for approval</b>: ${esc(s.title)} · <span class="chip">${esc(s.layout)}</span>
+      ${(s.items||[]).map(i => `<div>• <b>${esc(i.heading)}</b> ${esc(i.body)} ${i.icon ? `<span class="chip">${esc(i.icon)}</span>` : ''}</div>`).join('')}
+      ${(s.columns||[]).map(c => `<div>▸ <b>${esc(c.title)}</b> ${esc(c.body || '')} ${(c.items||[]).map(x => esc(x)).join(' · ')}</div>`).join('')}
+      ${s.table ? `<pre>${esc([s.table.header, ...s.table.rows].map(r => r.join(' | ')).join('\n'))}</pre>` : ''}${s.takeaway ? `<div><i>${esc(s.takeaway)}</i></div>` : ''}`; }
+  else if (g.kind === 'final') body = `<b>Final approval</b>: version ${p.version}${p.placed ? ' is in the editor; your edits there are included when you approve.' : '.'}
+      ${p.unresolved?.length ? `<div class="fail">Not resolved: ${p.unresolved.map(f => esc(f.problem)).join('; ')}</div>` : ''}<img src="${fileUrl(p.preview)}" alt="final preview">`;
+  else if (g.kind === 'similar_exists') body = `<b>A similar design already exists</b> for this client. Generate a new version anyway?` +
+      (p.matches || []).map(m => `<div class="client">“${esc(m.topic)}” <span class="chip">${esc(m.status)}</span> <span class="chip">similarity ${m.similarity}</span> ${m.layout ? `<span class="chip">${esc(m.layout)}</span>` : ''}
+        ${Object.keys(m.files || {}).length ? Object.entries(m.files).map(([k, v]) => `<div style="font-size:12px">${esc(k)}: <code>${esc(v)}</code></div>`).join('') : '<div style="font-size:12px;color:var(--mute)">' + (m.status === 'reserved' ? 'still being made in another run' : 'from the client\'s past work') + '</div>'}</div>`).join('');
+  const notes = g.options.includes('change') ? `<label>What to change (for "change")</label><textarea style="min-height:60px"></textarea>` : '';
+  return body + notes + `<div class="row">${g.options.map(o => `<button data-decision="${o}" class="${o === 'approve' || o === 'generate' ? 'primary' : ''}">${o === 'generate' ? 'generate again' : o}</button>`).join('')}</div>`;
+}
+
+$('send').onclick = async () => {
+  const text = $('chat').value.trim(); if (!text || !runId) return; $('send').disabled = true;
+  try { await api(`/api/runs/${runId}/messages`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ text }) }); $('chat').value = ''; }
+  catch (e) { alert(e.message); } finally { $('send').disabled = false; }
+};
+loadHealth(); loadClients().catch(e => $('clients').textContent = e.message);
+</script>
+</body></html>

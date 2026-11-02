@@ -51,7 +51,8 @@ mod prefs_dir;
 mod printing;
 #[cfg(not(target_os = "macos"))]
 mod single_instance;
-// 91studio: the AI agents' bridge (studio/docs/DECISIONS.md D-008).
+// 91studio: the AI agents' bridge (studio/docs/DECISIONS.md D-008) and the agents themselves (D-021).
+mod studio_agents;
 mod studio_bridge;
 #[cfg(windows)]
 mod system_fonts;
@@ -382,6 +383,9 @@ fn main() -> std::process::ExitCode {
             eframe::run_native("VectorCraft", options, app_creator)
         }
     };
+    // 91studio: the agents start with the app and stop when its window has closed (D-021).
+    let agents = studio_agents::launch();
+    let agents_info = agents.as_ref().map(|a| a.info.clone());
     let outcome = vectorcraft_engine::guard::catch_panic(|| {
         run(
             options,
@@ -462,7 +466,10 @@ fn main() -> std::process::ExitCode {
                 }
                 app.custom_titlebar = custom_titlebar;
                 // 91studio: the control server and the 91 Studio bridge feed one request queue.
-                let bridge = studio_bridge::enabled();
+                let bridge = studio_bridge::enabled() || agents_info.is_some();
+                if let Some(info) = agents_info.clone() {
+                    app.services.studio_agents = Some(Box::new(studio_agents::Client::new(info, cc.egui_ctx.clone())));
+                }
                 if control_port.is_some() || bridge {
                     let (tx, rx) = std::sync::mpsc::channel();
                     if let Some(port) = control_port {
@@ -515,6 +522,8 @@ fn main() -> std::process::ExitCode {
             }),
         )
     });
+    // 91studio: the window is gone, so the agents go too.
+    drop(agents);
     // The window is gone: later launches start their own app, including the one a graphics
     // failure starts again below.
     #[cfg(not(target_os = "macos"))]

@@ -41,6 +41,8 @@ pub mod stroke;
 pub mod svg_interactivity;
 pub mod swatches;
 pub mod symbols;
+// 91studio: the AI panel (D-021).
+pub mod studio_ai;
 pub mod tabs;
 pub mod text_styles;
 pub mod transform;
@@ -175,6 +177,7 @@ pub fn show_icon_panel(app: &mut VectorcraftApp, ui: &mut Ui, id: &str) {
         "attributes" => attributes::show(app, ui),
         svg_interactivity::ID => svg_interactivity::show(app, ui),
         variables::ID => variables::show(app, ui),
+        studio_ai::ID => studio_ai::show(app, ui), // 91studio
         "colorThemes" => color_themes::show(app, ui),
         links::ID => links::show(app, ui),
         asset_export::ID => asset_export::show(app, ui),

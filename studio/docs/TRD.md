@@ -11,7 +11,7 @@
 | Models | Gemini (Strands Google provider), Groq (OpenAI-compatible) | `AI-MODELS.md` |
 | Rendering | Ours: Jinja2 → HTML → Playwright Chromium → PNG, then `layered_svg()` | Approach learned from `Design skill/skill/render.py`. No code dependency (D-010). |
 | Data | Local only: the `clients/` folder plus SQLite (`history.db`: designs, briefs, layouts, phash) | No Supabase (D-009, D-010) |
-| Embeddings | `sentence-transformers/all-MiniLM-L6-v2` (384-d, local CPU), vectors stored in SQLite | For the duplicate-topic check on this machine |
+| Embeddings | `sentence-transformers/all-MiniLM-L6-v2` (384-d, local CPU), vectors stored in SQLite | For the similar-design check on this machine |
 
 ## Sidecar API (panel → agents), localhost only
 Every request carries `Authorization: Bearer <SIDECAR_TOKEN>`. The app generates the token at launch and passes it to the sidecar through an environment variable.
@@ -19,7 +19,7 @@ Every request carries `Authorization: Bearer <SIDECAR_TOKEN>`. The app generates
 | Method | Path | Body / result |
 |---|---|---|
 | `POST` | `/runs` | `{client, content?, image_b64?, instruction?, artboard_id?}` → `{run_id}` |
-| `GET` | `/runs/{id}/events` | SSE stream: `text` (agent message chunks), `step` (agent/node started or finished), `tool` (tool call name and short args), `interrupt` (`{id, kind: outline\|final\|dedup_warn, payload}`), `artboard` (placed node ids), `usage` (tokens and cost), `done`, `error` |
+| `GET` | `/runs/{id}/events` | SSE stream: `text` (agent message chunks), `step` (agent/node started or finished), `tool` (tool call name and short args), `gate` (`{kind: similar_exists\|outline\|final, options, payload}`), `artboard` (placed node ids), `usage` (tokens and cost), `done`, `error` |
 | `POST` | `/runs/{id}/interrupts/{interrupt_id}` | `{decision: approve\|change\|abandon, notes?}` → resumes the graph |
 | `POST` | `/runs/{id}/messages` | `{text, selection_ids?}`. A chat turn, e.g. an edit request, on an existing run or artboard. |
 | `POST` | `/runs/{id}/cancel` | Stops the run |
@@ -80,12 +80,12 @@ Responses are `{ok, result|error}`. Status codes: 200 OK, 401 token, 403 refused
 | Tool | Does | Idea taken from (reference only) |
 |---|---|---|
 | `load_brand(client)` | Reads `DESIGN.md` front matter, then returns tokens, palette and rule texts | skill `brand.py` |
-| `dup_check(topic, angle, client)` | Local embedding search over `history.db`. Returns ok, warn or block plus the layouts to avoid. | skill `registry.py` thresholds (block ≥ 0.80, warn ≥ 0.65) |
+| `History.check(client, topic, angle)` | Local embedding search over `history.db`. Returns `ok`, or `similar` with matches (status, similarity, layout, **files**), plus recently used layouts as a *preference*. | skill warn threshold (≥ 0.65); no blocking (D-020) |
 | `search_icons(word)` | Searches a bundled open icon set (e.g. Tabler, MIT) | skill icon search |
 | `render(spec)` | Jinja HTML, then PNG, then `auto_checks` | skill `render.py` |
 | `to_layered_svg(html)` | Layered SVG for the editor | new |
 | `canvas_*` (place, inspect, edit, export) | Bridge client (`agents/bridge.py`) | new |
-| `record_final(...)` | Writes the approved design to `history.db` and checks phash duplicates | skill `registry.log` |
+| `History.approve(...)` | Records the approved design and its files; reports visually similar approved designs for information only | skill `registry.log` |
 
 ## Client packs (D-009)
 **Local storage:** `<app data>/clients/<client>/`, for example `~/.local/share/91studio/clients/` on Linux. It uses the same layout as the skill's `brands/<client>/`:

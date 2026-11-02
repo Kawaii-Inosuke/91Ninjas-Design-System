@@ -675,6 +675,7 @@ pub fn menu_tree_named(english_names: bool) -> Vec<(&'static str, Vec<Item>)> {
                     type_items
                 }),
                 panel("Variables", crate::panels::variables::ID),
+                panel("91 Studio AI", crate::panels::studio_ai::ID), // 91studio
             ];
             sort_by_localized_label(&mut panels, lang);
             window_items.extend(panels);

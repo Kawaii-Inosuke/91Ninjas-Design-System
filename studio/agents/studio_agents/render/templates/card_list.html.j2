@@ -1,0 +1,10 @@
+{% extends "base.html.j2" %}{% from "macros.j2" import marker with context %}
+{# variants: check (default) | number #}
+{% block body %}
+<ol class="clist clist-{{ variant or 'check' }}" data-layer="list">
+{% for it in spec.items %}
+  <li class="card" data-layer="item">{{ marker(variant or "check", loop.index, it, 56) }}
+    <p class="b" data-layer="text">{% if it.heading %}<strong class="lead">{{ it.heading }}</strong>{% if it.body %}: {% endif %}{% endif %}{{ it.body }}</p></li>
+{% endfor %}
+</ol>
+{% endblock %}

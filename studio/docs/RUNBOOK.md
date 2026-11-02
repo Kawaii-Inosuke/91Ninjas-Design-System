@@ -42,6 +42,12 @@ The log prints `91 Studio bridge listening on 127.0.0.1:<port>`. The agents find
 
 **Disk:** the test builds leave large binaries in `target/debug/deps` (the engine's test binary alone is ~430 MB). Deleting them is safe; they are rebuilt when needed.
 
+## 2c. Normal use: just start the editor
+```bash
+cd studio/editor && ./target/debug/vectorcraft
+```
+The app starts the agents and the bridge by itself (log: `91 Studio agents starting on 127.0.0.1:<port>`; agents' log `$XDG_RUNTIME_DIR/91studio/agents.log`). Open **Window › 91 Studio AI**, or the wand icon in the panel column. Requirements: `uv` installed and `studio/agents` set up (step 3). To turn it off, use `STUDIO_AGENTS=0`. To use another agents folder or `uv`, use `STUDIO_AGENTS_DIR` / `STUDIO_UV`.
+
 ## 3. Agents project (Python)
 ```bash
 cd studio/agents

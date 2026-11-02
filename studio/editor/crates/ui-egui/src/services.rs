@@ -154,6 +154,9 @@ pub struct Services {
     /// bar's open menu) for floating panels in OS windows of their own: eframe runs the host's
     /// `raw_input_hook` for the main window only.
     pub native_input_hook: Option<NativeInputHook>,
+    /// 91studio: the 91 Studio agents for the AI panel (desktop, when the app started them). Without them
+    /// the panel says they aren't available. D-021.
+    pub studio_agents: Option<Box<dyn crate::studio::StudioAgents>>,
 }
 
 /// Rewrites one window's raw input before egui reads it ([`Services::native_input_hook`]).

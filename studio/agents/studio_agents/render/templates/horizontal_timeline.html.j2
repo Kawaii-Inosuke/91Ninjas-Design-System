@@ -1,0 +1,9 @@
+{% extends "base.html.j2" %}{% from "macros.j2" import marker, text with context %}
+{# variants: number (default) | icon #}
+{% block body %}
+<div class="htl htl-{{ variant or 'number' }}" data-layer="timeline" style="grid-template-columns: repeat({{ spec.items | length }}, 1fr)">
+{% for it in spec.items %}
+  <div class="htl-step" data-layer="item">{{ marker(variant or "number", loop.index, it, 72) }}<div class="htl-text" data-layer="text">{{ text(it) }}</div></div>
+{% endfor %}
+</div>
+{% endblock %}

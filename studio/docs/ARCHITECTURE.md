@@ -28,12 +28,12 @@
 | AI panel | Rust/egui (ours) | Chat, streamed agent events, approval cards, client wizard, pack import and export |
 | Agent sidecar | Python (ours) | Orchestration (Strands Graph), model calls, tools |
 | Renderer | Python (ours; approach learned from the skill) | Spec → Jinja HTML (brand tokens as CSS variables) → Playwright Chromium → PNG preview and `auto_checks` → layered SVG |
-| Local store | files + SQLite | `clients/<client>/` brand packs, design history and duplicate-topic index |
+| Local store | files + SQLite | `clients/<client>/` brand packs, design history and similar-design index |
 
 ## New-design data flow
 1. **Panel → sidecar:** `POST /runs {client, content, image?, instruction?}`. The sidecar opens an SSE stream.
 2. **Brief Writer:** produces a brief (topic, angle, key points, layout family) as structured output.
-3. **Duplicate check:** compares the brief against the local history using embeddings. *Block* stops the run, *warn* is shown to the designer.
+3. **Similar-design check:** compares the brief against the local history using embeddings. If anything similar exists, the run pauses (gate `similar_exists`) and shows each match with its status and **file locations**. The designer chooses *generate again* or *abandon*. It never blocks (D-020).
 4. **Layout Designer:** produces `spec.json` (layout, items, icons, copy).
 5. **Interrupt "outline":** the designer chooses approve, change (notes go back to step 4), or abandon.
 6. **Renderer:** builds HTML, then PNG, then runs `auto_checks` (canvas size, fonts, off-palette colours, overflow, minimum text size).

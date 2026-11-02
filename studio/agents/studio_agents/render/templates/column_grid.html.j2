@@ -1,0 +1,9 @@
+{% extends "base.html.j2" %}
+{% block body %}
+<div class="grid" data-layer="columns" style="grid-template-columns: repeat({{ spec.columns | length }}, 1fr)">
+{% for c in spec.columns %}
+  <section class="col" data-layer="column"><p class="col-head b" data-layer="column-title">{{ c.title }}</p>
+    <div class="col-body" data-layer="column-body">{% if c.body %}<p class="b" data-layer="body">{{ c.body }}</p>{% endif %}{% if c["items"] %}<ul class="bullets b" data-layer="points">{% for x in c["items"] %}<li data-layer="point">{{ x }}</li>{% endfor %}</ul>{% endif %}</div></section>
+{% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,10 @@
+# Which AI model each agent uses (D-003). Change a line here to switch provider or model; no code changes.
+# Providers: gemini (GEMINI_API_KEY), groq (GROQ_API_KEY, OpenAI-compatible API), anthropic (ANTHROPIC_API_KEY, later).
+# Model ids: check what your keys can use with `uv run python -m studio_agents.models --list`, then pin them here.
+roles:
+  brief:      {provider: gemini, model: gemini-2.5-flash, temperature: 0.3}   # content → topic, angle, key points
+  layout:     {provider: gemini, model: gemini-2.5-pro,   temperature: 0.4}   # brief → design spec
+  critic:     {provider: gemini, model: gemini-2.5-pro,   temperature: 0.1}   # looks at the preview (vision)
+  editor:     {provider: gemini, model: gemini-2.5-flash, temperature: 0.2}   # chat edits on the artboard
+  onboarder:  {provider: gemini, model: gemini-2.5-pro,   temperature: 0.3}   # drafts a new client's DESIGN.md (vision)
+  tagger:     {provider: groq,   model: llama-3.3-70b-versatile, temperature: 0.1}   # cheap bulk text: tag past work

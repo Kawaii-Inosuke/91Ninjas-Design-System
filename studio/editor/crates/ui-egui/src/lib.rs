@@ -68,6 +68,8 @@ mod scrub;
 pub mod shortcut_editor;
 pub mod shortcuts;
 pub mod state;
+// 91studio: how the AI panel reaches the 91 Studio agents (studio/docs/DECISIONS.md D-021).
+pub mod studio;
 pub mod stylus;
 pub mod sysclip;
 pub mod theme;

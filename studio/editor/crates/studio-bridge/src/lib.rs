@@ -95,8 +95,8 @@ fn accept_loop(listener: TcpListener, server: http::Server) {
     }
 }
 
-/// 32 random bytes as 64 hex digits.
-fn new_token() -> io::Result<String> {
+/// 32 random bytes as 64 hex digits (the bridge's token; the app uses it for the agents' token too).
+pub fn new_token() -> io::Result<String> {
     let mut bytes = [0u8; 32];
     getrandom::fill(&mut bytes).map_err(|e| io::Error::other(format!("no random source: {e}")))?;
     Ok(bytes.iter().map(|b| format!("{b:02x}")).collect())

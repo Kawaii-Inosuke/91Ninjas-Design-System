@@ -11,7 +11,7 @@
 | Art Director (chat) | Gemini | Flash | no | Low latency in the panel |
 | Canvas Editor | Gemini | Flash | optional | Small, precise edit plans |
 | Brand Onboarder: tagging past work | Groq | an open model, e.g. Llama or Qwen | no | Very fast and cheap for bulk text |
-| Duplicate search | local | `all-MiniLM-L6-v2` | no | Already in the skill, free and offline |
+| Similar-design search | local | `all-MiniLM-L6-v2` | no | Already in the skill, free and offline |
 
 All of this is configured in `agents/models.yaml`. Code never hard-codes a model ID.
 

@@ -20,7 +20,7 @@ One desktop app that is an Illustrator-class editor with an AI side panel. In th
 ## Core flows (v1)
 1. **New design.**
    - The designer picks a client, pastes text or drops an image, and adds an optional instruction.
-   - Agents write a brief and run the duplicate check. A warn result is shown; a block result stops the run.
+   - Agents write a brief and look for similar designs. If one exists, the designer sees it and **where its files are**, and chooses to **generate again** or stop. Nothing is ever blocked: designers often want several versions of a topic (D-020).
    - Agents propose an outline. **Approval gate 1: approve, request changes, or abandon.**
    - Agents render the design, critique it (at most 3 rounds), and place it on a new artboard.
 2. **Hand edits.** The designer edits with normal tools (pen, type, colors, transform). Nothing is locked.
@@ -39,7 +39,7 @@ One desktop app that is an Illustrator-class editor with an AI side panel. In th
 
 ## Requirements
 - **Brand fidelity.** Use only the brand pack's colors, fonts and rules, and run the existing `auto_checks` plus the critic.
-- **No repeats.** A local duplicate-topic check using the same thresholds that work in the skill (block ≥ 0.80, warn ≥ 0.65, phash ≤ 8).
+- **Know what exists.** A local similar-design check (the skill's threshold, similarity ≥ 0.65) shows existing designs with their file locations. The designer always decides; nothing is blocked (D-020).
 - **Designer stays in control.** Nothing is logged or exported without approval, and the agents never overwrite manual edits silently.
 - **Swappable AI.** Gemini and Groq at launch. Claude (API or Bedrock) can be added by config.
 - **Runs locally.** The editor and agents run on the designer's machine. All data is local. The only network traffic is to the AI providers (D-009, D-010).
@@ -57,7 +57,7 @@ One desktop app that is an Illustrator-class editor with an AI side panel. In th
 - Time from content to approved infographic at least 50% lower than with the skill-only workflow
 - At least 80% of AI drafts reach final approval with hand edits only (no full redraw)
 - Zero brand-palette or font violations in logged finals
-- Zero duplicate-topic finals logged
+- Designers are never surprised by an existing design: every similar one is shown before generating
 
 ## Open questions
 - Exact Gemini and Groq model IDs and per-design cost (decided in Phase 3, recorded in `AI-MODELS.md`).

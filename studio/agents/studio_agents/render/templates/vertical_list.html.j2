@@ -1,0 +1,12 @@
+{% extends "base.html.j2" %}{% from "macros.j2" import marker, text with context %}
+{# variants: number (default) | icon #}
+{% block body %}
+<ol class="vlist vlist-{{ variant or 'number' }}" data-layer="list">
+{% for it in spec.items %}
+  <li class="vl-item" data-layer="item">
+    <span class="vl-marker">{{ marker(variant or "number", loop.index, it, 96) }}</span>
+    <div class="vl-text" data-layer="text">{{ text(it) }}</div>
+  </li>
+{% endfor %}
+</ol>
+{% endblock %}

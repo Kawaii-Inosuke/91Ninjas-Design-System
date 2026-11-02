@@ -1,0 +1,8 @@
+{% extends "base.html.j2" %}
+{% block body %}
+{% set n = spec.table.header | length %}
+<div class="ctable" data-layer="table" style="grid-template-columns: {% if n > 2 %}0.8fr repeat({{ n - 1 }}, 1fr){% else %}repeat({{ n }}, 1fr){% endif %}">
+  {% for h in spec.table.header %}<div class="cell head b" data-layer="header-cell">{{ h }}</div>{% endfor %}
+  {% for row in spec.table.rows %}{% for v in row %}<div class="cell b {{ 'label' if loop.first and n > 2 else 'data' }}" data-layer="cell">{{ v }}</div>{% endfor %}{% endfor %}
+</div>
+{% endblock %}
