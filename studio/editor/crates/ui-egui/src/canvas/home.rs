@@ -25,9 +25,10 @@ pub(super) fn home(app: &mut VectorcraftApp, ui: &mut Ui, rect: egui::Rect) {
 /// The Home screen's column: welcome, New / Open, Recent Files, presets and community links.
 fn home_content(app: &mut VectorcraftApp, ui: &mut Ui) {
     let t = Tokens::get(ui.ctx());
-    ui.label(egui::RichText::new(tl!("Welcome to VectorCraft")).font(theme::semibold(26.0)).color(t.text));
+    // 91studio: our product's welcome (D-022).
+    ui.label(egui::RichText::new(tl!("Welcome to 91 Studio")).font(theme::semibold(26.0)).color(t.text));
     ui.add_space(4.0);
-    ui.label(egui::RichText::new(tl!("Vector illustration — fast, open, scriptable.")).size(14.0).color(t.text_dim));
+    ui.label(egui::RichText::new(tl!("On-brand designs made by AI, finished by you.")).size(14.0).color(t.text_dim));
     ui.add_space(22.0);
     ui.horizontal(|ui| {
         if widgets::primary_button(ui, tl!("New file")).clicked() {
@@ -54,9 +55,12 @@ fn home_content(app: &mut VectorcraftApp, ui: &mut Ui) {
         }
     });
     ui.add_space(28.0);
-    ui.label(egui::RichText::new(tl!("Community")).font(theme::semibold(14.0)).color(t.text));
+    // 91studio: the AI panel instead of the upstream community links (D-022).
+    ui.label(egui::RichText::new(tl!("Make a design with AI")).font(theme::semibold(14.0)).color(t.text));
     ui.add_space(10.0);
-    crate::community::links(app, ui);
+    if widgets::secondary_button(ui, tl!("Open the 91 Studio AI panel")).clicked() {
+        app.run("window.panel", json!({ "panel": crate::panels::studio_ai::ID })).ok();
+    }
 }
 
 /// The Home screen's Recent Files (#663): the first of File › Open Recent Files, each its name and

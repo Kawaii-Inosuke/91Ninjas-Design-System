@@ -31,7 +31,9 @@ The repo was about one month old at fork time, with about 7.5k commits and dozen
 | `crates/ui-egui/src/panels.rs`, `state.rs`, `menus/tree.rs` | Register the `studioAi` panel (module, dispatch, `ICON_PANELS` + group, Window menu) | The AI panel | same |
 | `apps/vectorcraft/src/main.rs` | Launch the agents before the window, give the panel its client, stop the agents after the window closes | D-021 | live check (PHASE-4) |
 
-Our own new files: `crates/studio-bridge/`, `apps/vectorcraft/src/studio_bridge.rs`, `apps/vectorcraft/src/studio_agents.rs`, `crates/ui-egui/src/studio.rs`, `crates/ui-egui/src/panels/studio_ai.rs`.
+| Rebrand (D-022): `ui-egui` `native_menu.rs` (APP_NAME), `chrome.rs`, `canvas/home.rs`, `dialogs/about.rs`, `menus/tree.rs`, `menus/bar.rs`, `menus/ui_commands.rs`, `brand.rs`; app `titlebar.rs`, `main.rs`; tests that assert names (`chrome/tests.rs`, `tests/home.rs`, `tests/nativemenu.rs`, `i18n/tests.rs`, `titlebar.rs`); `README.md`, `NOTICE`, `ASSETS.md`; `docs/brand/` deleted | The product is 91 Studio; ArtCraft trademarks removed as the licence requires | 2,882 ui-egui tests, `xtask assets`, `xtask brands` |
+
+Our own new files: `assets/91studio/` (placeholder icon), `crates/studio-bridge/`, `apps/vectorcraft/src/studio_bridge.rs`, `apps/vectorcraft/src/studio_agents.rs`, `crates/ui-egui/src/studio.rs`, `crates/ui-egui/src/panels/studio_ai.rs`.
 
 ## Git setup
 - Our repo is https://github.com/Kawaii-Inosuke/91Ninjas-Design-System.git. The repo root is `Design system/`.

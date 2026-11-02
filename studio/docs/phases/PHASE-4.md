@@ -1,6 +1,6 @@
 # Phase 4: the AI panel in the editor
 
-*Status: **in progress** (2026-11-02). 4a, 4b and 4d are done. 4c (rebrand) is waiting for your choices on name and logo.*
+*Status: **done** (2026-11-02). The rebrand (4c) was finished at the start of Phase 5 with default choices (D-022).*
 
 ## Done
 | Part | What | Checked |
@@ -17,6 +17,19 @@
 - The editor forbids egui's `ComboBox` (clippy rule, egui#5225), so the panel uses `craft_ui::ComboBox`.
 - egui's `Id::new` is deprecated in this fork, so panel state uses the shared `pstate` helpers.
 
-## Next
-- **4c rebrand** (needs your input): the app name, window title, welcome screen, About, app icon and logo. Licence and NOTICE files stay.
-- Live end-to-end design in the panel once the API keys are in (carried over from Phase 3).
+## 4c Rebrand (D-022)
+- **Changes:**
+  - "91 Studio" everywhere designers see the app's name.
+  - Welcome screen: "Welcome to 91 Studio", plus an "Open the 91 Studio AI panel" button.
+  - About: "91 Studio by 91Ninjas, built on VectorCraft".
+  - Removed: the Discord button and items, the ArtCraft links, and the ArtCraft logos (`docs/brand/`).
+  - Placeholder "91" icon.
+  - The upstream update check is turned off.
+- **Checked:**
+  - 2,882 ui-egui tests pass (11 tests updated for the new names).
+  - `xtask assets` (330 files attributed) and `xtask brands` pass; clippy is clean.
+  - Live screenshot of the welcome screen and About.
+
+## Carried over
+- Live end-to-end design in the panel once the API keys are in (from Phase 3).
+- The real 91Ninjas logo, to replace `assets/91studio/` (same file names).

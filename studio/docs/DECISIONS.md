@@ -231,6 +231,21 @@ Format per entry: **Context → Decision → Alternatives → Consequences**. En
   - Designer machines need `uv` and the agents' Python environment until Phase 5 packages them.
   - The panel works with any backend that implements the trait, so it can be tested with a fake one.
 
+## D-022: Rebrand what designers see as "91 Studio"; keep internal names (2026-11-02)
+- **Context:**
+  - VectorCraft's licence requires forks to remove the ArtCraft name, wordmark and logos (`docs/brand/`).
+  - The user hasn't chosen a name or logo yet, and said to go on.
+- **Decision:**
+  - **Name:** product name **"91 Studio"**, one constant (`ui-egui/src/native_menu.rs::APP_NAME`) used for the window title, app id, app bar, Mac app menu, About, and Quit/Hide.
+  - **Removed:** the welcome screen's community links, the Discord button and items, the ArtCraft and getartcraft links, the `docs/brand/` logos, and the README logos.
+  - **Credit kept:** "built on VectorCraft (MIT OR Apache-2.0)" in About, Help and NOTICE.
+  - **Icon:** a placeholder (`assets/91studio/`: a blue tile with "91"), to be replaced by the 91Ninjas logo.
+  - **Update check off:** the startup update check looked for *upstream* VectorCraft releases, so it is turned off.
+  - **Internal names unchanged:** crate names, the `.vectorcraft` file format and extension, the preferences folder and log names. Renaming them would break files and thousands of tests and add nothing for designers.
+- **Consequences:**
+  - The theme's orange accent colour is upstream's look, not a trademark. It can change when there's a 91Ninjas palette.
+  - Translations of the renamed menu items fall back to English until translated.
+
 ## D-007: Every phase ends with a phase report and a docs update (2026-11-02)
 - **Decision:**
   - At the end of each phase, write `phases/PHASE-N.md` and update the PRD, TRD, ARCHITECTURE and SECURITY docs.

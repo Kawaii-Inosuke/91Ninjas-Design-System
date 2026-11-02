@@ -1,11 +1,6 @@
-<p align="center">
-  <a href="https://getartcraft.com/">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="docs/brand/artcraft-logo-white.svg">
-      <img alt="ArtCraft" src="docs/brand/artcraft-logo.svg" width="200">
-    </picture>
-  </a>
-</p>
+> **91 Studio fork.** This folder is the editor of 91 Studio, a fork of [VectorCraft](https://github.com/storytold/vectorcraft)
+> (MIT OR Apache-2.0) pinned at `4ee0ef2`. Our changes are listed in `../docs/UPSTREAM.md`. The ArtCraft
+> trademarks were removed, as the licence below requires of forks. The rest of this README is upstream's.
 
 
 <p align="center">
@@ -390,7 +385,4 @@ ArtCraft Team and are not covered by this license. They may be used only unmodif
 part of this repository and VectorCraft, under [`docs/brand/LICENSE-brand.txt`](docs/brand/LICENSE-brand.txt).
 Forks and modified versions must remove them.
 
-<p align="center">
-  <a href="https://getartcraft.com/"><img alt="ArtCraft" src="docs/brand/artcraft-mark.svg" width="28"></a><br>
-  <sub>Made by the <a href="https://getartcraft.com/">ArtCraft</a> team and community.</sub>
-</p>
+<p align="center"><sub>VectorCraft is made by the ArtCraft team and community (https://getartcraft.com/).</sub></p>
