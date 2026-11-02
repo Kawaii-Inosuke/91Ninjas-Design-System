@@ -5,7 +5,8 @@ A desktop vector editor for 91Ninjas designers with a built-in team of AI agents
 | Folder | What it is |
 |---|---|
 | `editor/` | Fork of [VectorCraft](https://github.com/storytold/vectorcraft) (Rust/egui), pinned at `4ee0ef2`. See `docs/UPSTREAM.md`. |
-| `agents/` | *(Phase 3)* Python sidecar: FastAPI + Strands agents |
+| `agents/` | Python: layered-SVG renderer (Phase 1). The agent sidecar (FastAPI + Strands) comes in Phase 3. |
+| `samples/` | Small SVGs for hand checks in the editor |
 | `docs/` | PRD, TRD, architecture, security, decisions, phase reports |
 | `../Design skill/` | **Reference only** (D-010). It shows the approach that gives good output, which we re-implement in `agents/`. The app does not use it. |
 

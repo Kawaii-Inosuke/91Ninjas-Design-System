@@ -132,6 +132,34 @@ Format per entry: **Context → Decision → Alternatives → Consequences**. En
   - Editor changes are kept to the minimum the AI needs (bridge, AI panel, RGB defaults, rebrand).
   - We don't build new drawing tools unless designers ask for them.
 
+## D-013: How HTML becomes layered SVG (2026-11-02)
+- **Context:** Designs are rendered as HTML (D-005). The editor needs named groups and live text (PHASE-0 findings).
+- **Decision:**
+  - Walk the rendered DOM in Chromium, in CSS paint order.
+  - Turn `::before`/`::after` into real elements first, because the templates draw bullets, connectors and rails with them.
+  - Measure text per character to get the exact line breaks and baselines, then emit one `<text>` per text block, one `<tspan>` per line, and nested runs for style changes.
+  - Layer names follow `data-layer` → id → class → readable tag name (heading, list, item, icon/graphic). Repeated names are numbered (`step-1…3`).
+  - Centred and right-aligned blocks keep `text-anchor`, so edits stay centred.
+  - **Our own templates (Phase 3) will put `data-layer` on every meaningful element**, so the agents get stable names.
+- **Alternatives:**
+  - The skill's PDF → SVG export: exact geometry, but flattened, unnamed paths.
+  - Having agents draw directly with editor commands (rejected in D-005).
+- **Consequences:**
+  - The output matches the browser render to ≤ 0.03% on 13 real designs.
+  - Unsupported CSS (shadows, filters, transforms, url backgrounds, clipping) produces warnings, so templates should avoid it.
+
+## D-014: Placement procedure for AI designs (2026-11-02)
+- **Decision:** Every AI design is placed in four steps:
+  1. `file.new {width, height, units: "Pixels", colorMode: "rgb"}`
+  2. `file.place {name: "design-<slug>"}`
+  3. Read the `background` layer's bounds.
+  4. `object.move` the design by minus those bounds, so it sits exactly on the artboard.
+
+  All four run inside one undo group once the bridge exists.
+- **Why:**
+  - The desktop app defaults new documents to CMYK.
+  - `file.place` centres the design's *bounds*, and the editor over-measures multi-line centred text (to be fixed in our fork in Phase 2; the reference move stays as a safety net).
+
 ## D-007: Every phase ends with a phase report and a docs update (2026-11-02)
 - **Decision:**
   - At the end of each phase, write `phases/PHASE-N.md` and update the PRD, TRD, ARCHITECTURE and SECURITY docs.

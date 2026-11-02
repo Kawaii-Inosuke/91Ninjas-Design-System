@@ -33,8 +33,15 @@ cargo run --release -p vectorcraft-cli -- --help    # headless CLI
 - **Measured (2026-11-02, dev build):** `target/` 3.2 GB + `~/.cargo` 0.7 GB + `~/.rustup` 0.6 GB = **~4.5 GB**. The first build takes ~6 minutes of compile time.
 - Linux system libraries needed (all were already present): gcc, pkg-config, x11, xkbcommon, wayland-client, fontconfig.
 
-## 3. Agent sidecar
-*(Phase 3. Not built yet.)*
+## 3. Agents project (Python)
+```bash
+cd studio/agents
+uv sync                                          # creates .venv (~230 MB)
+uv run playwright install chromium-headless-shell # ~280 MB, shared in ~/.cache/ms-playwright
+uv run pytest -q                                 # editor tests need the editor built (step 2)
+uv run python -m studio_agents.render.layered_svg design.html -o design.svg --name design-<slug>
+```
+The sidecar server comes in Phase 3.
 
 ## Troubleshooting
 - **GPU or window problems on Linux:** see `editor/docs/development.md`, sections "Linux: Wayland and X11" and "Desktop graphics processor". `WGPU_POWER_PREF=high` and `WAYLAND_DISPLAY=` are the usual fixes.

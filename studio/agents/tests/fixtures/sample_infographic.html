@@ -1,0 +1,57 @@
+<!doctype html>
+<!-- Test design for layered_svg(). Covers the visual features the infographic templates use:
+     tinted bars, rounded/bordered cards, ::before bullets and dashed connectors, numbered circle markers,
+     inline SVG icons (currentColor), clip-path arrows, gradients, centred multi-line text, mixed runs, uppercase. -->
+<html><head><meta charset="utf-8">
+<style>
+:root { --primary: #0164F0; --accent: #4E93F5; --tint: #E6F0FE; --ink: #383838; --surface: #FFFFFF; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { width: 1200px; font-family: 'DejaVu Sans'; font-size: 22px; line-height: 1.45; color: var(--ink); }
+#canvas { width: 1200px; height: 900px; background: var(--surface); position: relative; overflow: hidden; }
+.title-bar { height: 110px; display: flex; align-items: center; justify-content: center;
+  background: #0164F01A; color: var(--primary); font-size: 40px; font-weight: 700; }
+.subtitle { text-align: center; margin: 28px 120px 0; font-size: 24px; }
+.subtitle b { color: var(--primary); }
+.steps { list-style: none; display: grid; gap: 36px; margin: 44px 0 0 90px; width: 520px; position: relative; }
+.step { display: grid; grid-template-columns: 72px 1fr; gap: 24px; align-items: center; position: relative; }
+.step:not(:last-child)::before { content: ""; position: absolute; left: 34.5px; top: 50%; height: calc(100% + 36px);
+  border-left: 3px dashed var(--accent); }
+.marker { width: 72px; height: 72px; border: 3px solid var(--accent); border-radius: 50%; background: var(--surface);
+  display: grid; place-items: center; color: var(--accent); font-size: 30px; font-weight: 700; line-height: 1;
+  position: relative; z-index: 1; }
+.label { text-transform: uppercase; font-size: 16px; letter-spacing: 2px; color: var(--primary); font-weight: 700; }
+.card { position: absolute; left: 680px; top: 330px; width: 440px; padding: 36px 40px; border-radius: 24px;
+  background: linear-gradient(180deg, #0164F0 0%, #4E93F5 100%); color: #FFFFFF; }
+.card h2 { font-size: 30px; line-height: 1.25; margin-bottom: 18px; }
+.card ul { list-style: none; display: grid; gap: 10px; }
+.card li { position: relative; padding-left: 26px; }
+.card li::before { content: ""; position: absolute; left: 4px; top: .6em; width: 10px; height: 10px;
+  border-radius: 50%; background: currentColor; }
+.icon-tile { position: absolute; left: 1036px; top: 296px; width: 68px; height: 68px; border-radius: 16px;
+  background: var(--tint); color: var(--primary); display: grid; place-items: center; }
+.icon-tile svg { width: 40px; height: 40px; }
+.arrow { position: absolute; left: 610px; top: 520px; width: 44px; height: 52px; background: var(--accent);
+  clip-path: polygon(0 0, 100% 50%, 0 100%); }
+.footer { position: absolute; left: 0; right: 0; bottom: 0; height: 64px; background: var(--primary); color: #fff;
+  display: flex; align-items: center; justify-content: center; font-size: 18px; }
+</style></head>
+<body><div id="canvas">
+  <div class="title-bar" data-layer="title">Five steps to safer payments</div>
+  <p class="subtitle" data-layer="subtitle">A short checklist your team can follow before approving <b>any transfer</b>, no matter how urgent it looks.</p>
+  <ol class="steps" data-layer="steps">
+    <li class="step" data-layer="step"><div class="marker">1</div><div><div class="label">Verify</div><div>Confirm the sender by phone</div></div></li>
+    <li class="step" data-layer="step"><div class="marker">2</div><div><div class="label">Check</div><div>Compare bank details with past records</div></div></li>
+    <li class="step" data-layer="step"><div class="marker">3</div><div><div class="label">Approve</div><div>Two people sign off large amounts</div></div></li>
+  </ol>
+  <div class="arrow" data-layer="arrow"></div>
+  <div class="card" data-layer="tips-card">
+    <h2>Red flags to watch for</h2>
+    <ul><li>New bank account</li><li>Pressure to act fast</li><li>Unusual sender address</li></ul>
+  </div>
+  <div class="icon-tile" data-layer="icon-shield">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/>
+    </svg>
+  </div>
+  <div class="footer" data-layer="footer">91ninjas.com · Payments safety series</div>
+</div></body></html>

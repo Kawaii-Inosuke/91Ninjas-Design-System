@@ -1,0 +1,22 @@
+[project]
+name = "studio-agents"
+version = "0.1.0"
+description = "91 Studio agent sidecar: AI design agents, renderer, layered SVG"
+requires-python = ">=3.11"
+dependencies = [
+    "playwright>=1.48",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "pillow>=10",
+    "numpy>=1.26",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = [".", "tests"]
+
+[tool.uv]
+package = false

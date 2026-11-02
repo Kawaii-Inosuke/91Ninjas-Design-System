@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="900" viewBox="0 0 1200 900">
+<defs>
+<linearGradient id="tips-card-shape-grad" gradientUnits="userSpaceOnUse" x1="900" y1="330" x2="900" y2="610.67"><stop offset="0" stop-color="#0164f0"/><stop offset="1" stop-color="#4e93f5"/></linearGradient>
+</defs>
+<g id="design-sample">
+  <rect id="background" x="0" y="0" width="1200" height="900" fill="#ffffff"/>
+  <g id="title">
+    <rect id="title-shape" x="0" y="0" width="1200" height="110" fill="#0164f0" fill-opacity="0.1"/>
+    <text id="title-text" font-family="DejaVu Sans" font-size="40" font-weight="700" fill="#0164f0" xml:space="preserve"><tspan x="272.59" y="69">Five steps to safer payments</tspan></text>
+  </g>
+  <text id="subtitle" font-family="DejaVu Sans" font-size="24" font-weight="400" fill="#383838" text-anchor="middle" xml:space="preserve"><tspan x="600" y="163">A short checklist your team can follow before approving <tspan font-weight="700" fill="#0164f0">any transfer</tspan>, no</tspan><tspan x="600" y="197.8">matter how urgent it looks.</tspan></text>
+  <g id="steps">
+    <g id="step-1">
+      <g id="content-1">
+        <text id="label-1" font-family="DejaVu Sans" font-size="16" font-weight="700" letter-spacing="2" fill="#0164f0" xml:space="preserve"><tspan x="186" y="277.05">VERIFY</tspan></text>
+        <text id="text-1" font-family="DejaVu Sans" font-size="22" font-weight="400" fill="#383838" xml:space="preserve"><tspan x="186" y="306.23">Confirm the sender by phone</tspan></text>
+      </g>
+      <line id="step-before-1" x1="126" y1="287.59" x2="126" y2="395.59" stroke="#4e93f5" stroke-width="3" stroke-dasharray="9 6"/>
+      <g id="marker-1">
+        <rect id="marker-shape-1" x="91.5" y="253.09" width="69" height="69" rx="34.5" ry="34.5" fill="#ffffff" stroke="#4e93f5" stroke-width="3"/>
+        <text id="marker-text-1" font-family="DejaVu Sans" font-size="30" font-weight="700" fill="#4e93f5" xml:space="preserve"><tspan x="115.56" y="297.59">1</tspan></text>
+      </g>
+    </g>
+    <g id="step-2">
+      <g id="content-2">
+        <text id="label-2" font-family="DejaVu Sans" font-size="16" font-weight="700" letter-spacing="2" fill="#0164f0" xml:space="preserve"><tspan x="186" y="376.59">CHECK</tspan></text>
+        <text id="text-2" font-family="DejaVu Sans" font-size="22" font-weight="400" fill="#383838" xml:space="preserve"><tspan x="186" y="405.78">Compare bank details with past</tspan><tspan x="186" y="437.67">records</tspan></text>
+      </g>
+      <line id="step-before-2" x1="126" y1="403.08" x2="126" y2="526.05" stroke="#4e93f5" stroke-width="3" stroke-dasharray="9 6"/>
+      <g id="marker-2">
+        <rect id="marker-shape-2" x="91.5" y="368.58" width="69" height="69" rx="34.5" ry="34.5" fill="#ffffff" stroke="#4e93f5" stroke-width="3"/>
+        <text id="marker-text-2" font-family="DejaVu Sans" font-size="30" font-weight="700" fill="#4e93f5" xml:space="preserve"><tspan x="115.56" y="413.08">2</tspan></text>
+      </g>
+    </g>
+    <g id="step-3">
+      <g id="content-3">
+        <text id="label-3" font-family="DejaVu Sans" font-size="16" font-weight="700" letter-spacing="2" fill="#0164f0" xml:space="preserve"><tspan x="186" y="508.02">APPROVE</tspan></text>
+        <text id="text-3" font-family="DejaVu Sans" font-size="22" font-weight="400" fill="#383838" xml:space="preserve"><tspan x="186" y="537.2">Two people sign off large amounts</tspan></text>
+      </g>
+      <g id="marker-3">
+        <rect id="marker-shape-3" x="91.5" y="484.06" width="69" height="69" rx="34.5" ry="34.5" fill="#ffffff" stroke="#4e93f5" stroke-width="3"/>
+        <text id="marker-text-3" font-family="DejaVu Sans" font-size="30" font-weight="700" fill="#4e93f5" xml:space="preserve"><tspan x="115.56" y="528.56">3</tspan></text>
+      </g>
+    </g>
+  </g>
+  <polygon id="arrow" points="610,520 654,546 610,572" fill="#4e93f5"/>
+  <g id="tips-card">
+    <rect id="tips-card-shape" x="680" y="330" width="440" height="280.67" rx="24" ry="24" fill="url(#tips-card-shape-grad)"/>
+    <text id="heading" font-family="DejaVu Sans" font-size="30" font-weight="700" fill="#ffffff" xml:space="preserve"><tspan x="720" y="395">Red flags to watch</tspan><tspan x="720" y="432.5">for</tspan></text>
+    <g id="list">
+      <g id="item-1">
+        <text id="item-text-1" font-family="DejaVu Sans" font-size="22" font-weight="400" fill="#ffffff" xml:space="preserve"><tspan x="746" y="482">New bank account</tspan></text>
+        <rect id="item-before-1" x="724" y="472.19" width="10" height="10" rx="5" ry="5" fill="#ffffff"/>
+      </g>
+      <g id="item-2">
+        <text id="item-text-2" font-family="DejaVu Sans" font-size="22" font-weight="400" fill="#ffffff" xml:space="preserve"><tspan x="746" y="523.89">Pressure to act fast</tspan></text>
+        <rect id="item-before-2" x="724" y="514.08" width="10" height="10" rx="5" ry="5" fill="#ffffff"/>
+      </g>
+      <g id="item-3">
+        <text id="item-text-3" font-family="DejaVu Sans" font-size="22" font-weight="400" fill="#ffffff" xml:space="preserve"><tspan x="746" y="565.78">Unusual sender address</tspan></text>
+        <rect id="item-before-3" x="724" y="555.97" width="10" height="10" rx="5" ry="5" fill="#ffffff"/>
+      </g>
+    </g>
+  </g>
+  <g id="icon-shield">
+    <rect id="icon-shield-shape" x="1036" y="296" width="68" height="68" rx="16" ry="16" fill="#e6f0fe"/>
+    <g id="icon" transform="translate(1050 310) scale(1.6667)"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z" fill="none" stroke="#0164f0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M9 12l2 2 4-4" fill="none" stroke="#0164f0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></g>
+  </g>
+  <g id="footer">
+    <rect id="footer-shape" x="0" y="836" width="1200" height="64" fill="#0164f0"/>
+    <text id="footer-text" font-family="DejaVu Sans" font-size="18" font-weight="400" fill="#ffffff" xml:space="preserve"><tspan x="427.03" y="873.95">91ninjas.com · Payments safety series</tspan></text>
+  </g>
+</g>
+</svg>

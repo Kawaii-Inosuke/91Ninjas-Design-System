@@ -54,6 +54,8 @@ Designed from `research/vectorcraft-mcp.md` and implemented in Phase 2 (D-008).
 | `export {artboard, format, path}` | `app.export`, with the path confined to the output folder |
 | `undo` / `redo` | history commands |
 
+**Placement procedure (D-014):** `file.new` (RGB, design size) → `file.place {name: "design-<slug>"}` → read the `background` bounds → `object.move` by minus those bounds, all inside one undo group.
+
 **Document colour mode:** the desktop app defaults new documents to CMYK. The bridge creates AI documents and artboards in **RGB**, because brand tokens are RGB hex (PHASE-0 test 7).
 
 **Rules for the SVG we place** (from the import findings)
@@ -82,6 +84,8 @@ assets/brand.css · assets/fonts/*.woff2 · assets/icons/*.svg · assets/canvas.
 past/                sample past infographics (PNG/JPG/SVG/PDF)     — required, ≥ 3
 source/              original guideline (optional)
 ```
+**Fonts:** installing a pack copies its fonts to `~/.local/share/fonts/91studio/<client>/` and runs `fc-cache`, because the editor draws text with system fonts (PHASE-1 open issue 2).
+
 The pack format follows the skill's `brands/<client>/` layout because it is proven to work. The app reads packs only through its own `load_brand()`.
 
 **Share file `.91pack`:** a zip archive containing the folder above plus `manifest.json`:
