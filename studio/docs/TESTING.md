@@ -1,18 +1,23 @@
 # Testing
 
-*Last updated: 2026-11-02 (Phase 1)*
+*Last updated: 2026-11-03 (D-032, D-033).*
 
-Run with `cd studio/agents && uv run pytest -q`. The editor tests skip themselves if the editor isn't built.
+Python: `cd studio/agents && uv run pytest -q` (tests that need a running editor skip themselves).
+Rust: `cd studio/editor && CARGO_INCREMENTAL=0 cargo test -p vectorcraft-ui-egui --lib` and `-p vectorcraft-studio-bridge`.
+Disk is tight: delete the test binaries in `target/debug/deps` afterwards (RUNBOOK).
 
-| Layer | Test | How | Phase |
-|---|---|---|---|
-| Similar-design check ✅ | `tests/test_history.py`: similar designs are reported with their files and never blocked; other topics and clients pass; abandoned reservations stop counting; look-alikes are reported on approval. `tests/test_runs.py`: the `similar_exists` gate shows the existing files, and both *generate again* and *abandon* work. | pytest | 3 |
-| Layered SVG ✅ | `tests/test_layered_svg.py` on `fixtures/sample_infographic.html` checks: layer order, one outer group, unique readable ids, 16 live texts with lines, runs, uppercase and letter-spacing, one font per element, no filters, CSS features (clip polygon, gradient, border stroke, dashed `::before`, alpha tint, inline icon with `currentColor`). Pixel match against the browser render is < 0.3% (`tests/imaging.py`: light blur, threshold 48). | pytest | 1 |
-| SVG import fidelity ✅ | `tests/test_editor_import.py` runs headless through `vectorcraft-cli run`. It checks: RGB artboard at the design's size, background at (0,0), named groups, 16 Type objects with the right text, exact colours, and the editor's own PNG export within 1% of the HTML. Plus an optional hand check in the desktop app. | pytest + manual | 1 |
-| Real designs (local only) | The 13 skill outputs in `Design skill/output/fcc/` gave ≤ 0.03% difference (PHASE-1). They are not in the repo because they are client material, so this can only be re-run locally. | ad-hoc script | 1 |
-| Studio bridge ✅ | Rust: 11 tests against a fake app (`cargo test -p vectorcraft-studio-bridge`): token, origin/host, allow-list, path keys, inline place data, batch with refs, cancel on failure, refusal before running, malformed input. Python live tests (`tests/test_bridge_live.py`, skipped without a running editor): exact RGB placement in one step, a turn is one undo step, a failing turn is rolled back, preview/export, refusals. | cargo test + pytest | 2 |
-| Engine fix | `cargo test -p vectorcraft-engine --lib`: 3,979 pass, including `placed_svg_with_centred_type_is_measured_by_its_layout` (fails without the fix) | cargo test | 2 |
-| Agent graph | Strands graph tests with a stubbed model (deterministic tool calls). Interrupt pause and resume. Critic loop capped at 3. | pytest | 3 |
-| Model eval | 5 FCC contents run through the Gemini/Groq agents, compared with the skill's Claude results. Measured: auto_checks failures, critic rounds, designer score. | script + human review | 3 |
-| End to end | `POST /runs` on FCC sample content → outline interrupt → resume → design placed → final approval → a history entry recorded with the exported files. | manual, then scripted | 3–4 |
-| UI | Chat edit "make the title 20% bigger" changes only the title. Ctrl+Z reverts it in one step. | manual checklist | 4 |
+| Layer | Test | How |
+|---|---|---|
+| Designs with Claude ✅ | `tests/test_designs.py`, against a fake editor with documents, artboards, undo and closed tabs: each design gets its own document and the designer's tab never matters; versions side by side, the others removed in one step; `look` sees Ctrl+Z and closed tabs, and `place` brings a version back; approval exports from the design's own document; bad input refused. The connector's tools return text and images (`render_design`, `look_at_editor`). | pytest |
+| Connector live ✅ | An MCP client starts the connector over stdio (as Claude does) against a running editor: list, start, render (with image), place, place beside, look, remove one version, edit the other. A script in the session notes, not in CI yet. | manual script |
+| Local service ✅ | `tests/test_server.py`: token and origin, client packs over HTTP (create, export, import, install, from folder, pack path), history, activity feed (`after`), connect commands, which Claude apps are connected. | pytest |
+| New clients ✅ | `tests/test_onboard.py`: measuring past work (exact colours snapped to declared ones, coverage, radii, sizes, docs), too-few/no folder refused, the DESIGN.md template Claude is shown is a valid pack, `save_new_client` installs and refuses overwrite/bad files, `measure_past_work` returns facts, images and template. | pytest |
+| Similar-design check ✅ | `tests/test_history.py`: similar designs are reported with their files and never blocked; other topics and clients pass; abandoned reservations stop counting; look-alikes reported on approval. | pytest |
+| Rendering ✅ | `tests/test_render.py`: specs of every layout family render in a brand; auto-checks. | pytest |
+| Layered SVG ✅ | `tests/test_layered_svg.py`: layer order, one outer group, unique ids, live text with lines and runs, CSS features; pixel match < 0.3%. | pytest |
+| SVG import fidelity ✅ | `tests/test_editor_import.py` (headless `vectorcraft-cli`): RGB artboard at size, named groups, live Type objects, exact colours, editor export within 1%. | pytest |
+| Client packs ✅ | `tests/test_packs.py`: create, export, import (zip-slip, caps, sanitising), install modes. | pytest |
+| Studio bridge ✅ | Rust (`-p vectorcraft-studio-bridge`, 12 tests): token, origin, allow-list, path keys, inline place data, batches with refs, cancel on failure, calls and batches naming a document (D-032). Python live (`tests/test_bridge_live.py`): placement, one undo step per turn, rollback, preview/export, refusals. | cargo + pytest |
+| Documents by uid ✅ | Rust `control::tests`: `studio.inDocument` lands in the named document while the designer's stays in front; closed documents and other methods refused. | cargo |
+| Panel ✅ | Rust `panels::studio_ai::tests`: answers fill the panel, quiet retry while the service starts, the new-client request text, which Claude apps are connected. Visual check by screenshot. | cargo + screenshot |
+| Real use | The designer's checklist in Claude: a design from content, "another one with icons", "make the title bigger", Ctrl+Z then "add it back", 3 versions then "keep B", new content opens a new document, approval files in History. | manual |

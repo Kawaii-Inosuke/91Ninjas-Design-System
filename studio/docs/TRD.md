@@ -7,8 +7,8 @@
 |---|---|---|
 | Editor | VectorCraft fork, Rust ≥ 1.95 (edition 2024), egui/eframe, vello_cpu + wgpu | Pinned at `4ee0ef2` (`UPSTREAM.md`) |
 | Bridge | New Rust crate `crates/studio-bridge` | Section "Bridge API" below; design in `research/vectorcraft-mcp.md` |
-| Agents | Python 3.11+, `strands-agents` (≈1.6x), FastAPI, uvicorn, Pydantic v2 | Sidecar process started by the app |
-| Models | Gemini (Strands Google provider), Groq (OpenAI-compatible) | `AI-MODELS.md` |
+| Connector + local service | Python 3.11+, MCP Python SDK 2.x, FastAPI, uvicorn, Pydantic v2, Playwright, fastembed | The connector is started by Claude (stdio); the local service by the app |
+| AI | Claude, in the designer's Claude Code / Claude Desktop (D-033) | `AI-MODELS.md` |
 | Rendering | Ours: Jinja2 → HTML → Playwright Chromium → PNG, then `layered_svg()` | Approach learned from `Design skill/skill/render.py`. No code dependency (D-010). |
 | Data | Local only: the `clients/` folder plus SQLite (`history.db`: designs, briefs, layouts, phash) | No Supabase (D-009, D-010) |
 | Embeddings | `sentence-transformers/all-MiniLM-L6-v2` (384-d, local CPU), vectors stored in SQLite | For the similar-design check on this machine |

@@ -3,7 +3,7 @@
 *Last updated: 2026-11-03 (D-033).* *Earlier: 2026-11-02 (Phase 0)*
 
 ## Assets to protect
-- Model API keys (Gemini, Groq, and later Anthropic), which are company money
+- *(No model API keys since D-033: Claude runs in the designer's own Claude app.)*
 - Client brand packs and past work (confidential client material)
 - The designer's files on disk
 
@@ -27,6 +27,7 @@
 | T9 | Trademark and licence | Keep the MIT/Apache licence and NOTICE files. Remove the ArtCraft and VectorCraft names and logos from the shipped app. | 4 |
 
 ## Rules for contributors (and Claude Code)
-- Never commit `.env` or paste keys into chat, issues or docs.
+- Never commit `.env` or paste keys or tokens into chat, issues or docs.
+- The connector must stay a stdio MCP server with no network listener; new tools take no file paths unless the designer names the folder (T13).
 - Never run code from `Design skill/reference/`. It is read-only inspiration.
 - Any new network listener must bind to localhost and require the token.

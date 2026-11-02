@@ -37,6 +37,8 @@ The repo was about one month old at fork time, with about 7.5k commits and dozen
 | Mockup layout (D-028): `ui-egui` `workspaces.rs` (91Ninjas workspace, `studio_docking`, `adopt_studio_workspace`), `state.rs` (`studio_workspace_adopted`), `panel_docking.rs` (`dock_columns` pub(crate)), `chrome.rs` and new `chrome/share_export.rs` (Share/Export), `chrome/control_bar.rs` (AI button), `chrome/tabs.rs` (mint tab), `app.rs` (no hint line in the 91Ninjas workspace), `panels/studio_ai.rs` (outlined AI button, retry while agents start); app `main.rs` (adopt once); tests `titlebar.rs`, `workspaces.rs` | The 91Ninjas mockup | 2,885 ui-egui tests, clippy |
 | Variants (D-030): `ui-egui` `panels/studio_ai.rs` only (versions picker, outline per version, Keep A/B/C, pick by letter, test) | 5c | 2,886 ui-egui tests, clippy |
 | Brand Onboarder (D-031): `ui-egui` `panels/studio_ai.rs` only (New client from past work form, progress, review card, test) | 5d | 2,887 ui-egui tests, clippy |
+| Documents by uid (D-032): `ui-egui` `control.rs` (`studio.documents`, `studio.newDocument`, `studio.inDocument`), `control/tests.rs`; `studio-bridge` `api.rs` (`document` on calls and batches), `tests.rs` | The AI never acts on the wrong tab | 2,885 ui-egui + 12 bridge tests, clippy |
+| Claude companion panel (D-033): `ui-egui` `panels/studio_ai.rs` rewritten (Claude / Clients / History tabs; connect commands; live activity; connected-apps state) | Claude only | 2,885 ui-egui tests (the connected-apps state: not yet built, see PHASE-6) |
 
 Our own new files: `assets/91studio/` (placeholder icon), `crates/studio-bridge/`, `apps/vectorcraft/src/studio_bridge.rs`, `apps/vectorcraft/src/studio_agents.rs`, `crates/ui-egui/src/studio.rs`, `crates/ui-egui/src/panels/studio_ai.rs`.
 

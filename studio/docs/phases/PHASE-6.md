@@ -26,6 +26,13 @@
 - Rust: 2,885 ui-egui tests, 12 bridge tests (1 new), a new control test; clippy.
 - Live: the connector started over stdio (as Claude starts it) against the real editor. It rendered, placed in its own document, placed a version beside it, saw both, removed one version in one step, and changed the other's title (screenshot checked).
 
+## End of day (2026-11-03)
+- **Claude Code is connected on the developer machine.** `claude mcp list` shows `91ninjas-studio` connected, and the user reports it working end to end with Claude.
+- **The panel's "connected" state (D-034):**
+  - **Done:** the local service part, built and tested.
+  - **Not done:** the panel code is written and committed, but **not yet built or tested** (the build was interrupted). First job next session: `cargo build -p vectorcraft`, the `studio_ai` tests, then a screenshot.
+- **Disk:** about 2.8 GB free on /home and 1.9 GB on /. A build needs about 1 GB headroom, and the installer about 10 GB.
+
 ## Next
 - The user connects Claude Code (`claude mcp add …` from the panel) and tries real content: the first real-world test of Claude's designs.
 - Tune `claude/workflow.md` and `spec.md` from those conversations.

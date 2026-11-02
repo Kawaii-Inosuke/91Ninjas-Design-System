@@ -441,6 +441,15 @@ Format per entry: **Context → Decision → Alternatives → Consequences**. En
   - The Gemini-era steps (5b dropped; 5c and 5d were built on Gemini) live on as connector tools and in Claude's instructions: versions side by side (D-030) and new clients from past work (D-031).
 - **Checked:** 55 Python tests (13 new for designs, the connector, the server and onboarding), 2,885 ui-egui tests, clippy. Live: the connector started over stdio (as Claude starts it) rendered, placed in its own document, placed a version beside it, looked, removed one version in one step, and edited the other, in the real editor.
 
+## D-034: The panel knows when Claude is connected (2026-11-03)
+- **Context:** After connecting Claude Code, the panel still showed the setup steps, so it looked as if nothing had happened.
+- **Decision:**
+  - `/api/connect` reports `connected`: the Claude apps whose config names the `91ninjas-studio` server. It reads Claude Code's `~/.claude.json` (user or project scope) and Claude Desktop's `claude_desktop_config.json` (Linux, Mac and Windows paths), read only.
+  - The Claude tab then shows "✓ Claude Code is connected" with what to ask, keeps the setup behind "Connect another Claude app", and checks again every 5 s until something is connected.
+- **State:**
+  - **Built and tested:** the local service part (1 test).
+  - **Not yet built or tested:** the panel part. It's written, but was interrupted before the build (see PHASE-6 › End of day).
+
 ## D-007: Every phase ends with a phase report and a docs update (2026-11-02)
 - **Decision:**
   - At the end of each phase, write `phases/PHASE-N.md` and update the PRD, TRD, ARCHITECTURE and SECURITY docs.

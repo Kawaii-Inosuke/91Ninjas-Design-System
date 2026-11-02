@@ -18,34 +18,29 @@ Designers work with **Claude** (Claude Code or Claude Desktop, on their own Clau
 - **Every designer** can create clients locally and share them as pack files. There is no admin role in the app (D-009).
 
 ## Goal
-One desktop app that is an Illustrator-class editor with an AI side panel. In that panel a team of agents turns *client + content* into an on-brand design on the artboard. Every element (title, cards, icons, text) is a separate, editable layer.
+One desktop app that is an Illustrator-class editor, with **Claude** as the designer's AI partner (D-033). In a
+conversation with Claude, *client + content* becomes an on-brand design on the artboard. Every element (title, cards,
+icons, text) is a separate, editable layer.
 
 ## Core flows (v1)
-1. **New design.**
-   - The designer picks a client, pastes text or drops an image, and adds an optional instruction.
-   - Agents write a brief and look for similar designs. If one exists, the designer sees it and **where its files are**, and chooses to **generate again** or stop. Nothing is ever blocked: designers often want several versions of a topic (D-020).
-   - Agents propose an outline. **Approval gate 1: approve, request changes, or abandon.**
-   - Agents render the design, critique it (at most 3 rounds), and place it on a new artboard.
-2. **Hand edits.** The designer edits with normal tools (pen, type, colors, transform). Nothing is locked.
-3. **Chat edits.** For example "make the title 20% bigger" or "swap icon 3 for a shield". The agents change only the named layers, and **each AI turn is one undo step**.
-4. **Re-critique.** The designer asks the critic to check the *current* artboard, including their own edits, against the brand rules.
-5. **Final approval (gate 2).** The design is exported (SVG/PNG/PDF) from the editor and recorded in the local history, so the designer-edited version is the one recorded.
-6. **New client (local).** A **New client** wizard asks for:
-   - a few past infographics (required)
-   - a design-language file (`DESIGN.md`)
-   - a rulebook (`critic_rules.md`)
-   - fonts, logo and icons
-   - an optional guideline PDF
-
-   If the design language or rulebook is missing, the Brand Onboarder agent drafts it from the past work, and the designer reviews and edits it. The client is usable immediately on that machine. There is no approval step (D-009).
-7. **Share a client.** **Export** a client as one `.91pack` file, which includes a few sample past infographics. Send it over Slack or Drive. The receiver clicks **Import** in their app, which validates the pack, previews it, and installs it. If the client already exists, the receiver chooses to replace it or keep both.
+1. **New design (in Claude, with the app open).**
+   - The designer pastes content into Claude and names the client (or Claude asks).
+   - Claude writes a brief and checks for similar designs. If one exists, the designer sees it and **where its files are**, and decides whether to make a new one. Nothing is ever blocked (D-020).
+   - Claude proposes an outline (title, layout, items). **The designer approves or asks for changes.**
+   - Claude renders the design, checks the preview against the client's rules (at most 3 rounds), and places it in **a new document of its own** (D-032).
+2. **Versions.** "Give me 3 versions": different layouts side by side on artboards. The designer says which to keep; the others leave in one undo step (D-030).
+3. **Hand edits.** The designer edits with normal tools (pen, type, colours, transform). Nothing is locked.
+4. **Edits by asking.** "Make the title 20% bigger", "another one with icons", "add it back". Claude looks at the artboard first (it sees the designer's edits, undo and deletions), then changes only what was meant; **each change is one undo step**.
+5. **Approval.** When the designer says it's approved, the design is exported (SVG/PNG/PDF) from its own document, edits included, and recorded in the client's history (the panel's History tab).
+6. **New client (local).** Either a brand folder (DESIGN.md, critic_rules.md, past work, fonts), or **from past work with Claude**: Claude measures the client's past designs, drafts the design language and rules, shows them, and saves the client after the designer's OK (D-031, D-033). No approval step (D-009).
+7. **Share a client.** **Export** a client as one `.91pack` file (with a few sample past infographics) and send it over Slack or Drive. The receiver imports it in the panel's Clients tab: validated, previewed, installed; replace or keep both if it exists.
 
 ## Requirements
 - **Brand fidelity.** Use only the brand pack's colors, fonts and rules, and run the existing `auto_checks` plus the critic.
 - **Know what exists.** A local similar-design check (the skill's threshold, similarity ≥ 0.65) shows existing designs with their file locations. The designer always decides; nothing is blocked (D-020).
 - **Designer stays in control.** Nothing is logged or exported without approval, and the agents never overwrite manual edits silently.
-- **Swappable AI.** Gemini and Groq at launch. Claude (API or Bedrock) can be added by config.
-- **Runs locally.** The editor and agents run on the designer's machine. All data is local. The only network traffic is to the AI providers (D-009, D-010).
+- **AI: Claude only** (D-033), through the designer's own Claude Code or Claude Desktop and plan. No AI keys in the app; nothing is charged to 91Ninjas per design.
+- **Runs locally.** The editor and the connector run on the designer's machine. All data is local. The only network traffic is Claude's own app talking to Anthropic (D-009, D-010, D-033).
 
 ## Out of scope (v1)
 - Web or browser version (VectorCraft has a WASM build, which may come later)
@@ -63,5 +58,5 @@ One desktop app that is an Illustrator-class editor with an AI side panel. In th
 - Designers are never surprised by an existing design: every similar one is shown before generating
 
 ## Open questions
-- Exact Gemini and Groq model IDs and per-design cost (decided in Phase 3, recorded in `AI-MODELS.md`).
+- Which Claude plan designers need for a day of work (Pro vs Max), measured once designers use it.
 - Do designers need a fallback to the skill-only workflow during rollout? (Assumed yes.)
