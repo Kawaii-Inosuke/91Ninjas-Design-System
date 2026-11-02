@@ -14,4 +14,4 @@
 | 5c | **Variants** (D-030): 2–3 versions with different layouts, side by side on their own artboards; Keep A/B/C; the others leave in one undo step. 74 Python and 2,886 ui-egui tests pass; checked live in the editor. | ✅ done |
 | 5d | **Brand Onboarder** (D-031): Clients → New client from past work: measure the past designs (exact colours, radii, sizes), the AI drafts DESIGN.md and the rulebook in fixed slots, the designer reviews/edits and saves. 8 new tests; 2,887 ui-egui and 72 Python tests pass. Live AI draft still to try (Gemini quota). | ✅ done |
 | 6 (moved up) | **Claude connector** (D-032, D-033): see PHASE-6.md. Gemini and Groq removed; the panel became Claude's companion. | ✅ done |
-| 5e | Installer: release build plus the bundled agents environment (Linux first). Needs about 10 GB free for a release build. | |
+| 5e | **Installer and updates** (D-035): Windows Setup.exe (Start menu + desktop icon) and Mac .dmg, built by GitHub Actions, published on a public releases-only repo, unsigned (one-time click on first install), in-app updates that ask first and show no warning. | next |

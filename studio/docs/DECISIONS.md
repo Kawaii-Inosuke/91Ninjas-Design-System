@@ -450,6 +450,16 @@ Format per entry: **Context → Decision → Alternatives → Consequences**. En
   - **Built and tested:** the local service part (1 test).
   - **Not yet built or tested:** the panel part. It's written, but was interrupted before the build (see PHASE-6 › End of day).
 
+## D-035: Distribution for the internal team: free, unsigned, public releases repo (2026-11-03)
+- **Context:** Designers use Windows and Mac and have no GitHub accounts. The app is for the internal 91Ninjas team only. Nothing is to be paid (no code-signing certificates, no Apple Developer account, no Microsoft Store) and there will be no open-source licence change (so not SignPath).
+- **Decision:**
+  - **Installers:** Windows `Setup.exe` (setup wizard, Start menu entry, desktop icon, uninstall in Apps) and Mac `.dmg` (drag to Applications; Launchpad, Spotlight, Dock). Each bundles the editor, the connector, Python and the renderer. Designers install only Claude Desktop besides.
+  - **Built by GitHub Actions** on GitHub's free Windows and Mac machines when a version is tagged (nothing built on the developer's laptop).
+  - **Hosted on a public GitHub repo used only for releases** (installers + a latest-version file). The source code stays in the private repo. Designers download without an account.
+  - **Unsigned:** the **first install** shows the system warning once. Windows: "Windows protected your PC" → *More info → Run anyway*. Mac: *System Settings → Privacy & Security → Open Anyway*. The Mac app is ad-hoc ("self") signed (free) so new Macs don't call it "damaged". The download page explains the one-time click with screenshots.
+  - **Updates:** the app checks the releases repo and **asks first** (Update now / Remind me later / Install when I close the app). It downloads and installs updates itself; files the app downloads aren't marked "from the internet", so **updates show no warning**. Clients, designs and settings are kept.
+- **Not chosen:** Microsoft Trusted Signing, OV/EV certificates, Microsoft Store, Apple notarization (cost), SignPath Foundation (needs open-source licensing).
+
 ## D-007: Every phase ends with a phase report and a docs update (2026-11-02)
 - **Decision:**
   - At the end of each phase, write `phases/PHASE-N.md` and update the PRD, TRD, ARCHITECTURE and SECURITY docs.
