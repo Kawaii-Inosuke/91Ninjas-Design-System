@@ -40,7 +40,7 @@ Claude-connected panel · designs into the file in front · shared team clients 
 full toolbar with frames · one-click Connect · Windows/Mac installers and updates (workflow written) · rebrand texts.
 
 ## Next
-1. **Set up the team repo and key, and the releases repo, token and variable** (PHASE-7 › What the user needs to do).
+1. **Set up the team repo and key, and the releases repo, token and variable:** step by step in `GIT-GUIDE.md`.
 2. **First release:** push tag `v1.0.0`; fix what the Windows/Mac build logs show; install on a Windows and a Mac laptop.
 3. "Install when I close the app" for updates; a short designer guide.
 4. Real use with designers, then tune Claude's instructions (`studio_agents/claude/`).

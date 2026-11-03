@@ -589,6 +589,10 @@ fn team_card(ui: &mut Ui, st: &mut State, asks: &mut Asks, t: &Tokens) {
                 if ui.small_button(tl!("Check now")).clicked() {
                     asks.push(("team-change", "POST", "/api/team/check".into(), None));
                 }
+                // A new team key (an old one revoked) or another team: leave, then join again. Installed clients stay.
+                if ui.small_button(tl!("Leave team")).on_hover_text(tl!("To join with a new key: your installed clients stay")).clicked() {
+                    asks.push(("team-change", "DELETE", "/api/team".into(), None));
+                }
             });
             if !s(&team, "error").is_empty() {
                 ui.label(RichText::new(s(&team, "error")).small().color(t.text_dim));
