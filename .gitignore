@@ -36,3 +36,6 @@ Thumbs.db
 .idea/
 .vscode/
 *.swp
+
+# Installers built by studio/packaging (D-040)
+studio/dist/

@@ -50,3 +50,12 @@ Our own new files: `assets/91studio/` (placeholder icon), `crates/studio-bridge/
   2. Run `diff -ru` (or `git diff --no-index`) against `studio/editor`, excluding `target/`.
   3. Apply the changes, keeping our `// 91studio:` edits.
   4. Rebuild and run the tests, then update the pin above.
+
+### 2026-11-04 (D-036 to D-040)
+| Files | Why | Checked |
+|---|---|---|
+| `ui-egui` `panels/studio_ai.rs` (team card, connect buttons, setup messages), `workspaces.rs` (Advanced toolbar), `toolbar.rs` (`slots_for_tests`), `lib.rs` (`UPDATE_APP` → 91Ninjas Studio and `RELEASES_REPO`) | Team clients, connect, installers, updates | 2,886 ui-egui tests, clippy |
+| `studio-bridge` `lib.rs` (`bridge_dir` home fallback) | Mac/Windows: Claude's connector finds the bridge | 12 bridge tests |
+| app `main.rs` (update check only in release builds), `studio_agents.rs` (bundled agents, uv, environment), `build.rs` (91 icon and names in the .exe) | Installed app | build, live installed-layout check |
+| Visible texts `VectorCraft` → `91Ninjas Studio` in `prefs_dialog.rs`, `updates_ui.rs`, `io/save.rs`, `dialogs/{script_check,shortcut_import,confirm,place,recovery,missing_fonts}.rs`, their tests | Rebrand | same |
+| New: `assets/91studio/icon.ico`, `icon.icns` (ASSETS.md); `studio/packaging/` (our installers); `.github/workflows/studio-release.yml` | D-040 | `xtask assets` |

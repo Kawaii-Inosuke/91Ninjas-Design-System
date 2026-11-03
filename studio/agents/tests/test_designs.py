@@ -50,7 +50,7 @@ class FakeBridge:
     def new_document(self, w, h, name=None):
         uid = self.ed.next_uid
         self.ed.next_uid += 1
-        self.ed.docs[uid] = {"title": name, "artboards": [{"name": "Artboard 1", "x": 0, "y": 0, "width": w, "height": h}], "groups": {}}
+        self.ed.docs[uid] = {"title": name, "artboards": [{"name": "Artboard 1", "x": 0, "y": 0, "width": w, "height": h}], "groups": {}, "mode": "Rgb"}
         self.ed.front, self.document = uid, uid
         return uid
 
@@ -71,8 +71,19 @@ class FakeBridge:
         boards.append({"name": name, "x": x, "y": y, "width": w, "height": h})
         return len(boards) - 1
 
-    def inspect(self):
-        return {"artboards": self._doc()["artboards"]}
+    def inspect(self, **_):
+        d = self._doc()
+        return {"artboards": d["artboards"], "colorMode": d["mode"], "layers": [{"name": "Layer 1", "children": [{"id": g} for g in d["groups"]]}]}
+
+    def call(self, command, **params):
+        d = self._doc()
+        self.ed.log.append(("call", self.document, command))
+        if command == "artboard.setProps":
+            for a in params["artboards"]:
+                d["artboards"][a["index"]].update({k: v for k, v in a.items() if k != "index"})
+        elif command == "file.documentColorMode":
+            d["mode"] = "Rgb" if params["mode"] == "rgb" else "Cmyk"
+        return {}
 
     def node(self, gid):
         g = self._doc()["groups"].get(gid)
@@ -117,25 +128,61 @@ def setup(tmp_path, monkeypatch):
     return ed, Studio(History(data / "history.db"), bridge_factory=ed.bridge)
 
 
-def test_each_design_gets_its_own_document_and_the_designers_tab_never_matters(setup):
+def test_new_designs_go_into_the_file_in_front_and_tab_switches_never_redirect_work(setup):
+    """D-036: designs collect in the file in front (new artboards to the right); D-032: once placed, work on a design
+    goes to its own file whichever tab is in front."""
     ed, studio = setup
     a = studio.create("demo", "Safer payments", "steps")
     studio.render(a.id, SPECS["vertical_list"])
     pa = studio.place(a.id)
+    assert pa["new_file"], "no file open: a new one"
     b = studio.create("demo", "Marketplace vs D2C", "comparison")
     studio.render(b.id, SPECS["comparison_cards"])
     pb = studio.place(b.id)
-    assert pa["document"] != pb["document"], "a new design never goes into another design's document"
-    # The designer clicks back to design A's tab; edits and approval of B still go to B's document.
-    ed.front = pa["document"]
+    assert pb["document"] == pa["document"] and not pb["new_file"], "the next design joins the same file"
+    boards = ed.docs[pa["document"]]["artboards"]
+    assert [x["name"] for x in boards] == [SPECS["vertical_list"]["title"], SPECS["comparison_cards"]["title"]]
+    assert boards[0]["x"] + boards[0]["width"] < boards[1]["x"], "to the right, apart"
+    assert len(ed.docs[pa["document"]]["groups"]) == 2, "the first design is still there"
+    # The designer opens a new, empty file: the next design goes there, onto its empty artboard (resized).
+    other = FakeBridge(ed, None).new_document(612, 792, "Untitled-2")
+    c = studio.create("demo", "Returns", "steps")
+    studio.render(c.id, SPECS["card_list"])
+    pc = studio.place(c.id)
+    assert pc["document"] == other and pc["artboard"] == 0 and len(ed.docs[other]["artboards"]) == 1
+    assert ed.docs[other]["artboards"][0]["width"] != 612, "the empty artboard takes the design's size"
+    here = studio.current_file()
+    assert here["file"]["uid"] == other and [d["design"] for d in here["designs"]] == [c.id]
+    # Back on the first file's tab… then edits and approval of B still go to B's file.
+    ed.front = other
     studio.edit(b.id, [{"command": "text.setText", "params": {"id": 1, "text": "x"}}], "New title")
     assert ed.log[-1] == ("batch", pb["document"], "New title", 1)
     r = studio.approve(b.id)
     assert Path(r["files"]["svg"]).read_bytes() == f"svg of {pb['document']}".encode()
-    assert {e[1] for e in ed.log if e[0] == "export"} == {pb["document"]}, "exported from B's document only"
     assert studio.get(b.id).status == "approved" and studio.history.get(studio.get(b.id).history_id)["status"] == "approved"
     with pytest.raises(DesignError, match="approved"):
         studio.render(b.id, SPECS["vertical_list"])
+    # Asked for a separate file: a new one.
+    d = studio.create("demo", "Own file", "")
+    studio.render(d.id, SPECS["vertical_list"])
+    assert studio.place(d.id, new_file=True)["new_file"]
+
+
+def test_a_cmyk_file_with_art_is_left_alone_an_empty_one_becomes_rgb(setup):
+    ed, studio = setup
+    fb = FakeBridge(ed, None)
+    full = fb.new_document(500, 500, "Print poster")
+    ed.docs[full]["mode"] = "Cmyk"
+    ed.docs[full]["groups"][1] = {"x": 0, "y": 0, "width": 10, "height": 10}
+    d = studio.create("demo", "X", "")
+    studio.render(d.id, SPECS["vertical_list"])
+    assert studio.place(d.id)["new_file"], "brand colours are RGB: not into a CMYK file with art"
+    empty = fb.new_document(500, 500, "Untitled-3")
+    ed.docs[empty]["mode"] = "Cmyk"
+    e = studio.create("demo", "Y", "")
+    studio.render(e.id, SPECS["vertical_list"])
+    p = studio.place(e.id)
+    assert p["document"] == empty and ed.docs[empty]["mode"] == "Rgb"
 
 
 def test_versions_side_by_side_then_keep_one_in_one_step(setup):
@@ -148,7 +195,8 @@ def test_versions_side_by_side_then_keep_one_in_one_step(setup):
     p3 = studio.place(d.id, 3, beside=True)
     assert p1["document"] == p2["document"] == p3["document"] and (p2["artboard"], p3["artboard"]) == (1, 2)
     boards = ed.docs[p1["document"]]["artboards"]
-    assert [b["name"] for b in boards] == ["Version 1", "Version 2", "Version 3"]
+    t = [SPECS[f]["title"] for f in ("vertical_list", "horizontal_timeline", "comparison_cards")]
+    assert [b["name"] for b in boards] == [t[0], f"{t[1]} · v2", f"{t[2]} · v3"]
     assert boards[0]["x"] + boards[0]["width"] < boards[1]["x"] < boards[2]["x"], "to the right, apart"
     studio.remove(d.id, [1, 3], "Keep version 2")
     assert ed.log[-1] == ("remove", p1["document"], (p1["group_id"], p3["group_id"]), (0, 2), "Keep version 2")
@@ -167,7 +215,8 @@ def test_look_sees_the_designers_undo_and_place_brings_it_back(setup):
     state, png = studio.look(d.id)
     assert state["design"]["placed"][0]["on_artboard"] is False and png is None
     again = studio.place(d.id, 1)                         # "add it back"
-    assert again["document"] != p["document"] and studio.look(d.id)[0]["design"]["placed"][0]["on_artboard"]
+    assert again["document"] == p["document"], "back into the same file (its empty artboard)"
+    assert studio.look(d.id)[0]["design"]["placed"][0]["on_artboard"]
     del ed.docs[again["document"]]                        # tab closed
     assert studio.look(d.id)[0]["design"]["placed"][0]["document_open"] is False
     with pytest.raises(DesignError, match="place one without"):
@@ -201,8 +250,8 @@ def test_the_connectors_tools_return_text_and_images(setup, monkeypatch):
     monkeypatch.setattr(mcp_server, "studio", studio)
     tools = {t.name for t in asyncio.run(mcp_server.server.list_tools())}
     assert {"get_brand", "check_similar", "start_design", "render_design", "place_design", "remove_versions", "look_at_editor",
-            "edit_design", "approve_design", "list_designs", "measure_past_work", "save_new_client"} <= tools
-    assert "create something new" not in mcp_server.INSTRUCTIONS and "NEW design" in mcp_server.INSTRUCTIONS
+            "edit_design", "approve_design", "list_designs", "measure_past_work", "save_new_client", "current_file"} <= tools
+    assert "current_file" in mcp_server.INSTRUCTIONS and "Never remove or replace an earlier design" in mcp_server.INSTRUCTIONS
     brand = mcp_server.get_brand("demo")
     assert "## Writing the spec" in brand and "vertical_list" in brand and "Rules every design is checked against" in brand
     did = json.loads(mcp_server.start_design("demo", "Safer payments", "steps", ["call back"]))["design"]
@@ -210,6 +259,7 @@ def test_the_connectors_tools_return_text_and_images(setup, monkeypatch):
     kinds = [c.type for c in r.content]
     assert kinds == ["text", "image"] and '"version": 1' in r.content[0].text
     assert json.loads(mcp_server.place_design(did))["document"] == 1
+    assert json.loads(mcp_server.current_file())["designs"][0]["design"] == did
     assert mcp_server.edit_design(did, [{"command": "text.setText", "params": {"id": 1, "text": "Hi"}}], "Hi").startswith("{")
     assert mcp_server.edit_design("nope", [], "x").startswith("error:")
     assert did in mcp_server.list_designs("demo")

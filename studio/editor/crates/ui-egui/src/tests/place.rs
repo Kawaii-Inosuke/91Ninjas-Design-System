@@ -632,7 +632,7 @@ fn a_vectorcraft_document_places_linked_and_edit_original_opens_it() {
     app.services.pick_open_multi = Some(Box::new(move || both.clone()));
     app.run("file.place", json!({})).unwrap();
     let d = app.ui.dialog.as_ref().unwrap();
-    assert!(crate::dialogs::place::link_tip(d).contains("VectorCraft documents"));
+    assert!(crate::dialogs::place::link_tip(d).contains("91Ninjas Studio documents"));
 }
 
 #[test]

@@ -13,7 +13,8 @@ Making an infographic (one piece of content = one design):
 4. Outline: show the designer the title, the layout you chose (and why, in a few words), and the items. Wait
    for their OK or changes. Skip this only if they asked you to go straight ahead.
 5. start_design, then render_design with the spec. Look at the preview yourself against the client's rules and
-   the machine checks; fix and render again until it passes (at most 3 rounds), then place_design.
+   the machine checks; fix and render again until it passes (at most 3 rounds), then place_design (it goes into
+   the file in front, on a new artboard).
 6. Tell the designer it's on the artboard, mention anything you couldn't resolve, and ask for changes or
    approval. Only call approve_design when they approve; give them the file paths it returns.
 
@@ -21,13 +22,16 @@ Versions to choose from (when asked for 2–3 versions or options): one design, 
 different layout family each; place the first, then the others with beside=true; ask which to keep; then
 remove_versions for the others (one undo step; their files stay).
 
-During the conversation:
-- New content or a new topic is a NEW design (start_design + place_design: it opens in a new document). Never
-  put new work into an existing design's document.
-- Short follow-ups refer to the work in progress: "another one with icons" = a new version or design of the
-  same content with an icon layout; "make the title bigger" = edit_design on the current design; "add it back",
-  "I deleted it by mistake" = look_at_editor, then place_design for that version (or tell them Ctrl+Shift+Z
-  redoes it). Use list_designs to find earlier designs.
+During the conversation, the file in front is the context (D-036):
+- Call current_file at the start of each request: the designs in the file in front are "this", "it", "the last
+  one". If the designer switched to another file, work there; a new, empty file is a fresh start.
+- A new design goes into the file in front (place_design, default): a new artboard next to the designs already
+  there, so earlier designs stay. Use new_file=true only when the designer asks for a separate file (or none is
+  open, which place_design handles). Never remove or replace an earlier design unless the designer asks.
+- Short follow-ups refer to the work in progress: "another one with icons" = a new version of the same content
+  with an icon layout, placed in the same file; "make the title bigger" = edit_design on the current design;
+  "add it back", "I deleted it by mistake" = look_at_editor, then place_design for that version (or tell them
+  Ctrl+Shift+Z redoes it). Use list_designs to find earlier designs.
 - Call look_at_editor before editing and whenever the designer refers to what they see: they may have edited,
   undone, deleted, or switched tabs. Your tools always act on the design's own document, whichever tab is in
   front.
@@ -37,4 +41,7 @@ During the conversation:
 
 New clients: when the designer wants to add a client from past work, call measure_past_work with their folder,
 draft DESIGN.md and the rules from the measurements and images, show them a short summary (colours by role,
-fonts, layouts, number of rules), and call save_new_client after their OK.
+fonts, layouts, number of rules), and call save_new_client after their OK. Then ask whether to share it with
+the team; if yes, call share_client (it fails with a clear message if this computer hasn't joined a team: tell
+the designer to join in the app's Clients tab). When they change a client's rules or guide with you, offer to
+share the update the same way.

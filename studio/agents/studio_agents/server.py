@@ -22,6 +22,7 @@ from pydantic import BaseModel
 from studio_agents import brand as brandmod
 from studio_agents import config, packs
 from studio_agents.designs import DesignError, Studio
+from studio_agents.team import Team, TeamError
 
 MAX_UPLOAD = 25 * 1024 * 1024
 
@@ -31,16 +32,33 @@ class InstallBody(BaseModel):
     mode: str = "replace"
 
 
+class JoinBody(BaseModel):
+    repo: str
+    key: str
+    name: str
+    create: bool = False
+
+
+class ShareBody(BaseModel):
+    client: str
+    message: str = ""
+
+
+class ClientBody(BaseModel):
+    client: str
+
+
 class PathBody(BaseModel):
     path: str
     client: str | None = None
 
 
-def create_app(token: str, studio: Studio | None = None) -> FastAPI:
+def create_app(token: str, studio: Studio | None = None, team: Team | None = None) -> FastAPI:
     """The editor's AI panel back end (D-033): clients, history, what Claude is doing, how to connect Claude, and
     the files to preview. No model calls: Claude does the AI work through the connector (`mcp_server`)."""
     app = FastAPI(title="91Ninjas Studio", docs_url=None, redoc_url=None, openapi_url=None)
     studio = studio or Studio()
+    team = team or Team()
     previews: dict[str, packs.ImportPreview] = {}
 
     def auth(request: Request) -> None:
@@ -71,11 +89,25 @@ def create_app(token: str, studio: Studio | None = None) -> FastAPI:
 
     @app.get("/api/health", dependencies=[api])
     def health() -> dict:
-        return {"ok": True, "editor": studio.bridge_factory() is not None, "ai": "claude"}
+        return {"ok": True, "editor": studio.bridge_factory() is not None, "ai": "claude", "setup": SETUP.get("state", "")}
 
     @app.get("/api/connect", dependencies=[api])
     def connect() -> dict:
         """How to connect Claude Code or Claude Desktop to this machine's connector."""
+        return connect_info()
+
+    @app.post("/api/connect/{app_name}", dependencies=[api])
+    def connect_app(app_name: str) -> dict:
+        """One click in the panel: set the connector up in Claude Code or Claude Desktop (D-039)."""
+        try:
+            if app_name == "claude-code":
+                connect_claude_code()
+            elif app_name == "claude-desktop":
+                connect_claude_desktop()
+            else:
+                raise HTTPException(404, "unknown app")
+        except ConnectError as e:
+            raise HTTPException(422, str(e)) from None
         return connect_info()
 
     @app.get("/api/activity", dependencies=[api])
@@ -189,6 +221,49 @@ def create_app(token: str, studio: Studio | None = None) -> FastAPI:
             raise HTTPException(422, str(e)) from None
         return studio.history.list(client, min(max(limit, 1), 200))
 
+    # ── the team's shared clients (D-037) ───────────────────────────────────────────────────────────
+    def team_call(fn, *args):
+        try:
+            return fn(*args)
+        except (TeamError, brandmod.BrandError, packs.PackError) as e:
+            raise HTTPException(422, str(e)) from None
+
+    @app.get("/api/team", dependencies=[api])
+    def team_status() -> dict:
+        return team.status()
+
+    @app.post("/api/team/join", dependencies=[api])
+    def team_join(body: JoinBody) -> dict:
+        return team_call(team.join, body.repo, body.key, body.name, body.create)
+
+    @app.post("/api/team/check", dependencies=[api])
+    def team_check() -> dict:
+        return team.check()
+
+    @app.post("/api/team/share", dependencies=[api])
+    def team_share(body: ShareBody) -> dict:
+        r = team_call(team.share, body.client, body.message)
+        return team.check() | {"shared": r}
+
+    @app.post("/api/team/accept", dependencies=[api])
+    def team_accept(body: ClientBody) -> dict:
+        team_call(team.accept, body.client)
+        return team.check()
+
+    @app.post("/api/team/decline", dependencies=[api])
+    def team_decline(body: ClientBody) -> dict:
+        team.decline(body.client)
+        return team.status()
+
+    @app.post("/api/team/reject", dependencies=[api])
+    def team_reject(body: ClientBody) -> dict:
+        return team_call(team.reject, body.client)
+
+    @app.delete("/api/team", dependencies=[api])
+    def team_leave() -> dict:
+        team.leave()
+        return team.status()
+
     @app.get("/api/designs", dependencies=[api])
     def designs(client: str | None = None) -> list[dict]:
         """Designs made with Claude, newest first (the panel's History shows the approved files)."""
@@ -214,19 +289,82 @@ AGENTS_DIR = Path(__file__).resolve().parents[1]
 
 def connect_info() -> dict:
     """The commands that connect Claude to this machine's connector (paths filled in)."""
-    uv = shutil.which("uv") or str(Path.home() / ".local" / "bin" / "uv")
-    args = ["--directory", str(AGENTS_DIR), "run", "python", "-m", "studio_agents.mcp_server"]
+    uv, args = _uv_args()
+    env = _connector_env()
     quoted = " ".join(f'"{a}"' if " " in a else a for a in [uv, *args])
+    flags = "".join(f' -e "{k}={v}"' for k, v in env.items())
+    desktop: dict = {"command": uv, "args": args} | ({"env": env} if env else {})
     return {
         "name": "91ninjas-studio",
-        "claude_code": f"claude mcp add --scope user 91ninjas-studio -- {quoted}",
-        "claude_desktop": {"mcpServers": {"91ninjas-studio": {"command": uv, "args": args}}},
+        "claude_code": f"claude mcp add --scope user{flags} 91ninjas-studio -- {quoted}",
+        "claude_desktop": {"mcpServers": {"91ninjas-studio": desktop}},
         "claude_code_installed": shutil.which("claude") is not None,
         "connected": connected_apps(),
     }
 
 
 SERVER_NAME = "91ninjas-studio"
+
+
+class ConnectError(RuntimeError):
+    pass
+
+
+def _uv_args() -> tuple[str, list[str]]:
+    """How the connector is started: the same uv, folder and environment the app runs its service with
+    (an installed app ships its own uv and keeps the Python environment in the user's data folder, D-040)."""
+    uv = os.environ.get("STUDIO_UV") or shutil.which("uv") or str(Path.home() / ".local" / "bin" / "uv")
+    args = ["--directory", str(AGENTS_DIR), "run"]
+    if os.environ.get("STUDIO_BUNDLED") == "1":
+        args += ["--frozen", "--no-dev"]
+    return uv, [*args, "python", "-m", "studio_agents.mcp_server"]
+
+
+def _connector_env() -> dict[str, str]:
+    return {"UV_PROJECT_ENVIRONMENT": os.environ["UV_PROJECT_ENVIRONMENT"]} if os.environ.get("UV_PROJECT_ENVIRONMENT") else {}
+
+
+def connect_claude_code() -> None:
+    """`claude mcp add --scope user …` (replacing an older entry of ours)."""
+    import subprocess
+    claude = shutil.which("claude") or str(Path.home() / ".local" / "bin" / "claude")
+    if not Path(claude).exists():
+        raise ConnectError("Claude Code isn't installed on this computer")
+    uv, args = _uv_args()
+    subprocess.run([claude, "mcp", "remove", "--scope", "user", SERVER_NAME], capture_output=True, timeout=30, check=False)
+    env_flags = [x for k, v in _connector_env().items() for x in ("-e", f"{k}={v}")]
+    r = subprocess.run([claude, "mcp", "add", "--scope", "user", *env_flags, SERVER_NAME, "--", uv, *args], capture_output=True, text=True, timeout=30, check=False)
+    if r.returncode != 0:
+        raise ConnectError(f"Claude Code said: {(r.stderr or r.stdout).strip()[:300]}")
+
+
+def desktop_config_path(home: Path | None = None) -> Path:
+    home = home or Path.home()
+    if os.name == "nt":
+        return Path(os.environ.get("APPDATA", home / "AppData" / "Roaming")) / "Claude" / "claude_desktop_config.json"
+    if (home / "Library").is_dir():   # macOS
+        return home / "Library" / "Application Support" / "Claude" / "claude_desktop_config.json"
+    return home / ".config" / "Claude" / "claude_desktop_config.json"
+
+
+def connect_claude_desktop(home: Path | None = None) -> Path:
+    """Add our entry to Claude Desktop's config, keeping everything else in it (a copy of the old file is kept)."""
+    p = desktop_config_path(home)
+    cfg: dict = {}
+    if p.is_file():
+        try:
+            cfg = json.loads(p.read_text() or "{}")
+        except ValueError:
+            raise ConnectError(f"Claude Desktop's config ({p}) isn't valid JSON; fix or delete it first") from None
+        shutil.copyfile(p, p.with_suffix(".json.before-91ninjas"))
+    uv, args = _uv_args()
+    env = _connector_env()
+    cfg.setdefault("mcpServers", {})[SERVER_NAME] = {"command": uv, "args": args} | ({"env": env} if env else {})
+    p.parent.mkdir(parents=True, exist_ok=True)
+    tmp = p.with_suffix(".tmp")
+    tmp.write_text(json.dumps(cfg, indent=2))
+    tmp.replace(p)
+    return p
 
 
 def connected_apps(home: Path | None = None) -> list[str]:
@@ -251,6 +389,26 @@ def connected_apps(home: Path | None = None) -> list[str]:
         except (OSError, ValueError, AttributeError):
             continue
     return out
+
+
+SETUP: dict[str, str] = {}
+
+
+def ensure_browser() -> None:
+    """First start of an installed app: fetch the drawing engine (Chromium for Playwright, ~110 MB) once, in the
+    background; the panel says so meanwhile (D-040). Quick when it's there already."""
+    import subprocess
+    import sys
+    import threading
+
+    def run() -> None:
+        SETUP["state"] = "Getting the drawing engine ready (first start only)…"
+        try:
+            r = subprocess.run([sys.executable, "-m", "playwright", "install", "chromium-headless-shell"], capture_output=True, text=True, timeout=1800, check=False)
+            SETUP["state"] = "" if r.returncode == 0 else f"The drawing engine couldn't be installed: {(r.stderr or r.stdout).strip()[-200:]}"
+        except (OSError, subprocess.TimeoutExpired) as e:
+            SETUP["state"] = f"The drawing engine couldn't be installed: {e}"
+    threading.Thread(target=run, name="setup-browser", daemon=True).start()
 
 
 def _exit_with_parent(pid: int) -> None:
@@ -280,7 +438,11 @@ def main() -> None:
     info.parent.mkdir(parents=True, exist_ok=True)
     info.write_text(json.dumps({"port": port, "token": token, "pid": os.getpid()}))
     info.chmod(0o600)
-    uvicorn.run(create_app(token), host="127.0.0.1", port=port, log_level="warning")
+    if os.environ.get("STUDIO_BUNDLED") == "1":
+        ensure_browser()
+    team = Team()
+    team.watch()   # new and changed team clients, every few minutes (D-037)
+    uvicorn.run(create_app(token, team=team), host="127.0.0.1", port=port, log_level="warning")
 
 
 if __name__ == "__main__":

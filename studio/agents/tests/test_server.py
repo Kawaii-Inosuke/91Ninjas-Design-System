@@ -31,7 +31,7 @@ def test_token_and_origin_are_required(client):
     assert client.get("/api/health", headers={"Authorization": "Bearer wrong"}).status_code == 401
     assert client.get("/api/health", headers={**AUTH, "Origin": "https://evil.example"}).status_code == 403
     r = client.get("/api/health", headers=AUTH)
-    assert r.status_code == 200 and r.json() == {"ok": True, "editor": False, "ai": "claude"}
+    assert r.status_code == 200 and r.json() == {"ok": True, "editor": False, "ai": "claude", "setup": ""}
 
 
 def test_clients_export_import_install(client, tmp_path):
@@ -107,3 +107,49 @@ def test_the_panel_knows_which_claude_apps_are_connected(tmp_path):
     assert connected_apps(tmp_path) == ["Claude Code", "Claude Desktop"]
     (tmp_path / ".claude.json").write_text("not json")
     assert connected_apps(tmp_path) == ["Claude Desktop"]
+
+
+def test_the_team_through_the_api(tmp_path, monkeypatch):
+    from studio_agents.designs import Studio
+    from studio_agents.team import Team
+    from test_team import FakeRepo
+    data = tmp_path / "data"
+    monkeypatch.setenv("STUDIO_DATA_DIR", str(data))
+    shutil.copytree(FIX / "brands" / "demo", data / "clients" / "demo")
+    repo = FakeRepo()
+    c = TestClient(create_app(TOKEN, Studio(History(data / "history.db"), bridge_factory=lambda: None), Team(lambda n, k: repo)))
+    assert c.get("/api/team", headers=AUTH).json()["joined"] is False
+    assert c.post("/api/team/join", headers=AUTH, json={"repo": "o/r", "key": "k", "name": "Ana"}).status_code == 422
+    st = c.post("/api/team/join", headers=AUTH, json={"repo": "o/r", "key": "k", "name": "Ana", "create": True}).json()
+    assert st["joined"] and st["manager"] and st["unshared"] == ["demo"]
+    assert c.post("/api/team/share", headers=AUTH, json={"client": "nobody"}).status_code == 422
+    assert c.post("/api/team/reject", headers=AUTH, json={"client": "demo"}).status_code == 422
+    assert c.delete("/api/team", headers=AUTH).json()["joined"] is False
+
+
+def test_one_click_claude_desktop_keeps_the_rest_of_its_config(tmp_path):
+    from studio_agents.server import ConnectError, connect_claude_desktop, connected_apps, desktop_config_path
+    p = desktop_config_path(tmp_path)
+    p.parent.mkdir(parents=True)
+    p.write_text(json.dumps({"mcpServers": {"figma": {"command": "x"}}, "theme": "dark"}))
+    connect_claude_desktop(tmp_path)
+    cfg = json.loads(p.read_text())
+    assert set(cfg["mcpServers"]) == {"figma", "91ninjas-studio"} and cfg["theme"] == "dark"
+    assert cfg["mcpServers"]["91ninjas-studio"]["args"][-1] == "studio_agents.mcp_server"
+    assert p.with_suffix(".json.before-91ninjas").is_file(), "the old file is kept"
+    assert "Claude Desktop" in connected_apps(tmp_path)
+    p.write_text("{broken")
+    with pytest.raises(ConnectError, match="isn't valid JSON"):
+        connect_claude_desktop(tmp_path)
+
+
+def test_an_installed_app_starts_the_connector_with_its_own_uv_and_environment(monkeypatch):
+    from studio_agents.server import connect_info
+    monkeypatch.setenv("STUDIO_UV", "/Applications/91Ninjas Studio.app/Contents/MacOS/uv")
+    monkeypatch.setenv("STUDIO_BUNDLED", "1")
+    monkeypatch.setenv("UV_PROJECT_ENVIRONMENT", "/Users/a/.local/share/91studio/agents-env")
+    c = connect_info()
+    d = c["claude_desktop"]["mcpServers"]["91ninjas-studio"]
+    assert d["command"].endswith("MacOS/uv") and "--frozen" in d["args"] and "--no-dev" in d["args"]
+    assert d["env"] == {"UV_PROJECT_ENVIRONMENT": "/Users/a/.local/share/91studio/agents-env"}
+    assert ' -e "UV_PROJECT_ENVIRONMENT=/Users/a/.local/share/91studio/agents-env" 91ninjas-studio -- "/Applications/91Ninjas Studio.app/Contents/MacOS/uv"' in c["claude_code"]

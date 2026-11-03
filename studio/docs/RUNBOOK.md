@@ -60,6 +60,9 @@ Then, with 91Ninjas Studio open, start `claude` in any folder and ask, for examp
 text: …". Claude Desktop (Mac, Windows): paste the `mcpServers` entry from the panel into Settings › Developer ›
 Edit Config, then restart Claude. No API keys or `.env` are needed.
 
+## 2e. Team clients and releases (D-037, D-040)
+See `phases/PHASE-7.md` › What the user needs to do: the private team repo and key; the public releases repo, the `RELEASES_TOKEN` secret and `RELEASES_REPO` variable; release by pushing a `v*` tag (`.github/workflows/studio-release.yml`). Packaging scripts: `studio/packaging/windows/package.ps1`, `studio/packaging/macos/package.sh` (run on GitHub's Windows and Mac machines).
+
 ## 3. Agents project (Python)
 ```bash
 cd studio/agents

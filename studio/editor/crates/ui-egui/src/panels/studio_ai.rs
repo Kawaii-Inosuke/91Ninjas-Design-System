@@ -14,8 +14,9 @@ use crate::theme::Tokens;
 use crate::{icons, widgets};
 
 pub const ID: &str = "studioAi";
-/// How often the panel asks again while the local service starts (every [`RETRY_EVERY_S`] seconds: about a minute).
-const START_RETRIES: u32 = 40;
+/// How often the panel asks again while the local service starts (every [`RETRY_EVERY_S`] seconds: five minutes,
+/// for an installed app's first start, which fetches Python and its packages, D-040).
+const START_RETRIES: u32 = 200;
 const RETRY_EVERY_S: f64 = 1.5;
 /// How often the activity feed is refreshed.
 const ACTIVITY_EVERY_S: f64 = 2.0;
@@ -107,6 +108,13 @@ struct State {
     /// New client from past work: its name and folder, for the request to Claude.
     new_name: String,
     new_folder: Option<String>,
+    /// The team's shared clients (`/api/team`, D-037) and when they were last asked about.
+    team: Option<Value>,
+    team_at: Option<f64>,
+    join_repo: String,
+    join_key: String,
+    join_name: String,
+    join_create: bool,
     /// The History tab: the client's designs, and which client they are for.
     history: Vec<Value>,
     history_for: String,
@@ -231,7 +239,7 @@ fn on_answer(st: &mut State, tag: &str, result: Result<Value, String>) {
         // The app starts the local service with itself and it takes a few seconds: ask again quietly.
         Err(_) if matches!(tag, "health" | "clients" | "connect") && st.retries < START_RETRIES => {
             st.retry_pending = true;
-            st.status = tl!("Starting…").into();
+            st.status = if st.retries > 8 { tl!("Setting up the AI tools (first start only, a few minutes)…") } else { tl!("Starting…") }.into();
             return;
         }
         Err(e) if tag == "health" => {
@@ -239,7 +247,7 @@ fn on_answer(st: &mut State, tag: &str, result: Result<Value, String>) {
             st.status = format!("Not reachable: {e}");
             return;
         }
-        Err(_) if tag == "activity" => return,
+        Err(_) if tag == "activity" || tag == "team" => return,
         Err(e) => {
             st.note = format!("{}: {e}", tl!("That didn't work"));
             return;
@@ -249,7 +257,17 @@ fn on_answer(st: &mut State, tag: &str, result: Result<Value, String>) {
         "health" => {
             st.agents_ok = true;
             st.editor_ok = v.get("editor").and_then(Value::as_bool).unwrap_or(false);
-            st.status = if st.editor_ok { tl!("Ready for Claude").into() } else { tl!("Ready · editor connection off").into() };
+            st.status = if !s(&v, "setup").is_empty() {
+                s(&v, "setup")
+            } else if st.editor_ok {
+                tl!("Ready for Claude").into()
+            } else {
+                tl!("Ready · editor connection off").into()
+            };
+            // Asked again while a first-start setup runs, so the line changes when it's done.
+            if !s(&v, "setup").is_empty() {
+                st.retry_pending = true;
+            }
         }
         "clients" => on_clients(st, &v),
         "connect" => st.connect = Some(v),
@@ -262,6 +280,11 @@ fn on_answer(st: &mut State, tag: &str, result: Result<Value, String>) {
         "import" => {
             st.note = format!("“{}” v{} by {}: install it?", s(&v, "name"), s(&v, "version"), s(&v, "author"));
             st.import = Some(v);
+        }
+        "team" => st.team = Some(v),
+        "team-change" => {
+            st.team = Some(v);
+            st.started = false; // installed or reverted clients: refresh the list
         }
         "install" | "folder" => {
             st.note = format!("{} {}.", tl!("Added client"), s(&v, "client"));
@@ -294,6 +317,7 @@ fn tool_label(tool: &str) -> &str {
         "place_design" => tl!("Placed it on an artboard"),
         "remove_versions" => tl!("Removed versions"),
         "look_at_editor" => tl!("Looked at the artboard"),
+        "current_file" => tl!("Checked the open file"),
         "edit_design" => tl!("Edited the design"),
         "approve_design" => tl!("Approved and exported"),
         "abandon_design" => tl!("Dropped a design"),
@@ -317,14 +341,28 @@ fn copy_row(ui: &mut Ui, text: &str, t: &Tokens) {
     );
 }
 
-fn connect_card(app: &mut VectorcraftApp, ui: &mut Ui, st: &State, t: &Tokens) {
+fn connect_card(app: &mut VectorcraftApp, ui: &mut Ui, st: &State, asks: &mut Asks, t: &Tokens) {
     let Some(c) = st.connect.as_ref() else {
         ui.label(RichText::new(tl!("Getting the connection details…")).small().color(t.text_dim));
         return;
     };
     ui.label(RichText::new(tl!("Connect Claude (once per computer)")).strong().color(t.text_strong));
     ui.add_space(4.0);
-    ui.label(RichText::new(tl!("Claude Code: run this in a terminal.")).small().color(t.text_dim));
+    // 91studio: one click does it (D-039); the commands below stay for doing it by hand.
+    ui.horizontal_wrapped(|ui| {
+        let code = c.get("claude_code_installed").and_then(Value::as_bool).unwrap_or(false);
+        if code && widgets::primary_button(ui, tl!("Connect Claude Code")).clicked() {
+            asks.push(("connect", "POST", "/api/connect/claude-code".into(), None));
+        }
+        if widgets::secondary_button(ui, tl!("Set up Claude Desktop"))
+            .on_hover_text(tl!("Adds the connector to Claude Desktop's settings; restart Claude Desktop after"))
+            .clicked()
+        {
+            asks.push(("connect", "POST", "/api/connect/claude-desktop".into(), None));
+        }
+    });
+    ui.add_space(6.0);
+    ui.label(RichText::new(tl!("Or by hand. Claude Code: run this in a terminal.")).small().color(t.text_dim));
     copy_row(ui, &s(c, "claude_code"), t);
     if !c.get("claude_code_installed").and_then(Value::as_bool).unwrap_or(false) {
         ui.horizontal_wrapped(|ui| {
@@ -366,7 +404,7 @@ fn connected(st: &State) -> Vec<String> {
         .unwrap_or_default()
 }
 
-fn claude_tab(app: &mut VectorcraftApp, ui: &mut Ui, st: &mut State, t: &Tokens) {
+fn claude_tab(app: &mut VectorcraftApp, ui: &mut Ui, st: &mut State, asks: &mut Asks, t: &Tokens) {
     ui.horizontal(|ui| {
         let dot = if st.agents_ok && st.editor_ok {
             Color32::from_rgb(52, 168, 83)
@@ -404,7 +442,7 @@ fn claude_tab(app: &mut VectorcraftApp, ui: &mut Ui, st: &mut State, t: &Tokens)
             ui.add_space(12.0);
             let apps = connected(st);
             if apps.is_empty() || st.show_connect {
-                connect_card(app, ui, st, t);
+                connect_card(app, ui, st, asks, t);
             } else {
                 // Set up already: say what to do next, keep the setup one click away.
                 Frame::new().fill(t.panel_darker).stroke(Stroke::new(1.0, t.accent)).corner_radius(CornerRadius::same(10)).inner_margin(Margin::same(10)).show(
@@ -435,7 +473,7 @@ fn claude_tab(app: &mut VectorcraftApp, ui: &mut Ui, st: &mut State, t: &Tokens)
             st.show_connect = !st.show_connect;
         }
         if st.show_connect {
-            connect_card(app, ui, st, t);
+            connect_card(app, ui, st, asks, t);
             widgets::divider(ui);
         }
         ui.label(RichText::new(tl!("What Claude is doing")).strong().color(t.text_strong));
@@ -468,6 +506,7 @@ fn clients_tab(app: &mut VectorcraftApp, ui: &mut Ui, st: &mut State, asks: &mut
         if import_card(ui, st, asks, t) {
             st.import = None;
         }
+        team_card(ui, st, asks, t);
         if st.clients.is_empty() {
             ui.label(RichText::new(tl!("No clients yet.")).color(t.text_dim));
         }
@@ -507,6 +546,118 @@ fn clients_tab(app: &mut VectorcraftApp, ui: &mut Ui, st: &mut State, asks: &mut
                 .small()
                 .color(t.text_dim),
         );
+    });
+}
+
+// ── the team's shared clients (D-037) ───────────────────────────────────────────────────────────────
+
+fn team_card(ui: &mut Ui, st: &mut State, asks: &mut Asks, t: &Tokens) {
+    let team = st.team.clone().unwrap_or(Value::Null);
+    let joined = team.get("joined").and_then(Value::as_bool).unwrap_or(false);
+    Frame::new().fill(t.panel_darker).stroke(Stroke::new(1.0, t.input_border)).corner_radius(CornerRadius::same(10)).inner_margin(Margin::same(10)).show(
+        ui,
+        |ui| {
+            ui.set_width(ui.available_width());
+            ui.label(RichText::new(tl!("Team clients")).strong().color(t.text_strong));
+            if !joined {
+                ui.label(
+                    RichText::new(tl!("Share clients with the team: everyone gets the same guides, rules and past work, and is asked before changes install. Designs stay on your laptop."))
+                        .small()
+                        .color(t.text_dim),
+                );
+                ui.add(TextEdit::singleline(&mut st.join_repo).hint_text(tl!("Team repo, e.g. 91ninjas/studio-clients")).desired_width(f32::INFINITY));
+                ui.add(TextEdit::singleline(&mut st.join_key).password(true).hint_text(tl!("Team key (from your manager)")).desired_width(f32::INFINITY));
+                ui.add(TextEdit::singleline(&mut st.join_name).hint_text(tl!("Your name")).desired_width(f32::INFINITY));
+                ui.checkbox(&mut st.join_create, RichText::new(tl!("I'm the manager setting up a new team")).small());
+                let ready = !st.join_repo.trim().is_empty() && !st.join_key.trim().is_empty() && !st.join_name.trim().is_empty() && !st.busy;
+                if widgets::primary_button_enabled(ui, tl!("Join team"), ready).clicked() {
+                    st.busy = true;
+                    asks.push((
+                        "team-change",
+                        "POST",
+                        "/api/team/join".into(),
+                        Some(json!({"repo": st.join_repo.trim(), "key": st.join_key.trim(), "name": st.join_name.trim(), "create": st.join_create})),
+                    ));
+                    st.join_key.clear();
+                }
+                return;
+            }
+            let manager = team.get("manager").and_then(Value::as_bool).unwrap_or(false);
+            let who = format!("{}{}", s(&team, "name"), if manager { format!(" ({})", tl!("manager")) } else { String::new() });
+            ui.horizontal_wrapped(|ui| {
+                ui.label(RichText::new(format!("{} · {who}", s(&team, "repo"))).small().color(t.text_dim));
+                if ui.small_button(tl!("Check now")).clicked() {
+                    asks.push(("team-change", "POST", "/api/team/check".into(), None));
+                }
+            });
+            if !s(&team, "error").is_empty() {
+                ui.label(RichText::new(s(&team, "error")).small().color(t.text_dim));
+            }
+            for a in team.get("applied").and_then(Value::as_array).into_iter().flatten() {
+                ui.label(RichText::new(format!("{} {} {}: {}", s(a, "by"), tl!("rejected a change to"), s(a, "client"), tl!("it's back to the earlier version."))).small());
+            }
+            for p in team.get("pending").and_then(Value::as_array).into_iter().flatten() {
+                pending_change(ui, p, manager, asks, t);
+            }
+            for c in team.get("unshared").and_then(Value::as_array).into_iter().flatten().filter_map(Value::as_str) {
+                ui.horizontal_wrapped(|ui| {
+                    ui.label(RichText::new(format!("{c}: {}", tl!("not shared with the team yet"))).small());
+                    if ui.small_button(tl!("Share")).clicked() {
+                        asks.push(("team-change", "POST", "/api/team/share".into(), Some(json!({ "client": c }))));
+                    }
+                });
+            }
+        },
+    );
+    ui.add_space(8.0);
+}
+
+/// One change waiting for this designer: who, what, the lines added and removed, and the choices.
+fn pending_change(ui: &mut Ui, p: &Value, manager: bool, asks: &mut Asks, t: &Tokens) {
+    let client = s(p, "client");
+    ui.add_space(6.0);
+    Frame::new().fill(t.panel).stroke(Stroke::new(1.0, t.accent)).corner_radius(CornerRadius::same(8)).inner_margin(Margin::same(8)).show(ui, |ui| {
+        ui.set_width(ui.available_width());
+        let what = if s(p, "kind") == "new" { tl!("shared a new client") } else { tl!("updated") };
+        ui.label(
+            RichText::new(format!("{} {what} {} (v{})", s(p, "by"), s(p, "name"), p.get("version").and_then(Value::as_u64).unwrap_or(0))).strong(),
+        );
+        if !s(p, "message").is_empty() {
+            ui.label(RichText::new(format!("“{}”", s(p, "message"))).small().italics());
+        }
+        let green = Color32::from_rgb(52, 168, 83);
+        let red = Color32::from_rgb(220, 80, 70);
+        for (file, lines) in p.get("changes").and_then(Value::as_object).into_iter().flatten() {
+            let label = if file == "critic_rules.md" { tl!("Rules") } else { tl!("Design language") };
+            egui::CollapsingHeader::new(RichText::new(format!("{label} ({})", lines.as_array().map_or(0, Vec::len))).small())
+                .id_salt((client.as_str(), file.as_str()))
+                .default_open(s(p, "kind") != "new")
+                .show(ui, |ui| {
+                    for l in lines.as_array().into_iter().flatten() {
+                        let add = s(l, "op") == "+";
+                        let text = format!("{} {}", if add { "+" } else { "−" }, s(l, "text"));
+                        ui.add(egui::Label::new(RichText::new(text).small().monospace().color(if add { green } else { red })).wrap());
+                    }
+                });
+        }
+        for (key, sign) in [("files_added", "+"), ("files_removed", "−")] {
+            let files: Vec<&str> = p.get(key).and_then(Value::as_array).map(|a| a.iter().filter_map(Value::as_str).collect()).unwrap_or_default();
+            if !files.is_empty() {
+                ui.label(RichText::new(format!("{sign} {}", files.join(", "))).small().color(t.text_dim));
+            }
+        }
+        ui.horizontal_wrapped(|ui| {
+            let install = if s(p, "kind") == "new" { tl!("Install") } else { tl!("Install update") };
+            if widgets::primary_button(ui, install).clicked() {
+                asks.push(("team-change", "POST", "/api/team/accept".into(), Some(json!({ "client": client }))));
+            }
+            if widgets::secondary_button(ui, tl!("Not now")).clicked() {
+                asks.push(("team", "POST", "/api/team/decline".into(), Some(json!({ "client": client }))));
+            }
+            if manager && widgets::secondary_button(ui, tl!("Reject for everyone")).on_hover_text(tl!("Undo this change on every laptop")).clicked() {
+                asks.push(("team-change", "POST", "/api/team/reject".into(), Some(json!({ "client": client }))));
+            }
+        });
     });
 }
 
@@ -653,6 +804,11 @@ pub fn show(app: &mut VectorcraftApp, ui: &mut Ui) {
             st.started = false;
         }
     }
+    // The team's shared clients: what's waiting, every 30 s (the local service asks GitHub every few minutes).
+    if st.agents_ok && st.team_at.is_none_or(|at| now - at >= 30.0) {
+        st.team_at = Some(now);
+        asks.push(("team", "GET", "/api/team".into(), None));
+    }
     // Until a Claude app is set up, look again now and then, so setting it up shows here without a restart.
     if st.agents_ok && connected(&st).is_empty() && st.connect_at.is_none_or(|at| now - at >= 5.0) {
         st.connect_at = Some(now);
@@ -668,7 +824,7 @@ pub fn show(app: &mut VectorcraftApp, ui: &mut Ui) {
     tab_bar(ui, &mut st, &t);
     ui.add_space(6.0);
     match st.tab {
-        Tab::Claude => claude_tab(app, ui, &mut st, &t),
+        Tab::Claude => claude_tab(app, ui, &mut st, &mut asks, &t),
         Tab::Clients => clients_tab(app, ui, &mut st, &mut asks, &t),
         Tab::History => {
             let id = st.client().map(|c| c.id.clone()).unwrap_or_default();
@@ -724,6 +880,19 @@ mod tests {
         st.retries = START_RETRIES;
         on_answer(&mut st, "health", Err("Connection refused".into()));
         assert!(st.status.starts_with("Not reachable"));
+    }
+
+    #[test]
+    fn team_answers_reach_the_clients_tab() {
+        let mut st = State { started: true, ..Default::default() };
+        on_answer(&mut st, "team", Ok(json!({"joined": true, "pending": [{"client": "acme"}]})));
+        assert!(st.started && st.team.as_ref().is_some_and(|t| t["pending"][0]["client"] == "acme"));
+        on_answer(&mut st, "team-change", Ok(json!({"joined": true, "pending": []})));
+        assert!(!st.started, "after an install the client list is asked for again");
+        on_answer(&mut st, "team", Err("GitHub down".into()));
+        assert!(st.note.is_empty(), "a failed background check stays quiet");
+        on_answer(&mut st, "team-change", Err("only a manager can reject a change for everyone".into()));
+        assert!(st.note.contains("only a manager"));
     }
 
     #[test]

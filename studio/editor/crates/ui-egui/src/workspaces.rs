@@ -90,6 +90,8 @@ pub fn builtins() -> Vec<Workspace> {
             x.control_bar = true;
             x.rulers = true;
             x.toolbar_double = true;
+            // Every tool, the Artboard tool (frames on the endless canvas, as in Figma) among them (D-038).
+            x.toolbar_advanced = true;
             x.task_bar = false;
             x.docking = Some(studio_docking());
         }),
@@ -613,7 +615,8 @@ mod tests {
         let mut ui = UiState::default();
         adopt_studio_workspace(&mut ui);
         assert_eq!(ui.workspace, STUDIO);
-        assert!(ui.control_bar && ui.view.rulers && ui.toolbar_double && !ui.task_bar);
+        assert!(ui.control_bar && ui.view.rulers && ui.toolbar_double && ui.toolbar_advanced && !ui.task_bar);
+        assert!(crate::toolbar::slots_for_tests(&ui).iter().any(|s| s.contains(&"artboard")), "frames can be drawn from the toolbar");
         let layout = crate::panel_docking::layout_of(&ui);
         assert!(crate::panel_docking::valid(&layout));
         let expected = [crate::panels::studio_ai::ID, "properties", "appearance", "libraries", "layers", "artboards", "color", "swatches", "stroke"];

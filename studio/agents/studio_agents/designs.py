@@ -165,32 +165,84 @@ class Studio:
         v["svg"] = str(svg_path)
         return ls.svg, ls.width, ls.height, name
 
-    def place(self, did: str, version: int | None = None, beside: bool = False) -> dict:
-        """Put a version on an artboard: in a NEW document of its own (a new design never touches another one), or
-        with `beside`, on a new artboard to the right of this design's other versions (to compare them)."""
+    def place(self, did: str, version: int | None = None, beside: bool = False, new_file: bool = False) -> dict:
+        """Put a version on an artboard as editable layers (D-036):
+        - default: in the file the designer has in front, on its empty artboard or a new artboard to the right of
+          what's there; a new file only when none is open, or the one in front is CMYK with art in it;
+        - `beside`: next to this design's other versions, in their file (to compare versions);
+        - `new_file`: in a new file of its own (only when the designer asks for one)."""
         d = self.get(did)
         v = d.version(version)
         svg, w, h, name = self._layered(d, v)
         bridge = self._bridge()
+        label = f"{v['title']} · v{v['version']}" if beside else v["title"]
         if beside:
-            doc = next((p["document"] for p in d.placements.values() if p.get("document") is not None), None)
-            if doc is None or not bridge.in_document(doc).is_open():
+            doc = next((p["document"] for p in d.placements.values() if p.get("document") is not None and bridge.in_document(p["document"]).is_open()), None)
+            if doc is None:
                 raise DesignError("none of this design's versions is open in the editor: place one without `beside` first")
-            b = bridge.in_document(doc)
-            boards = b.inspect().get("artboards", [])
-            x = max((a["x"] + a["width"] for a in boards), default=0.0) + ARTBOARD_GAP
-            y = min((a["y"] for a in boards), default=0.0)
-            artboard = b.add_artboard(x, y, w, h, f"Version {v['version']}")
-            p = b.place_svg(svg, name=name, width=w, height=h, new_document=False, origin=(x, y))
+        elif new_file:
+            doc = None
         else:
+            doc = self._current_document(bridge)
+        if doc is None:
             b = bridge
             p = b.place_svg(svg, name=name, width=w, height=h, document_name=f"design-{slug(v['title'])}")
             artboard = 0
-            b.name_artboard(0, f"Version {v['version']}")
+            b.name_artboard(0, label[:120])
+        else:
+            b = bridge.in_document(doc)
+            artboard, x, y = self._next_artboard(b, w, h, label[:120])
+            p = b.place_svg(svg, name=name, width=w, height=h, new_document=False, origin=(x, y))
         d.placements[str(v["version"])] = {"document": p.document, "group_id": p.group_id, "artboard": artboard, "layers": len(p.nodes)}
         d.save()
         return {"design": d.id, "version": v["version"], "document": p.document, "group_id": p.group_id,
-                "artboard": artboard, "layers": len(p.nodes)}
+                "artboard": artboard, "layers": len(p.nodes), "new_file": doc is None}
+
+    @staticmethod
+    def _empty(info: dict) -> bool:
+        return not any(layer.get("children") for layer in info.get("layers", []))
+
+    def _current_document(self, bridge: Bridge) -> int | None:
+        """The file in front, if a design can go into it: RGB, or still empty (then it is switched to RGB, since
+        brand colours are RGB hex, D-014). A CMYK file with art in it is left alone: the design gets a new file."""
+        front = next((d["uid"] for d in bridge.documents() if d.get("active")), None)
+        if front is None:
+            return None
+        b = bridge.in_document(front)
+        info = b.inspect(depth=1)
+        if str(info.get("colorMode", "")).lower().startswith("rgb"):
+            return front
+        if self._empty(info):
+            b.call("file.documentColorMode", mode="rgb")
+            return front
+        return None
+
+    def _next_artboard(self, b: Bridge, w: float, h: float, name: str) -> tuple[int, float, float]:
+        """An artboard for the design: the file's only artboard if nothing is on it yet (resized to the design),
+        else a new one to the right of the others → (index, x, y)."""
+        info = b.inspect(depth=1)
+        boards = info.get("artboards", [])
+        if len(boards) == 1 and self._empty(info):
+            a = boards[0]
+            b.call("artboard.setProps", artboards=[{"index": 0, "x": a["x"], "y": a["y"], "width": w, "height": h, "name": name}])
+            return 0, a["x"], a["y"]
+        x = max((a["x"] + a["width"] for a in boards), default=0.0) + ARTBOARD_GAP
+        y = min((a["y"] for a in boards), default=0.0)
+        return b.add_artboard(x, y, w, h, name), x, y
+
+    def current_file(self) -> dict:
+        """The file in front and the designs placed in it (what "this", "it", "the last one" refer to)."""
+        bridge = self._bridge()
+        docs = bridge.documents()
+        front = next((d for d in docs if d.get("active")), None)
+        out: dict[str, Any] = {"file": front, "open_files": docs, "designs": []}
+        if front is None:
+            return out
+        for d in self.list(limit=200):
+            versions = [int(k) for k, p in d.placements.items() if p.get("document") == front["uid"]]
+            if versions:
+                out["designs"].append({"design": d.id, "title": d.title, "client": d.client, "status": d.status, "versions_here": versions})
+        return out
 
     def _placed(self, d: Design, version: int | None) -> tuple[Bridge, dict, str]:
         key = str(version) if version is not None else next(reversed(d.placements), None)

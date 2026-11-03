@@ -18,6 +18,8 @@ Generated-in-code art is original and has no file to list. This covers the defau
 | `assets/91studio/icon-128.png` | 91Ninjas | supplied by the owner (91Ninjas logo) | 91Ninjas trademark, used by its owner (not open source) | App icon |
 | `assets/91studio/icon-256.png` | 91Ninjas | supplied by the owner (91Ninjas logo) | 91Ninjas trademark, used by its owner (not open source) | App icon |
 | `assets/91studio/icon-512.png` | 91Ninjas | supplied by the owner (91Ninjas logo) | 91Ninjas trademark, used by its owner (not open source) | App icon |
+| `assets/91studio/icon.ico` | 91Ninjas | made from icon-512.png | 91Ninjas trademark, used by its owner (not open source) | Windows app and installer icon (D-040) |
+| `assets/91studio/icon.icns` | 91Ninjas | made from icon-512.png | 91Ninjas trademark, used by its owner (not open source) | macOS app icon (D-040) |
 | `assets/91studio/91ninjas-wordmark.png` | 91Ninjas | supplied by the owner (91Ninjas logo) | 91Ninjas trademark, used by its owner (not open source) | Welcome screen wordmark, tinted by the theme |
 | `assets/91studio/README.md` | 91Ninjas | supplied by the owner (91Ninjas logo) | 91Ninjas trademark, used by its owner (not open source) | Notes on these files |
 | `assets/app-icon/LICENSE.txt` | (licence/readme text) | VectorCraft | MIT OR Apache-2.0 |  |

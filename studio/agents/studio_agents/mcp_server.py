@@ -55,7 +55,7 @@ def log(tool: str, summary: str, ok: bool = True) -> None:
 
 def _fail(tool: str, e: Exception) -> str:
     log(tool, str(e), ok=False)
-    if not isinstance(e, (DesignError, brandmod.BrandError, packs.PackError, onboard.OnboardError, ValueError)):
+    if not isinstance(e, (DesignError, brandmod.BrandError, packs.PackError, onboard.OnboardError, ValueError, RuntimeError)):
         print(traceback.format_exc(), file=sys.stderr)
     return f"error: {e}"
 
@@ -166,16 +166,31 @@ def render_design(design: str, spec: dict[str, Any]) -> list:
 
 
 @server.tool()
-def place_design(design: str, version: int | None = None, beside: bool = False) -> str:
-    """Put a version on an artboard in the open editor as editable layers. Default: a NEW document of its own (never
-    reuse another design's document). `beside=true`: a new artboard to the right of this design's other versions,
-    to compare versions. Also use this to bring a version back after the designer removed or undid it."""
+def place_design(design: str, version: int | None = None, beside: bool = False, new_file: bool = False) -> str:
+    """Put a version on an artboard in the open editor as editable layers. Default: in the file the designer has in
+    front, on a new artboard (to the right of what's there), so a file collects the designs made while it's open.
+    `beside=true`: next to this design's other versions, to compare them. `new_file=true`: a new file of its own,
+    only when the designer asks for one. Also brings a version back after it was removed or undone."""
     try:
-        r = studio.place(design, version, beside)
-        log("place_design", f"version {r['version']}" + (", beside the others" if beside else ", in its own document"))
+        r = studio.place(design, version, beside, new_file)
+        where = "beside the other versions" if beside else ("in a new file" if r["new_file"] else "in the current file")
+        log("place_design", f"version {r['version']}, {where}")
         return _json(r)
     except Exception as e:
         return _fail("place_design", e)
+
+
+@server.tool()
+def current_file() -> str:
+    """The file the designer has in front, the other open files, and the designs placed in the front file. Call it at
+    the start of a request and whenever the designer may have switched files: "it", "this", "the last one" mean the
+    designs in this file."""
+    try:
+        r = studio.current_file()
+        log("current_file", (r["file"] or {}).get("title") or "no file open")
+        return _json(r)
+    except Exception as e:
+        return _fail("current_file", e)
 
 
 @server.tool()
@@ -293,6 +308,19 @@ def save_new_client(name: str, folder: str, design_md: str, critic_rules: str, c
         return _json({"client": cid, "name": b.name, "problems": b.problems})
     except Exception as e:
         return _fail("save_new_client", e)
+
+
+@server.tool()
+def share_client(client: str, message: str = "") -> str:
+    """Share a client with the team (its design language, rules, past work, fonts; never designs). Ask the designer
+    first; after a new client is saved, offer it ("Share Acme with the team?"). Everyone else is asked to install it."""
+    try:
+        from studio_agents.team import Team
+        r = Team().share(client, message)
+        log("share_client", f"{client} v{r['version']}")
+        return _json(r)
+    except Exception as e:
+        return _fail("share_client", e)
 
 
 def main() -> None:

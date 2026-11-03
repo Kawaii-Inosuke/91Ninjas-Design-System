@@ -42,6 +42,9 @@ def bridge_dir() -> Path:
     run = Path(f"/run/user/{os.getuid()}") if hasattr(os, "getuid") else None
     if run and (run / "91studio" / "bridge.json").is_file():
         return run / "91studio"
+    # Mac and Windows (no runtime folder): the app's data folder, as the editor's bridge (D-040).
+    if Path.home():
+        return Path.home() / ".local" / "share" / "91studio" / "bridge"
     return Path(tempfile.gettempdir()) / f"91studio-{os.environ.get('USER') or getpass.getuser()}"
 
 

@@ -396,8 +396,8 @@ fn main() -> std::process::ExitCode {
                 prefs_dir::attach_profile_store(&mut session);
                 prefs_dir::attach_plugin_store(&mut session);
                 let mut app = VectorcraftApp::new(session, services(cc.winit_window().cloned(), cc.egui_ctx.clone()));
-                // 91studio: no update check: it looks for upstream VectorCraft releases (D-022).
-                app.set_startup_update_check(false);
+                // 91studio: release builds look for updates in the team's releases repo; others never (D-022, D-040).
+                app.set_startup_update_check(!vectorcraft_ui_egui::RELEASES_REPO.is_empty());
                 load_prefs(&mut app, saved);
                 // 91studio: the 91Ninjas workspace, once per profile (D-028).
                 vectorcraft_ui_egui::workspaces::adopt_studio_workspace(&mut app.ui);

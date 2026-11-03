@@ -8,6 +8,7 @@ Everything is local (D-009): `STUDIO_DATA_DIR`, else `$XDG_DATA_HOME/91studio`, 
 from __future__ import annotations
 
 import os
+import sys
 from pathlib import Path
 
 
@@ -36,7 +37,15 @@ def models_dir() -> Path:
 
 
 def fonts_dir() -> Path:
-    """Client fonts are installed here so the editor (system fonts) can draw them (PHASE-1 issue 2)."""
+    """Client fonts are installed here so the editor (system fonts) can draw them (PHASE-1 issue 2): the user's own
+    fonts folder of each system (D-040): Linux ~/.local/share/fonts/91studio, macOS ~/Library/Fonts/91studio,
+    Windows %LOCALAPPDATA%\\Microsoft\\Windows\\Fonts (registered by `packs.install_fonts`)."""
+    if os.environ.get("STUDIO_FONTS_DIR"):
+        return Path(os.environ["STUDIO_FONTS_DIR"])
+    if sys.platform == "darwin":
+        return Path.home() / "Library" / "Fonts" / "91studio"
+    if os.name == "nt":
+        return Path(os.environ.get("LOCALAPPDATA") or Path.home() / "AppData" / "Local") / "Microsoft" / "Windows" / "Fonts"
     base = Path(os.environ.get("XDG_DATA_HOME") or Path.home() / ".local" / "share")
     return base / "fonts" / "91studio"
 

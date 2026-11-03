@@ -118,7 +118,7 @@ pub(crate) fn show(app: &mut VectorcraftApp, ctx: &egui::Context) {
     #[cfg(target_arch = "wasm32")]
     if app.updates_rt.manual_window_open {
         let mut open = true;
-        egui::Window::new(tl!("VectorCraft Updates"))
+        egui::Window::new(tl!("91Ninjas Studio Updates"))
             .open(&mut open)
             .collapsible(false)
             .resizable(false)

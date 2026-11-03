@@ -85,6 +85,16 @@ pub(crate) fn slots(app: &VectorcraftApp) -> Vec<(Option<&'static str>, Vec<&'st
     }
 }
 
+/// 91studio: the slots a workspace's flags give (no edited toolbar), for workspace tests.
+#[cfg(test)]
+pub(crate) fn slots_for_tests(ui: &crate::state::UiState) -> Vec<Vec<&'static str>> {
+    if ui.toolbar_advanced {
+        TOOL_GROUPS.iter().map(|g| g.iter().map(|t| t.id).collect()).collect()
+    } else {
+        BASIC.iter().flat_map(|(_, ss)| ss.iter().map(|s| s.to_vec())).collect()
+    }
+}
+
 /// Remember the tool shown in the slot that contains `id`.
 pub fn remember(app: &mut VectorcraftApp, id: &str) {
     for (_, s) in slots(app) {

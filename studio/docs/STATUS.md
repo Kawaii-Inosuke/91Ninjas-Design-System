@@ -35,19 +35,12 @@ Setup on a new machine: `RUNBOOK.md` (Rust build, `uv sync`, Playwright, then th
 - **Real-use check** with Claude: a design from content, "another one with icons", "make the title bigger", Ctrl+Z then "add it back", 3 versions then "keep B", new content in a new document, approval files in History. Then tune `studio_agents/claude/workflow.md` and `spec.md`.
 - **Disk:** about 2–3 GB free. Builds need about 1 GB headroom; a release build or installer needs about 10 GB.
 
-## Next session: before sending it to designers
-**First:** build and test the panel's "connected" state (D-034). Then the user's other edits.
+## Done on 2026-11-04 (PHASE-7)
+Claude-connected panel · designs into the file in front · shared team clients with approvals and the manager's reject ·
+full toolbar with frames · one-click Connect · Windows/Mac installers and updates (workflow written) · rebrand texts.
 
-**Step 5e: installer and updates (D-035, decided):**
-- **Windows `Setup.exe`** with a Start menu entry and a desktop icon; **Mac `.dmg`** into Applications. Each bundles the editor, the connector, Python and the renderer.
-- **Built by GitHub Actions** on GitHub's Windows and Mac machines, so no disk space is needed on the laptop.
-- **Published to a public, releases-only GitHub repo.** Designers need no account; the source code stays private.
-- **Free and unsigned.** The first install needs one click past the system warning, with screenshots on the download page. In-app updates show no warning.
-- **Updates ask first:** Update now / Remind me later / Install when I close the app. Clients, designs and settings are kept.
-- **Inside the app:** a one-click **Connect Claude** that sets up Claude Desktop for the designer, plus Help › Check for Updates.
-
-**Other candidates (the user will pick):**
-- Export FCC and other clients as `.91pack` files for the team.
-- A short guide for designers: install, connect Claude, what to ask, versions, approval, where files go.
-- Rebrand leftovers: a few upstream texts still say "VectorCraft" (e.g. the Recover Documents dialog).
-- Which Claude plan designers need (Pro vs Max), measured from real use.
+## Next
+1. **Set up the team repo and key, and the releases repo, token and variable** (PHASE-7 › What the user needs to do).
+2. **First release:** push tag `v1.0.0`; fix what the Windows/Mac build logs show; install on a Windows and a Mac laptop.
+3. "Install when I close the app" for updates; a short designer guide.
+4. Real use with designers, then tune Claude's instructions (`studio_agents/claude/`).

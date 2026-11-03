@@ -6,17 +6,18 @@
 
 fn main() -> Result<(), String> {
     println!("cargo:rerun-if-changed=build.rs");
-    println!("cargo:rerun-if-changed=../../assets/app-icon/vectorcraft.ico");
+    // 91studio: the 91Ninjas Studio icon and names in the .exe (D-040).
+    println!("cargo:rerun-if-changed=../../assets/91studio/icon.ico");
     println!("cargo:rerun-if-env-changed=VECTORCRAFT_REQUIRE_WINRES");
     if std::env::var("CARGO_CFG_TARGET_OS").as_deref() != Ok("windows") {
         return Ok(());
     }
     let mut res = winresource::WindowsResource::new();
-    res.set_icon("../../assets/app-icon/vectorcraft.ico")
-        .set("ProductName", "VectorCraft")
-        .set("FileDescription", "VectorCraft vector illustration editor")
-        .set("CompanyName", "Learning Machines LLC")
-        .set("LegalCopyright", "Copyright (c) the VectorCraft authors. MIT OR Apache-2.0.")
+    res.set_icon("../../assets/91studio/icon.ico")
+        .set("ProductName", "91Ninjas Studio")
+        .set("FileDescription", "91Ninjas Studio: on-brand design with Claude")
+        .set("CompanyName", "91Ninjas")
+        .set("LegalCopyright", "Built on VectorCraft (MIT OR Apache-2.0). 91Ninjas name and mark: 91Ninjas.")
         .set("OriginalFilename", "vectorcraft.exe")
         .set("InternalName", "vectorcraft");
     if let Err(e) = res.compile() {

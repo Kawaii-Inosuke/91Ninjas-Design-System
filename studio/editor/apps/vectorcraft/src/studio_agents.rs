@@ -48,14 +48,32 @@ fn agents_dir() -> Option<PathBuf> {
         return Some(PathBuf::from(d));
     }
     let exe = std::env::current_exe().ok()?;
+    // A checkout (studio/agents), the Windows install folder (agents\ next to the .exe) or the macOS bundle
+    // (Contents/Resources/agents) (D-040).
     exe.ancestors()
-        .flat_map(|a| [a.join("studio").join("agents"), a.join("agents")])
+        .flat_map(|a| [a.join("studio").join("agents"), a.join("agents"), a.join("Resources").join("agents")])
         .find(|d| d.join("pyproject.toml").is_file() && d.join("studio_agents").is_dir())
+}
+
+/// Installed (not a checkout): the agents came with the app, so their Python environment lives in the user's
+/// data folder (the install folder may not be writable) and is built from the lock file as shipped.
+fn bundled(dir: &std::path::Path) -> bool {
+    !dir.join(".venv").exists() && std::env::var_os("STUDIO_AGENTS_DIR").is_none()
+}
+
+/// The data folder the agents use (`~/.local/share/91studio`, as `studio_agents.config.data_dir`).
+fn data_dir() -> Option<PathBuf> {
+    std::env::var_os("HOME").or_else(|| std::env::var_os("USERPROFILE")).map(|h| PathBuf::from(h).join(".local").join("share").join("91studio"))
 }
 
 fn uv() -> Option<PathBuf> {
     if let Some(p) = std::env::var_os("STUDIO_UV").filter(|p| !p.is_empty()) {
         return Some(PathBuf::from(p));
+    }
+    // The `uv` shipped next to the app (D-040).
+    let name = if cfg!(windows) { "uv.exe" } else { "uv" };
+    if let Some(p) = std::env::current_exe().ok().and_then(|e| e.parent().map(|d| d.join(name))).filter(|p| p.is_file()) {
+        return Some(p);
     }
     let on_path = std::env::var_os("PATH").into_iter().flat_map(|p| std::env::split_paths(&p).collect::<Vec<_>>());
     let home = std::env::var_os("HOME").map(PathBuf::from);
@@ -94,11 +112,20 @@ pub fn launch() -> Option<Sidecar> {
         Ok((a, b)) => (Stdio::from(a), Stdio::from(b)),
         Err(_) => (Stdio::null(), Stdio::null()),
     };
-    let child = Command::new(&uv)
-        .args(["run", "--project"])
-        .arg(&dir)
+    let mut cmd = Command::new(&uv);
+    cmd.args(["run", "--project"]).arg(&dir);
+    if bundled(&dir)
+        && let Some(data) = data_dir()
+    {
+        // First start: uv fetches Python and the packages once (a few minutes), into the user's data folder.
+        cmd.args(["--frozen", "--no-dev"]).env("UV_PROJECT_ENVIRONMENT", data.join("agents-env")).env("STUDIO_BUNDLED", "1");
+    }
+    let child = cmd
         .args(["python", "-m", "studio_agents.server"])
         .current_dir(&dir)
+        // The connector Claude starts must run the same way (`/api/connect` reads these).
+        .env("STUDIO_UV", &uv)
+        .env("STUDIO_AGENTS_DIR_USED", &dir)
         .env("STUDIO_SIDECAR_TOKEN", &token)
         .env("STUDIO_SIDECAR_PORT", port.to_string())
         // The agents stop by themselves when the app is gone, even when it was killed.

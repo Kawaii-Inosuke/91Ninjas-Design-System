@@ -100,7 +100,7 @@ pub(crate) fn link_tip(d: &Dialog) -> String {
         (true, true) => {
             vec![
                 tl!("Images: link to the file instead of only embedding it."),
-                tl!("VectorCraft documents: one locked object, updated when the file changes."),
+                tl!("91Ninjas Studio documents: one locked object, updated when the file changes."),
             ]
         }
         _ => vec![tl!("Keep a link to an image file instead of only embedding it")],

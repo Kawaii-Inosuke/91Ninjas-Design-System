@@ -683,7 +683,7 @@ pub fn show(app: &mut VectorcraftApp, ctx: &egui::Context) {
         ui.add_space(8.0);
         ui.horizontal(|ui| {
             let current = d.str("start") == "current";
-            if widgets::radio(ui, tl!("Start from VectorCraft Defaults"), !current, true) {
+            if widgets::radio(ui, tl!("Start from 91Ninjas Studio Defaults"), !current, true) {
                 d.fields.insert("start".into(), json!("defaults"));
             }
             ui.add_space(12.0);
@@ -888,7 +888,7 @@ fn rows_section(ui: &mut egui::Ui, d: &mut Dialog, review: &mut Review, statuses
     let list = egui::Frame::NONE.fill(t.input).stroke(egui::Stroke::new(1.0, t.input_border)).inner_margin(egui::Margin::same(4)).show(ui, |ui| {
         ui.horizontal(|ui| {
             ui.add_space(22.0);
-            for (label, w) in [(tl!("In the File"), NAME_W), (tl!("In VectorCraft"), TARGET_W), (tl!("Shortcut"), CHORD_W)] {
+            for (label, w) in [(tl!("In the File"), NAME_W), (tl!("In 91Ninjas Studio"), TARGET_W), (tl!("Shortcut"), CHORD_W)] {
                 cell(ui, w, |ui| ui.label(egui::RichText::new(label).color(t.text_dim).size(11.0)));
             }
             ui.label(egui::RichText::new(tl!("Status")).color(t.text_dim).size(11.0));

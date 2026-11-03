@@ -9,9 +9,22 @@
 /// prompt shows both, and an AppImage's menu entry gets the icon.
 #[cfg(not(target_arch = "wasm32"))]
 pub const UPDATE_APP: craft_update::app::App = craft_update::app::App {
-    icon_png: Some(include_bytes!("../../../assets/app-icon/hicolor/128x128/apps/ai.storyteller.vectorcraft.png")),
-    accent: Some([0xe8, 0x57, 0x3f]),
+    // 91studio: 91Ninjas Studio, updated from the team's public releases repo (D-040). The id stays `vectorcraft`
+    // (the program's file name and the installers' asset names); the name is what installers register.
+    name: "91Ninjas Studio",
+    tagline: "On-brand design with Claude",
+    repo: RELEASES_REPO,
+    icon_png: Some(include_bytes!("../../../assets/91studio/icon-128.png")),
+    accent: Some([0x7e, 0xe8, 0xc8]),
     ..craft_update::suite::VECTORCRAFT
+};
+
+/// 91studio: where releases (installers and updates) are published: set by the release build
+/// (`STUDIO_RELEASES_REPO`, owner/repo), so only release builds look for updates (D-040).
+#[cfg(not(target_arch = "wasm32"))]
+pub const RELEASES_REPO: &str = match option_env!("STUDIO_RELEASES_REPO") {
+    Some(r) => r,
+    None => "",
 };
 
 /// Translate a UI string literal into the language the UI is drawn in (see [`i18n`]).

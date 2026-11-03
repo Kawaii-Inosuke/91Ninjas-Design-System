@@ -18,6 +18,7 @@ from __future__ import annotations
 import getpass
 import hashlib
 import json
+import os
 import re
 import shutil
 import stat
@@ -340,6 +341,8 @@ def install_fonts(client: str, root: Path | None = None) -> list[Path]:
     files = [p for p in src.glob("*") if p.suffix.lower() in FONT_EXT] if src.is_dir() else []
     if not files:
         return []
+    if os.name == "nt":
+        return _install_fonts_windows(client, files)
     dst = config.fonts_dir() / client
     dst.mkdir(parents=True, exist_ok=True)
     out = []
@@ -348,4 +351,20 @@ def install_fonts(client: str, root: Path | None = None) -> list[Path]:
         out.append(dst / p.name)
     if shutil.which("fc-cache"):
         subprocess.run(["fc-cache", "-f", str(dst)], capture_output=True, timeout=60, check=False)
+    return out
+
+
+def _install_fonts_windows(client: str, files: list[Path]) -> list[Path]:
+    """Windows reads per-user fonts from its own folder (no subfolders) and from the user's font registry (D-040)."""
+    import winreg  # Windows only
+    dst = config.fonts_dir()
+    dst.mkdir(parents=True, exist_ok=True)
+    out = []
+    with winreg.CreateKey(winreg.HKEY_CURRENT_USER, r"Software\Microsoft\Windows NT\CurrentVersion\Fonts") as key:
+        for p in files:
+            target = dst / f"91studio-{client}-{p.name}"
+            shutil.copyfile(p, target)
+            kind = "OpenType" if p.suffix.lower() == ".otf" else "TrueType"
+            winreg.SetValueEx(key, f"{p.stem} ({kind})", 0, winreg.REG_SZ, str(target))
+            out.append(target)
     return out

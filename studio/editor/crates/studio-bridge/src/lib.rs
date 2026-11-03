@@ -40,13 +40,18 @@ pub struct Bridge {
 }
 
 /// The folder for the bridge's connection file and the only folder its requests may touch:
-/// `STUDIO_BRIDGE_DIR`, else `$XDG_RUNTIME_DIR/91studio`, else `<temp>/91studio-<user>`.
+/// `STUDIO_BRIDGE_DIR`, else `$XDG_RUNTIME_DIR/91studio`, else `~/.local/share/91studio/bridge` (Mac, Windows).
 pub fn bridge_dir() -> PathBuf {
     if let Some(d) = std::env::var_os("STUDIO_BRIDGE_DIR").filter(|d| !d.is_empty()) {
         return PathBuf::from(d);
     }
     if let Some(d) = std::env::var_os("XDG_RUNTIME_DIR").filter(|d| !d.is_empty()) {
         return PathBuf::from(d).join("91studio");
+    }
+    // 91studio: Mac and Windows have no runtime folder: the app's data folder, which Claude's connector (started
+    // with a minimal environment) finds the same way (D-040). The temp folder only without a home.
+    if let Some(home) = std::env::var_os("HOME").or_else(|| std::env::var_os("USERPROFILE")).filter(|h| !h.is_empty()) {
+        return PathBuf::from(home).join(".local").join("share").join("91studio").join("bridge");
     }
     let user = std::env::var("USER").or_else(|_| std::env::var("USERNAME")).unwrap_or_else(|_| "user".into());
     std::env::temp_dir().join(format!("91studio-{user}"))

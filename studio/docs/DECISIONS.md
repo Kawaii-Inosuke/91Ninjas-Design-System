@@ -460,6 +460,78 @@ Format per entry: **Context → Decision → Alternatives → Consequences**. En
   - **Updates:** the app checks the releases repo and **asks first** (Update now / Remind me later / Install when I close the app). It downloads and installs updates itself; files the app downloads aren't marked "from the internet", so **updates show no warning**. Clients, designs and settings are kept.
 - **Not chosen:** Microsoft Trusted Signing, OV/EV certificates, Microsoft Store, Apple notarization (cost), SignPath Foundation (needs open-source licensing).
 
+## D-036: New designs go into the file in front; Claude follows that file (2026-11-04)
+- **Context:** The user wants a new infographic to join the same file, not replace the earlier one or open somewhere else, until they open a new file. They also want Claude's work tied to the file they're in.
+- **Decision:**
+  - **Placing:** `place_design` puts a design into the file in front.
+    - It goes onto the file's only artboard if that artboard is empty (resized to the design), else onto a new artboard to the right of the others, named after the design.
+    - A new file only when no file is open, the designer asks (`new_file`), or the file in front is CMYK with art in it. An empty CMYK file is switched to RGB, since brand colours are RGB.
+    - `beside` still puts versions next to each other.
+  - **Following the file:** new tool `current_file` returns the file in front and the designs placed in it. Claude's instructions make it the context of each request ("it", "this", "the last one"), say a new empty file is a fresh start, and say never to remove or replace an earlier design unless asked.
+  - **The limit:** Claude's chat is Claude's own window, so it can't be split per file. Claude's *work* follows the file; `/clear` starts a fresh chat.
+- **Checked:**
+  - Tests: designs collect in one file; a new empty file is used and resized; CMYK handling; current_file.
+  - Live: two designs landed side by side in one file.
+
+## D-037: Shared team clients through a private GitHub repo, with a team key (2026-11-04)
+- **Context:** Clients should be shared automatically, not on Drive. Designers have no GitHub accounts. Every change must be shown (added and changed, old and new) and approved before it installs. The manager can reject a change, and then everyone goes back automatically. Designs stay local.
+- **Decision:**
+  - **`team.py`:** the app talks to the GitHub REST API itself (git data endpoints, one commit per share, standard library only) with one **team key**: a fine-grained token for that repo only, contents read and write.
+    - **Joining:** each laptop joins once with the repo, the key and the designer's name. The key is stored owner-only. The manager creates the team, and `team.json` lists the managers.
+    - **Repo layout:** `clients/<id>/` holds DESIGN.md, critic_rules.md, past/, assets/fonts, assets/icons, source/, plus `meta.json` (version, by, when, message, the previous commit, reverted).
+    - **Share:** a new version. The panel offers it for clients not yet shared, and Claude offers it after saving a client.
+    - **Check** (at start, every 3 min, and on demand) shows, for each new or changed client, who changed it and what: lines added and removed in the design language and the rules, and files added and removed. **Install** or **Not now**; "not now" stays quiet until a newer version.
+    - **Manager's Reject for everyone:** a new version holding the files as they were before the change, marked `reverted`. It installs everywhere without asking, and the panel says so.
+  - **Installing** goes through `packs.create_client` (validated and sanitised like a pack).
+- **Limits:**
+  - Anyone with the key can share. Manager status is by name in `team.json`, which is fine for an internal team.
+  - Rotate the key if a laptop is lost.
+  - Client material lives in a private GitHub repo.
+- **Checked:** tests with three laptops and a fake repo (join, share, new, update with the exact diff, reject reverts everyone, not now, refusals), the GitHub client's requests, and the API.
+
+## D-038: The endless canvas and frames (2026-11-04)
+- **Context:** The user wants a Figma-like workspace: an endless canvas with frames anywhere.
+- **Found:**
+  - The canvas already extends 4 million points each way (`MAX_COORD`). The view scrolls freely past the art (checked live: 240,000 points down).
+  - Art can sit outside artboards.
+- **Decision:**
+  - Frames are the editor's artboards, drawn anywhere with the Artboard tool (Shift+O).
+  - The 91Ninjas workspace now uses the **Advanced toolbar**, which has every tool, the Artboard tool included. Adding it to the Basic toolbar would have shifted upstream toolbar positions that about 15 tests depend on.
+  - Not done: renaming artboards to "frames" across the UI, and nesting or clipping like Figma frames.
+
+## D-039: One-click Connect Claude (2026-11-04)
+- **Decision:** the Claude tab has **Connect Claude Code** and **Set up Claude Desktop**.
+  - **Claude Code:** runs `claude mcp add --scope user …`, replacing an older entry of ours.
+  - **Claude Desktop:** adds our entry to its config (Linux, Mac and Windows paths) and keeps everything else in it, plus a copy of the old file.
+  - The copy-and-paste commands stay, for doing it by hand.
+
+## D-040: Installers and updates (2026-11-04)
+- **Decision** (following D-035):
+  - **Workflow:** `.github/workflows/studio-release.yml` builds, on GitHub's machines when a `v*` tag is pushed (or by hand):
+    - `vectorcraft-<v>-windows-x64.msi`;
+    - `vectorcraft-<v>-macos-arm64.dmg` and `vectorcraft-<v>-macos-x86_64.dmg` (both built on the Apple-chip machine).
+
+    It then publishes them with `SHA256SUMS.txt` and the download notes to the **public releases repo** (`RELEASES_REPO` variable, `RELEASES_TOKEN` secret). The asset names keep the `vectorcraft` stem, which the updater matches.
+  - **Windows** (`studio/packaging/windows/91ninjas-studio.wxs`, `package.ps1`):
+    - a per-user MSI in `%LOCALAPPDATA%\Programs\91Ninjas Studio`, so no admin rights, and in-app updates need none either;
+    - a setup wizard with a ticked **Create a desktop shortcut** box, a **Start menu** entry, an uninstall entry, and "Start 91Ninjas Studio" at the end;
+    - the 91 icon in the .exe and the installer, a new UpgradeCode, and the `SOFTWARE\91Ninjas Studio\InstallDir` registry value the updater finds.
+  - **Mac** (`studio/packaging/macos/package.sh`): "91Ninjas Studio.app" (bundle `com.91ninjas.studio`, the 91 icon), ad-hoc signed (free), in a DMG with an Applications link.
+  - **Bundled:** the editor, `uv` 0.13.1, and the agents (source and lock file).
+  - **First start:** the app runs `uv run --frozen --no-dev` with the Python environment in `~/.local/share/91studio/agents-env`. uv fetches Python and the packages once, and the service then fetches the drawing engine (Chromium) once. The panel says "Setting up the AI tools (first start only, a few minutes)…" and waits up to 5 minutes.
+  - **The connector** that Claude starts uses the same uv, flags and environment: `/api/connect` and the one-click buttons pass `UV_PROJECT_ENVIRONMENT`.
+  - **Cross-platform fixes:**
+    - The bridge's connection file is in `~/.local/share/91studio/bridge` on Mac and Windows, on both sides, because Claude starts the connector with a minimal environment.
+    - Client fonts go to `~/Library/Fonts/91studio` on Mac, and on Windows to the per-user Fonts folder, registered under HKCU.
+  - **Updates:** upstream's updater (craft-update) is pointed at the releases repo: name "91Ninjas Studio", the 91 icon, the mint accent.
+    - Only release builds (`STUDIO_RELEASES_REPO` set at build time) check, at start and with Help › Check for Updates.
+    - The prompt offers **Update and restart / Download / Later**, so it asks first. The app downloads and installs the update itself, and updates show no system warning.
+    - Not built: "Install when I close the app".
+- **Checked:**
+  - Live on Linux: an installed layout (the app with `agents/` and `uv` beside it) found them, built its environment in the data folder, became ready, and gave Claude Desktop a config with the bundled uv and environment.
+  - Tests: the connect commands for an installed app.
+  - **Not yet run:** the Windows and Mac builds themselves. They run on GitHub, and the first tag push is their test.
+
 ## D-007: Every phase ends with a phase report and a docs update (2026-11-02)
 - **Decision:**
   - At the end of each phase, write `phases/PHASE-N.md` and update the PRD, TRD, ARCHITECTURE and SECURITY docs.

@@ -1,0 +1,112 @@
+# 91Ninjas Studio: build the installers and publish them for the team (D-035, D-040).
+#
+# Push a tag like v1.0.0 (or run it by hand with a version). GitHub's own Windows and Mac machines build:
+#   vectorcraft-<v>-windows-x64.msi      Windows installer (Start menu + desktop icon), per user, no admin
+#   vectorcraft-<v>-macos-arm64.dmg      Mac with Apple chips
+#   vectorcraft-<v>-macos-x86_64.dmg     Mac with Intel chips
+# and publishes them as a release in the PUBLIC releases-only repo (variable RELEASES_REPO, e.g.
+# Kawaii-Inosuke/91ninjas-studio-releases), where designers download them without a GitHub account and where the
+# app looks for updates. Needs: repository variable RELEASES_REPO, and secret RELEASES_TOKEN (a fine-grained token
+# with Contents: read and write on that repo only). Nothing is signed (free; one click on first install).
+name: 91Ninjas Studio release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to build, e.g. 1.0.0"
+        required: true
+
+permissions:
+  contents: read
+
+env:
+  STUDIO_RELEASES_REPO: ${{ vars.RELEASES_REPO }}
+  CARGO_INCREMENTAL: "0"
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      v: ${{ steps.v.outputs.v }}
+    steps:
+      - id: v
+        run: |
+          v="${{ inputs.version }}"
+          [ -z "$v" ] && v="${GITHUB_REF_NAME#v}"
+          echo "v=$v" >> "$GITHUB_OUTPUT"
+
+  windows:
+    needs: version
+    runs-on: windows-latest
+    env:
+      STUDIO_VERSION: ${{ needs.version.outputs.v }}
+      DIST: ${{ github.workspace }}\dist
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: WiX
+        run: |
+          dotnet tool install --global wix --version 5.0.2
+          wix extension add -g WixToolset.UI.wixext/5.0.2 WixToolset.Util.wixext/5.0.2
+      - name: Set the version
+        working-directory: studio/editor
+        run: cargo xtask version set ${{ needs.version.outputs.v }}
+      - name: Build and package
+        shell: pwsh
+        run: pwsh studio/packaging/windows/package.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: dist/*.msi
+
+  macos:
+    needs: version
+    strategy:
+      matrix:
+        include:
+          - arch: arm64
+            runner: macos-14
+            target: aarch64-apple-darwin
+          - arch: x86_64
+            runner: macos-14          # an Apple-chip machine builds the Intel version too (cross-compiled)
+            target: x86_64-apple-darwin
+    runs-on: ${{ matrix.runner }}
+    env:
+      STUDIO_VERSION: ${{ needs.version.outputs.v }}
+      DIST: ${{ github.workspace }}/dist
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+      - name: Set the version
+        working-directory: studio/editor
+        run: cargo xtask version set ${{ needs.version.outputs.v }}
+      - name: Build and package
+        run: studio/packaging/macos/package.sh ${{ matrix.arch }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-${{ matrix.arch }}
+          path: dist/*.dmg
+
+  publish:
+    needs: [version, windows, macos]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Publish to the releases repo
+        env:
+          GH_TOKEN: ${{ secrets.RELEASES_TOKEN }}
+          V: ${{ needs.version.outputs.v }}
+        run: |
+          test -n "$STUDIO_RELEASES_REPO" || { echo "set the RELEASES_REPO variable"; exit 1; }
+          cd dist && sha256sum * > SHA256SUMS.txt && cd ..
+          notes=studio/packaging/RELEASE_NOTES.md
+          gh release create "v$V" dist/* --repo "$STUDIO_RELEASES_REPO" --title "91Ninjas Studio $V" --notes-file "$notes"
