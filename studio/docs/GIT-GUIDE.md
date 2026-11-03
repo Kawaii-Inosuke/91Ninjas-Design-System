@@ -113,7 +113,7 @@ Then:
    - After fixing, use a new tag (`v1.0.1`). Or, to rebuild the same version: on the Actions page, **Run workflow** with the version.
 4. A **green ✓:** the releases repo → **Releases** has "91Ninjas Studio 1.0.0" with the `.msi`, the two `.dmg` files and `SHA256SUMS.txt`.
 
-**What designers who already have the app see:** the next time they open it, "91Ninjas Studio 1.0.1 is available" with **Update and restart / Download / Later**.
+**What designers who already have the app see:** the next time they open it (or within 3 hours if it stays open), "91Ninjas Studio 1.0.1 is available" with the release notes and **Update and restart / When I close the app / Later**. One click downloads, checks and installs it; nothing to do by hand (D-043).
 
 **Build time is limited on a free account.** Private repos get 2,000 build minutes a month. Mac minutes count ×10 and Windows ×2, so one release uses roughly **400–500** of them: about **4 releases a month** for free. Save releases for when there's something worth sending; for small fixes, wait and bundle them.
 
@@ -125,7 +125,7 @@ On-brand infographics with Claude, finished in a full vector editor. For the 91N
 
 ## Download
 Open **[Releases](../../releases/latest)** and download:
-- **Windows:** the file ending in `windows-x64.msi`
+- **Windows:** the file ending in `windows-x64.msi` (named `91ninjas-studio-…` from 1.0.2)
 - **Mac with Apple chips (M1, M2, M3, M4):** the file ending in `macos-arm64.dmg`
 - **Mac with Intel chips:** the file ending in `macos-x86_64.dmg`
   (Apple menu → About This Mac: "Chip: Apple M…" means Apple chips; "Processor: Intel" means Intel.)

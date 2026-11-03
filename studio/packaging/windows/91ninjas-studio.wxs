@@ -71,7 +71,7 @@
   <Fragment>
     <ComponentGroup Id="StudioFiles" Directory="INSTALLFOLDER">
       <Component Id="StudioApp" Guid="30E2ECA0-8562-4347-9C96-D47CBFA2284D">
-        <File Id="StudioExe" Source="$(var.StageDir)\vectorcraft.exe" KeyPath="yes">
+        <File Id="StudioExe" Source="$(var.StageDir)\91ninjas-studio.exe" KeyPath="yes">
           <Shortcut Id="StartMenuShortcut" Directory="ProgramMenuFolder" Name="91Ninjas Studio" Description="On-brand design with Claude"
                     WorkingDirectory="INSTALLFOLDER" Advertise="yes" Icon="StudioIcon.ico" IconIndex="0" />
         </File>

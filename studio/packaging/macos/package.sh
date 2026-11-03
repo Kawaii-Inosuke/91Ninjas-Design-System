@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Build 91Ninjas Studio for macOS and package it as a DMG (D-040).
 #   STUDIO_VERSION=1.0.0 studio/packaging/macos/package.sh arm64|x86_64
-# Writes $DIST/vectorcraft-<version>-macos-<arch>.dmg (the asset name craft-update looks for), holding
+# Writes $DIST/91ninjas-studio-<version>-macos-<arch>.dmg (the asset name craft-update looks for), holding
 # "91Ninjas Studio.app": the editor, the bundled uv (Contents/MacOS/uv) and the agents (Contents/Resources/agents).
 # Signed ad hoc (free, D-035): the first open needs System Settings › Privacy & Security › Open Anyway; updates don't.
 set -euo pipefail
@@ -28,7 +28,7 @@ WORK="$CARGO_TARGET_DIR/studio-macos-$ARCH"
 APP="$WORK/91Ninjas Studio.app"
 rm -rf "$WORK"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
-cp "$CARGO_TARGET_DIR/$TARGET/release/vectorcraft" "$APP/Contents/MacOS/vectorcraft"
+cp "$CARGO_TARGET_DIR/$TARGET/release/vectorcraft" "$APP/Contents/MacOS/91ninjas-studio"
 cp "$EDITOR/assets/91studio/icon.icns" "$APP/Contents/Resources/91Ninjas Studio.icns"
 
 # uv (Astral, MIT/Apache-2.0): runs the agents; the first start fetches Python and the packages with it.
@@ -47,8 +47,8 @@ cat >"$APP/Contents/Info.plist" <<PLIST
 <dict>
   <key>CFBundleName</key><string>91Ninjas Studio</string>
   <key>CFBundleDisplayName</key><string>91Ninjas Studio</string>
-  <key>CFBundleExecutable</key><string>vectorcraft</string>
-  <key>CFBundleIdentifier</key><string>com.91ninjas.studio</string>
+  <key>CFBundleExecutable</key><string>91ninjas-studio</string>
+  <key>CFBundleIdentifier</key><string>ai.storyteller.91ninjas-studio</string>
   <key>CFBundleIconFile</key><string>91Ninjas Studio</string>
   <key>CFBundlePackageType</key><string>APPL</string>
   <key>CFBundleShortVersionString</key><string>$SHORT</string>
@@ -67,7 +67,7 @@ codesign --force --sign - "$APP/Contents/MacOS/uv"
 codesign --force --deep --sign - "$APP"
 codesign --verify --deep --verbose=2 "$APP"
 
-DMG="$DIST/vectorcraft-$STUDIO_VERSION-macos-$ARCH.dmg"
+DMG="$DIST/91ninjas-studio-$STUDIO_VERSION-macos-$ARCH.dmg"
 STAGE="$WORK/dmg"
 mkdir -p "$STAGE"
 ditto "$APP" "$STAGE/91Ninjas Studio.app"

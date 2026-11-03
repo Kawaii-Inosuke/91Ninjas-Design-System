@@ -2,8 +2,8 @@
 .SYNOPSIS
   Build 91Ninjas Studio for Windows x64 and package it as an MSI (D-040).
 .DESCRIPTION
-  Writes $env:DIST\vectorcraft-<version>-windows-x64.msi (the asset name craft-update looks for). The MSI holds
-  vectorcraft.exe (the editor, with the 91Ninjas icon), uv.exe and the agents folder (studio/agents without its
+  Writes $env:DIST\91ninjas-studio-<version>-windows-x64.msi (the asset name craft-update looks for). The MSI holds
+  91ninjas-studio.exe (the editor, with the 91Ninjas icon), uv.exe and the agents folder (studio/agents without its
   .venv and tests); the first start builds the Python environment in the user's data folder.
   Needs: Rust (MSVC), WiX v5 (dotnet tool install --global wix --version 5.0.2;
   wix extension add -g WixToolset.UI.wixext/5.0.2 WixToolset.Util.wixext/5.0.2). Unsigned (D-035).
@@ -36,7 +36,7 @@ if (-not $SkipBuild) {
 $Stage = Join-Path $TargetDir 'studio-windows'
 Remove-Item -Recurse -Force $Stage -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Force -Path $Stage | Out-Null
-Copy-Item (Join-Path $TargetDir "$Target\release\vectorcraft.exe") $Stage
+Copy-Item (Join-Path $TargetDir "$Target\release\vectorcraft.exe") (Join-Path $Stage "91ninjas-studio.exe")
 
 # uv (Astral, MIT/Apache-2.0): runs the agents; the first start fetches Python and the packages with it.
 $UvVersion = if ($env:UV_VERSION) { $env:UV_VERSION } else { '0.13.1' }
@@ -71,7 +71,7 @@ foreach ($spec in @(@($Banner, 493, 58), @($Dialog, 493, 312))) {
 }
 $icon.Dispose()
 
-$Msi = Join-Path $Dist "vectorcraft-$Version-windows-x64.msi"
+$Msi = Join-Path $Dist "91ninjas-studio-$Version-windows-x64.msi"
 Invoke-Native 'wix build' {
   wix build (Join-Path $PSScriptRoot '91ninjas-studio.wxs') -arch x64 -ext WixToolset.UI.wixext -ext WixToolset.Util.wixext -culture en-US `
     -d "Version=$MsiVersion" -d "DisplayVersion=$Version" -d "StageDir=$Stage" -d "IconPath=$(Join-Path $Editor 'assets\91studio\icon.ico')" `

@@ -23,6 +23,7 @@ from studio_agents import brand as brandmod
 from studio_agents import config, packs
 from studio_agents.designs import DesignError, Studio
 from studio_agents.team import Team, TeamError
+from studio_agents.update import Updater, UpdateError
 
 MAX_UPLOAD = 25 * 1024 * 1024
 
@@ -44,6 +45,12 @@ class ShareBody(BaseModel):
     message: str = ""
 
 
+class PrepareBody(BaseModel):
+    exe: str
+    pid: int
+    restart: bool = True
+
+
 class ClientBody(BaseModel):
     client: str
 
@@ -53,12 +60,13 @@ class PathBody(BaseModel):
     client: str | None = None
 
 
-def create_app(token: str, studio: Studio | None = None, team: Team | None = None) -> FastAPI:
+def create_app(token: str, studio: Studio | None = None, team: Team | None = None, updater: Updater | None = None) -> FastAPI:
     """The editor's AI panel back end (D-033): clients, history, what Claude is doing, how to connect Claude, and
     the files to preview. No model calls: Claude does the AI work through the connector (`mcp_server`)."""
     app = FastAPI(title="91Ninjas Studio", docs_url=None, redoc_url=None, openapi_url=None)
     studio = studio or Studio()
     team = team or Team()
+    updater = updater or Updater()
     previews: dict[str, packs.ImportPreview] = {}
 
     def auth(request: Request) -> None:
@@ -258,6 +266,25 @@ def create_app(token: str, studio: Studio | None = None, team: Team | None = Non
     @app.post("/api/team/reject", dependencies=[api])
     def team_reject(body: ClientBody) -> dict:
         return team_call(team.reject, body.client)
+
+    # ── app updates without signing (D-043) ─────────────────────────────────────────────────────────
+    def update_call(fn, *args):
+        try:
+            return fn(*args)
+        except UpdateError as e:
+            raise HTTPException(422, str(e)) from e
+
+    @app.get("/api/update", dependencies=[api])
+    def update_status(force: bool = False) -> dict:
+        return updater.check(force=force)
+
+    @app.post("/api/update/download", dependencies=[api])
+    def update_download() -> dict:
+        return update_call(updater.start_download)
+
+    @app.post("/api/update/prepare", dependencies=[api])
+    def update_prepare(body: PrepareBody) -> dict:
+        return update_call(updater.prepare, body.exe, body.pid, body.restart)
 
     @app.delete("/api/team", dependencies=[api])
     def team_leave() -> dict:

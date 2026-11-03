@@ -299,13 +299,26 @@ fn on_answer(st: &mut State, tag: &str, result: Result<Value, String>) {
     }
 }
 
-fn absorb(app: &mut VectorcraftApp, st: &mut State) {
+/// Everything the local service answered since the last frame: the update prompt's answers go to
+/// [`crate::updates_ui`], the rest to the panel's state. Called every frame by the app, so answers arrive
+/// whether or not the panel is open (D-043).
+pub(crate) fn absorb_replies(app: &mut VectorcraftApp, ctx: &egui::Context) {
     let Some(agents) = app.services.studio_agents.as_mut() else { return };
-    for r in agents.poll() {
+    let replies = agents.poll();
+    if replies.is_empty() {
+        return;
+    }
+    let mut st: State = super::pstate(ctx, "studio-ai");
+    for r in replies {
         if let StudioReply::Answer { tag, result } = r {
-            on_answer(st, &tag, result);
+            if tag.starts_with("update") {
+                crate::updates_ui::studio_answer(&tag, result);
+            } else {
+                on_answer(&mut st, &tag, result);
+            }
         }
     }
+    super::set_pstate(ctx, "studio-ai", st);
 }
 
 // ── the Claude tab ──────────────────────────────────────────────────────────────────────────────────
@@ -808,6 +821,7 @@ pub fn show(app: &mut VectorcraftApp, ui: &mut Ui) {
         ui.label(RichText::new(tl!("The AI Design Assistant isn't available in this build.")).color(t.text_dim));
         return;
     }
+    absorb_replies(app, ui.ctx());
     let mut st: State = super::pstate(ui.ctx(), "studio-ai");
     let mut asks: Asks = vec![];
     let now = ui.input(|i| i.time);
@@ -817,7 +831,6 @@ pub fn show(app: &mut VectorcraftApp, ui: &mut Ui) {
         asks.push(("clients", "GET", "/api/clients".into(), None));
         asks.push(("connect", "GET", "/api/connect".into(), None));
     }
-    absorb(app, &mut st);
     if st.retry_pending {
         let at = *st.retry_at.get_or_insert(now + RETRY_EVERY_S);
         if now >= at {

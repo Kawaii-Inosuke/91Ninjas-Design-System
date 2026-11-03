@@ -9,8 +9,12 @@
 /// prompt shows both, and an AppImage's menu entry gets the icon.
 #[cfg(not(target_arch = "wasm32"))]
 pub const UPDATE_APP: craft_update::app::App = craft_update::app::App {
-    // 91studio: 91Ninjas Studio, updated from the team's public releases repo (D-040). The id stays `vectorcraft`
-    // (the program's file name and the installers' asset names); the name is what installers register.
+    // 91studio: 91Ninjas Studio, updated from the team's public releases repo (D-040, D-042). The id is the
+    // program's file name (`91ninjas-studio.exe`), the installers' asset names (`91ninjas-studio-<v>-<os>-<arch>`)
+    // and the Mac bundle id (`ai.storyteller.91ninjas-studio`, which the updater checks); the name is the
+    // install folder, the Mac app and what installers register. 1.0.0 and 1.0.1 used `vectorcraft`.
+    id: "91ninjas-studio",
+    former_ids: &["vectorcraft"],
     name: "91Ninjas Studio",
     tagline: "On-brand design with Claude",
     repo: RELEASES_REPO,
@@ -26,6 +30,9 @@ pub const RELEASES_REPO: &str = match option_env!("STUDIO_RELEASES_REPO") {
     Some(r) => r,
     None => "",
 };
+
+/// 91studio: this build's version, as the update check compares it (D-043).
+pub const APP_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 /// Translate a UI string literal into the language the UI is drawn in (see [`i18n`]).
 #[macro_export]

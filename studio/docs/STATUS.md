@@ -38,9 +38,11 @@ Setup on a new machine: `RUNBOOK.md` (Rust build, `uv sync`, Playwright, then th
 ## Done on 2026-11-04 (PHASE-7)
 Claude-connected panel · designs into the file in front · shared team clients with approvals and the manager's reject ·
 full toolbar with frames · one-click Connect · Windows/Mac installers and updates (workflow written) · rebrand texts.
+Later the same day: releases 1.0.0 and 1.0.1 published · manager password (D-041) · program and installers named
+`91ninjas-studio` (D-042) · one-click updates without signing, checked against SHA256SUMS (D-043).
 
 ## Next
-1. **Set up the team repo and key, and the releases repo, token and variable:** step by step in `GIT-GUIDE.md`.
-2. **First release:** push tag `v1.0.0`; fix what the Windows/Mac build logs show; install on a Windows and a Mac laptop.
-3. "Install when I close the app" for updates; a short designer guide.
+1. **Release `v1.0.2`** (rename + one-click updates); install it on a Windows and a Mac laptop.
+2. **Test an update:** release `v1.0.3` and check Update and restart on both.
+3. A short designer guide; send designers the releases link, team repo and key.
 4. Real use with designers, then tune Claude's instructions (`studio_agents/claude/`).

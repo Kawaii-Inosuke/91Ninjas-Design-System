@@ -18,8 +18,8 @@ fn main() -> Result<(), String> {
         .set("FileDescription", "91Ninjas Studio: on-brand design with Claude")
         .set("CompanyName", "91Ninjas")
         .set("LegalCopyright", "Built on VectorCraft (MIT OR Apache-2.0). 91Ninjas name and mark: 91Ninjas.")
-        .set("OriginalFilename", "vectorcraft.exe")
-        .set("InternalName", "vectorcraft");
+        .set("OriginalFilename", "91ninjas-studio.exe")
+        .set("InternalName", "91ninjas-studio");
     if let Err(e) = res.compile() {
         if std::env::var_os("VECTORCRAFT_REQUIRE_WINRES").is_some() {
             return Err(format!("embedding Windows resources failed: {e}"));

@@ -546,3 +546,27 @@ Format per entry: **Context → Decision → Alternatives → Consequences**. En
   - A wrong password is refused. No password means a designer, whatever the name.
 - **Alternatives:** per-device signing keys (stronger against someone editing the repo with the team key). Not needed for a private repo and an internal team.
 - **Consequences:** existing managers leave and join again once with the password. The name is still only a label on shares.
+
+## D-042: The program and installers are named 91ninjas-studio (2026-11-04)
+- **Context:** the downloads and the program file still said `vectorcraft`. Nobody has installed yet, so the rename costs nothing now.
+- **Decision:**
+  - The updater id is `91ninjas-studio`, with `vectorcraft` kept as a former id.
+  - Downloads: `91ninjas-studio-<v>-windows-x64.msi` and `91ninjas-studio-<v>-macos-<arch>.dmg`.
+  - Program file: `91ninjas-studio.exe` on Windows, and `91Ninjas Studio.app/Contents/MacOS/91ninjas-studio` on Mac.
+  - Mac bundle id: `ai.storyteller.91ninjas-studio`, because the updater recognises the installed app only by `ai.storyteller.<id>`.
+  - The `.vectorcraft` document format and the cargo package name stay.
+- **Found while checking (fixed by D-043):**
+  - craft-update installs an update only when the old app and the new installer are signed by the same publisher: Authenticode on Windows, Apple's team id on Mac.
+  - Our installers are unsigned (D-035), so **Update and restart** is expected to fail. The prompt and **Download** still work.
+  - The fix is our own small update step (D-043).
+
+## D-043: One-click updates without signing (2026-11-04)
+- **Context:** craft-update refuses to install over an unsigned copy (D-042), and we don't pay for certificates (D-035).
+- **Decision:** in release builds with the local service, the service does the update (`studio_agents/update.py`; `/api/update`, `/api/update/download`, `/api/update/prepare`):
+  - it checks the latest release of `STUDIO_RELEASES_REPO` against `STUDIO_APP_VERSION`, at start and every 3 hours, or at once from Help › Check for Updates;
+  - it downloads only from that repo's release downloads, and refuses a file whose SHA-256 differs from the release's `SHA256SUMS.txt` (or is missing from it);
+  - it writes an installer script. On Windows: wait for the app to close, `msiexec /i … /passive` (per-user, no admin), reopen. On Mac: wait, mount the image, copy the `.app` beside the old one, swap, reopen. A failed copy keeps the old app.
+  - The app runs the script detached, then closes, asking about unsaved work first. If the close is cancelled, the script installs whenever the app does close.
+- **The prompt** (`updates_ui.rs`, works even with the AI panel closed) has three buttons: **Update and restart**, **When I close the app** (installs then, without reopening), and **Later**. It shows the release notes and the download progress.
+- **Without the local service,** craft-update still offers the download page.
+- **Consequences:** the first real test is a 1.0.2 → 1.0.3 update on Windows and Mac. The scripts log to `~/.local/share/91studio/updates/install.log`.

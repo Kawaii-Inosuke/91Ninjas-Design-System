@@ -130,6 +130,10 @@ pub fn launch() -> Option<Sidecar> {
         .env("STUDIO_SIDECAR_PORT", port.to_string())
         // The agents stop by themselves when the app is gone, even when it was killed.
         .env("STUDIO_PARENT_PID", std::process::id().to_string())
+        // Updates without signing (D-043): what this build is and where its releases are.
+        .env("STUDIO_APP_VERSION", vectorcraft_ui_egui::APP_VERSION)
+        .env("STUDIO_RELEASES_REPO", vectorcraft_ui_egui::RELEASES_REPO)
+        .env("STUDIO_APP_ARCH", std::env::consts::ARCH)
         .stdin(Stdio::null())
         .stdout(out)
         .stderr(err)

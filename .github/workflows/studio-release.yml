@@ -1,9 +1,9 @@
 # 91Ninjas Studio: build the installers and publish them for the team (D-035, D-040).
 #
 # Push a tag like v1.0.0 (or run it by hand with a version). GitHub's own Windows and Mac machines build:
-#   vectorcraft-<v>-windows-x64.msi      Windows installer (Start menu + desktop icon), per user, no admin
-#   vectorcraft-<v>-macos-arm64.dmg      Mac with Apple chips
-#   vectorcraft-<v>-macos-x86_64.dmg     Mac with Intel chips
+#   91ninjas-studio-<v>-windows-x64.msi      Windows installer (Start menu + desktop icon), per user, no admin
+#   91ninjas-studio-<v>-macos-arm64.dmg      Mac with Apple chips
+#   91ninjas-studio-<v>-macos-x86_64.dmg     Mac with Intel chips
 # and publishes them as a release in the PUBLIC releases-only repo (variable RELEASES_REPO, e.g.
 # Kawaii-Inosuke/91ninjas-studio-releases), where designers download them without a GitHub account and where the
 # app looks for updates. Needs: repository variable RELEASES_REPO, and secret RELEASES_TOKEN (a fine-grained token
