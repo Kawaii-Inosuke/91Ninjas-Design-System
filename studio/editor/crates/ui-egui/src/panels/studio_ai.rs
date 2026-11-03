@@ -115,6 +115,8 @@ struct State {
     join_key: String,
     join_name: String,
     join_create: bool,
+    /// What the team is busy with ("Sharing fcc with the team…"), shown with a spinner until the answer.
+    team_working: String,
     /// The History tab: the client's designs, and which client they are for.
     history: Vec<Value>,
     history_for: String,
@@ -249,6 +251,7 @@ fn on_answer(st: &mut State, tag: &str, result: Result<Value, String>) {
         }
         Err(_) if tag == "activity" || tag == "team" => return,
         Err(e) => {
+            st.team_working.clear();
             st.note = format!("{}: {e}", tl!("That didn't work"));
             return;
         }
@@ -283,6 +286,7 @@ fn on_answer(st: &mut State, tag: &str, result: Result<Value, String>) {
         }
         "team" => st.team = Some(v),
         "team-change" => {
+            st.team_working.clear();
             st.team = Some(v);
             st.started = false; // installed or reverted clients: refresh the list
         }
@@ -559,6 +563,12 @@ fn team_card(ui: &mut Ui, st: &mut State, asks: &mut Asks, t: &Tokens) {
         |ui| {
             ui.set_width(ui.available_width());
             ui.label(RichText::new(tl!("Team clients")).strong().color(t.text_strong));
+            if !st.team_working.is_empty() {
+                ui.horizontal(|ui| {
+                    ui.add(egui::Spinner::new().size(12.0));
+                    ui.label(RichText::new(&st.team_working).small().color(t.text_dim));
+                });
+            }
             if !joined {
                 ui.label(
                     RichText::new(tl!("Share clients with the team: everyone gets the same guides, rules and past work, and is asked before changes install. Designs stay on your laptop."))
@@ -572,6 +582,7 @@ fn team_card(ui: &mut Ui, st: &mut State, asks: &mut Asks, t: &Tokens) {
                 let ready = !st.join_repo.trim().is_empty() && !st.join_key.trim().is_empty() && !st.join_name.trim().is_empty() && !st.busy;
                 if widgets::primary_button_enabled(ui, tl!("Join team"), ready).clicked() {
                     st.busy = true;
+                    st.team_working = tl!("Joining the team…").into();
                     asks.push((
                         "team-change",
                         "POST",
@@ -600,13 +611,19 @@ fn team_card(ui: &mut Ui, st: &mut State, asks: &mut Asks, t: &Tokens) {
             for a in team.get("applied").and_then(Value::as_array).into_iter().flatten() {
                 ui.label(RichText::new(format!("{} {} {}: {}", s(a, "by"), tl!("rejected a change to"), s(a, "client"), tl!("it's back to the earlier version."))).small());
             }
+            let before = asks.len();
             for p in team.get("pending").and_then(Value::as_array).into_iter().flatten() {
                 pending_change(ui, p, manager, asks, t);
+            }
+            // Installing or rejecting downloads or uploads the client's files: say so until it's done.
+            if let Some(a) = asks.get(before..).and_then(|a| a.iter().find(|a| a.0 == "team-change")) {
+                st.team_working = if a.2.ends_with("/reject") { tl!("Rejecting the change for everyone…") } else { tl!("Installing (downloading its files)…") }.into();
             }
             for c in team.get("unshared").and_then(Value::as_array).into_iter().flatten().filter_map(Value::as_str) {
                 ui.horizontal_wrapped(|ui| {
                     ui.label(RichText::new(format!("{c}: {}", tl!("not shared with the team yet"))).small());
-                    if ui.small_button(tl!("Share")).clicked() {
+                    if st.team_working.is_empty() && ui.small_button(tl!("Share")).clicked() {
+                        st.team_working = format!("{} {c} {}", tl!("Sharing"), tl!("with the team (uploading its files)…"));
                         asks.push(("team-change", "POST", "/api/team/share".into(), Some(json!({ "client": c }))));
                     }
                 });

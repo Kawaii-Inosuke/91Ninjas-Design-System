@@ -29,6 +29,7 @@ import tempfile
 import threading
 import urllib.error
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
@@ -44,6 +45,7 @@ TEXT_FILES = ("DESIGN.md", "critic_rules.md")
 MAX_FILE = 20 * 1024 * 1024
 MAX_CLIENT = 100 * 1024 * 1024
 CHECK_EVERY_S = 180
+PARALLEL = 8              # GitHub calls at once when sharing or installing a client
 
 
 class TeamError(RuntimeError):
@@ -118,13 +120,17 @@ class GitHub:
             if not changes:
                 return parent
         base = self._call("GET", f"/git/commits/{parent}")["tree"]["sha"]
-        entries = []
-        for path, data in changes.items():
+
+        def entry(item: tuple[str, bytes | None]) -> dict:
+            path, data = item
             if data is None:
-                entries.append({"path": path, "mode": "100644", "type": "blob", "sha": None})
-            else:
-                blob = self._call("POST", "/git/blobs", {"content": base64.b64encode(data).decode(), "encoding": "base64"})
-                entries.append({"path": path, "mode": "100644", "type": "blob", "sha": blob["sha"]})
+                return {"path": path, "mode": "100644", "type": "blob", "sha": None}
+            blob = self._call("POST", "/git/blobs", {"content": base64.b64encode(data).decode(), "encoding": "base64"})
+            return {"path": path, "mode": "100644", "type": "blob", "sha": blob["sha"]}
+
+        # Each GitHub call takes about a second: the files go up 8 at a time, not one after another.
+        with ThreadPoolExecutor(max_workers=PARALLEL) as pool:
+            entries = list(pool.map(entry, changes.items()))
         tree = self._call("POST", "/git/trees", {"base_tree": base, "tree": entries})
         c = self._call("POST", "/git/commits", {"message": message, "tree": tree["sha"], "parents": [parent]})
         try:
@@ -423,11 +429,12 @@ class Team:
             got: dict[str, list[Path]] = {sub: [] for sub in SHARED_DIRS}
             text: dict[str, str] = {}
             css = None
-            for path, sha in files.items():
-                if not path.startswith(prefix) or path == prefix + "meta.json":
-                    continue
+            wanted = [(p, sha) for p, sha in files.items() if p.startswith(prefix) and p != prefix + "meta.json"]
+            with ThreadPoolExecutor(max_workers=PARALLEL) as pool:   # downloads 8 at a time
+                blobs = dict(zip([p for p, _ in wanted], pool.map(lambda w: repo.read(w[1]), wanted)))
+            for path, _sha in wanted:
                 rel = path[len(prefix):]
-                data = repo.read(sha)
+                data = blobs[path]
                 if rel in TEXT_FILES:
                     text[rel] = data.decode(errors="replace")
                 elif rel == "assets/brand.css":
