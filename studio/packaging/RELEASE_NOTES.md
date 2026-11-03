@@ -1,7 +1,7 @@
 ## Download
-- **Windows:** `vectorcraft-…-windows-x64.msi`
-- **Mac with Apple chips (M1, M2, M3…):** `vectorcraft-…-macos-arm64.dmg`
-- **Mac with Intel chips:** `vectorcraft-…-macos-x86_64.dmg`
+- **Windows:** `91ninjas-studio-…-windows-x64.msi`
+- **Mac with Apple chips (M1, M2, M3…):** `91ninjas-studio-…-macos-arm64.dmg`
+- **Mac with Intel chips:** `91ninjas-studio-…-macos-x86_64.dmg`
 
 ## First install (once per laptop)
 - **Windows:** if it says "Windows protected your PC", click **More info → Run anyway**. The setup adds a Start menu
