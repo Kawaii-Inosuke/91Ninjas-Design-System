@@ -484,7 +484,7 @@ Format per entry: **Context → Decision → Alternatives → Consequences**. En
     - **Manager's Reject for everyone:** a new version holding the files as they were before the change, marked `reverted`. It installs everywhere without asking, and the panel says so.
   - **Installing** goes through `packs.create_client` (validated and sanitised like a pack).
 - **Limits:**
-  - Anyone with the key can share. Manager status is by name in `team.json`, which is fine for an internal team.
+  - Anyone with the key can share. Manager status was by name in `team.json`; since D-041 it needs the manager password.
   - Rotate the key if a laptop is lost.
   - Client material lives in a private GitHub repo.
 - **Checked:** tests with three laptops and a fake repo (join, share, new, update with the exact diff, reject reverts everyone, not now, refusals), the GitHub client's requests, and the API.
@@ -536,3 +536,13 @@ Format per entry: **Context → Decision → Alternatives → Consequences**. En
 - **Decision:**
   - At the end of each phase, write `phases/PHASE-N.md` and update the PRD, TRD, ARCHITECTURE and SECURITY docs.
   - Log each new decision here.
+
+## D-041: Manager password for team clients (2026-11-04)
+- **Context:** manager status was the name typed when joining, so anyone could type "Yashodhan" and get **Reject for everyone**.
+- **Decision:** an optional **Manager password** field replaces the "I'm the manager" checkbox.
+  - The first manager to join sets the password. For a new repo that creates `team.json`; for a team from before passwords, it adds the password.
+  - `team.json` stores only a salted PBKDF2-SHA256 hash (200,000 iterations); the laptop keeps the hash it proved.
+  - A manager is a laptop whose stored hash matches the repo's. A changed password ends old manager logins.
+  - A wrong password is refused. No password means a designer, whatever the name.
+- **Alternatives:** per-device signing keys (stronger against someone editing the repo with the team key). Not needed for a private repo and an internal team.
+- **Consequences:** existing managers leave and join again once with the password. The name is still only a label on shares.

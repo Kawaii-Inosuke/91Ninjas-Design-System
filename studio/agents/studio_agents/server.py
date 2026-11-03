@@ -36,7 +36,7 @@ class JoinBody(BaseModel):
     repo: str
     key: str
     name: str
-    create: bool = False
+    password: str = ""
 
 
 class ShareBody(BaseModel):
@@ -234,7 +234,7 @@ def create_app(token: str, studio: Studio | None = None, team: Team | None = Non
 
     @app.post("/api/team/join", dependencies=[api])
     def team_join(body: JoinBody) -> dict:
-        return team_call(team.join, body.repo, body.key, body.name, body.create)
+        return team_call(team.join, body.repo, body.key, body.name, body.password)
 
     @app.post("/api/team/check", dependencies=[api])
     def team_check() -> dict:

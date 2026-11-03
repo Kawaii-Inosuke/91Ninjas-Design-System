@@ -21,7 +21,7 @@ reinstalled.
 1. Create a **private** GitHub repo, e.g. `91ninjas-studio-clients`.
 2. Make a **fine-grained token**: GitHub → Settings → Developer settings → Fine-grained tokens → only that repo,
    *Contents: Read and write*, longest expiry. This is the **team key**.
-3. In the app: Clients → Team clients → repo, key, your name, tick "I'm the manager setting up a new team" → Join.
+3. In the app: Clients → Team clients → repo, key, your name, a manager password → Join (D-041).
 4. Send designers the repo name and the key (Slack, privately). They join without the manager box.
 
 **Releases (once):**

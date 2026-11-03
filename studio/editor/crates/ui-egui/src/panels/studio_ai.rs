@@ -114,7 +114,7 @@ struct State {
     join_repo: String,
     join_key: String,
     join_name: String,
-    join_create: bool,
+    join_password: String,
     /// What the team is busy with ("Sharing fcc with the team…"), shown with a spinner until the answer.
     team_working: String,
     /// The History tab: the client's designs, and which client they are for.
@@ -578,7 +578,8 @@ fn team_card(ui: &mut Ui, st: &mut State, asks: &mut Asks, t: &Tokens) {
                 ui.add(TextEdit::singleline(&mut st.join_repo).hint_text(tl!("Team repo, e.g. 91ninjas/studio-clients")).desired_width(f32::INFINITY));
                 ui.add(TextEdit::singleline(&mut st.join_key).password(true).hint_text(tl!("Team key (from your manager)")).desired_width(f32::INFINITY));
                 ui.add(TextEdit::singleline(&mut st.join_name).hint_text(tl!("Your name")).desired_width(f32::INFINITY));
-                ui.checkbox(&mut st.join_create, RichText::new(tl!("I'm the manager setting up a new team")).small());
+                ui.add(TextEdit::singleline(&mut st.join_password).password(true).hint_text(tl!("Manager password (managers only)")).desired_width(f32::INFINITY));
+                ui.label(RichText::new(tl!("Designers: leave the manager password empty. The first manager to join sets it.")).small().color(t.text_dim));
                 let ready = !st.join_repo.trim().is_empty() && !st.join_key.trim().is_empty() && !st.join_name.trim().is_empty() && !st.busy;
                 if widgets::primary_button_enabled(ui, tl!("Join team"), ready).clicked() {
                     st.busy = true;
@@ -587,9 +588,10 @@ fn team_card(ui: &mut Ui, st: &mut State, asks: &mut Asks, t: &Tokens) {
                         "team-change",
                         "POST",
                         "/api/team/join".into(),
-                        Some(json!({"repo": st.join_repo.trim(), "key": st.join_key.trim(), "name": st.join_name.trim(), "create": st.join_create})),
+                        Some(json!({"repo": st.join_repo.trim(), "key": st.join_key.trim(), "name": st.join_name.trim(), "password": st.join_password})),
                     ));
                     st.join_key.clear();
+                    st.join_password.clear();
                 }
                 return;
             }

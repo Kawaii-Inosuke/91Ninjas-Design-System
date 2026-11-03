@@ -39,7 +39,7 @@ The team key is a GitHub token that can only read and write this one repo.
 2. **Team repo:** `Kawaii-Inosuke/91ninjas-studio-clients`
 3. **Team key:** paste the token.
 4. **Your name:** e.g. `Shrikant` (the team sees this name on what you share).
-5. Tick **"I'm the manager setting up a new team"** → **Join team**.
+5. **Manager password:** choose one (at least 6 characters) → **Join team**. The first manager to join sets it; the repo keeps only a scrambled hash. Tell it only to other managers.
 6. Your clients are listed as "not shared with the team yet". Press **Share** on each one you want the team to have.
 
 ### A4. Add each designer
@@ -47,7 +47,7 @@ Send each designer privately (Slack DM, not a public channel):
 - the repo: `Kawaii-Inosuke/91ninjas-studio-clients`
 - the team key
 
-They open **Clients → Team clients**, fill in the repo, the key and **their own name**, leave the manager box **unticked**, and press **Join team**. The shared clients then appear in their app, waiting for them to install.
+They open **Clients → Team clients**, fill in the repo, the key and **their own name**, leave **Manager password** empty, and press **Join team**. The shared clients then appear in their app, waiting for them to install.
 
 ### A5. How it works day to day
 - **New client:** whoever adds it gets "Share with the team?" (from the app, or Claude asks). Everyone else sees "Priya shared a new client" → **Install** / **Not now**.
@@ -61,7 +61,7 @@ They open **Clients → Team clients**, fill in the repo, the key and **their ow
 2. Make a new key (A2) and send it to the team.
 3. Each designer: **Clients → Team clients → Leave team**, then join again with the new key. Their installed clients stay.
 
-To add another manager, edit `team.json` in the repo on GitHub (pencil icon) and add the name to `"managers"`, exactly as that person typed it when joining.
+**Another manager** (e.g. Akash) joins with the manager password; the app adds the name to `"managers"` itself. Don't edit `team.json` by hand. To change the password (or remove a manager): delete the `"manager_password"` part of `team.json` on GitHub, then join again with a new password; old manager logins stop working.
 
 ---
 

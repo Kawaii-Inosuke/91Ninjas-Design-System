@@ -1,6 +1,6 @@
 # 91Ninjas Studio: where it stands
 
-*Last updated: 2026-11-03. Details: `phases/PHASE-0..6.md`, decisions `DECISIONS.md` (D-001 to D-034).*
+*Last updated: 2026-11-04. Details: `phases/PHASE-0..7.md`, decisions `DECISIONS.md` (D-001 to D-041).*
 
 ## What it is now
 **91Ninjas Studio** is a desktop vector editor (a fork of VectorCraft, Rust) with the 91Ninjas look. Designers make

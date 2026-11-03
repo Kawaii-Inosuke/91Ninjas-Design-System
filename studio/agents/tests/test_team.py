@@ -75,9 +75,9 @@ def add_client(home: Path, cid="acme", rules="# Acme rules\nR1. White page.\n"):
 def test_join_share_install_update_with_a_diff_and_the_managers_reject(laptops):
     repo, homes, be = laptops
     # The manager sets the team up; designers join; joining a repo that isn't set up is refused.
-    with pytest.raises(TeamError, match="manager creates it first"):
+    with pytest.raises(TeamError, match="manager joins first"):
         be("priya").join("91ninjas/clients", "key", "Priya")
-    be("manager").join("91ninjas/clients", "key", "Shrikant", create=True)
+    be("manager").join("91ninjas/clients", "key", "Shrikant", password="ninja-boss")
     assert json.loads(repo.commits[repo.head()]["team.json"])["managers"] == ["Shrikant"]
     be("priya").join("91ninjas/clients", "key", "Priya")
     be("arjun").join("91ninjas/clients", "key", "Arjun")
@@ -132,7 +132,7 @@ def test_join_share_install_update_with_a_diff_and_the_managers_reject(laptops):
 
 def test_designs_are_never_shared_and_a_broken_client_is_not_sent(laptops):
     repo, homes, be = laptops
-    be("manager").join("91ninjas/clients", "key", "Shrikant", create=True)
+    be("manager").join("91ninjas/clients", "key", "Shrikant", password="ninja-boss")
     add_client(homes["manager"])
     (homes["manager"] / "designs" / "d1").mkdir(parents=True)
     (homes["manager"] / "designs" / "d1" / "design.json").write_text("{}")
@@ -186,3 +186,37 @@ def test_the_github_client_speaks_the_git_data_api(monkeypatch):
     blob = next(b for m, p, b in seen if p == "/git/blobs")
     assert base64.b64decode(blob["content"]) == b"x"
     assert seen[-1][:2] == ("PATCH", "/git/refs/heads/main")
+
+
+def test_manager_needs_the_password_not_the_name(laptops):
+    repo, _, be = laptops
+    be("manager").join("91ninjas/clients", "key", "Shrikant", password="ninja-boss")
+    team = json.loads(repo.commits[repo.head()]["team.json"])
+    assert "ninja-boss" not in json.dumps(team) and team["manager_password"]["hash"]
+    assert be("manager").check()["manager"]
+
+    # Typing the manager's name without the password: a designer, and Reject is refused.
+    assert be("priya").join("91ninjas/clients", "key", "Shrikant")["manager"] is False
+    with pytest.raises(TeamError, match="only a manager"):
+        be("priya").reject("acme")
+    # A wrong password is refused; the right one makes a second manager (added to the list).
+    with pytest.raises(TeamError, match="wrong manager password"):
+        be("arjun").join("91ninjas/clients", "key", "Akash", password="guess")
+    assert be("arjun").join("91ninjas/clients", "key", "Akash", password="ninja-boss")["manager"]
+    assert json.loads(repo.commits[repo.head()]["team.json"])["managers"] == ["Shrikant", "Akash"]
+
+
+def test_a_team_from_before_passwords_gets_one_from_the_first_manager(laptops):
+    repo, _, be = laptops
+    repo.commit({"team.json": json.dumps({"managers": ["Yashodhan", "Akash"]}).encode()}, "old team", None)
+    assert be("priya").join("91ninjas/clients", "key", "Yashodhan")["manager"] is False
+    with pytest.raises(TeamError, match="at least 6"):
+        be("manager").join("91ninjas/clients", "key", "Yashodhan", password="abc")
+    assert be("manager").join("91ninjas/clients", "key", "Yashodhan", password="ninja-boss")["manager"]
+    assert json.loads(repo.commits[repo.head()]["team.json"])["managers"] == ["Yashodhan", "Akash"]
+    # Changing the password in the repo ends the old manager logins.
+    team = json.loads(repo.commits[repo.head()]["team.json"])
+    from studio_agents.team import hash_password
+    team["manager_password"] = hash_password("new-pass-1")
+    repo.commit({"team.json": json.dumps(team).encode()}, "new password", repo.head())
+    assert be("manager").check()["manager"] is False

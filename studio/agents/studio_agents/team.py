@@ -2,10 +2,11 @@
 
 Designers have no GitHub accounts and never see git. The manager creates a private repo and a fine-grained access
 token for that repo only (contents: read and write), and gives the key to the team once; each designer joins
-with it and their name. Only clients are shared (DESIGN.md, the rules, past work, fonts, icons, documents);
+with it and their name. Managers also type the **manager password** (set by whoever creates the team; only
+its salted hash is in the repo); without it you join as a designer, whatever name you type. Only clients are shared (DESIGN.md, the rules, past work, fonts, icons, documents);
 designs stay on each laptop.
 
-    repo/team.json                      {"managers": ["Shrikant"]}
+    repo/team.json                      {"managers": ["Shrikant"], "manager_password": {"salt", "hash", "iterations"}}
     repo/clients/<id>/meta.json         {"version", "updated_by", "updated_at", "message", "previous_commit", "reverted"}
     repo/clients/<id>/DESIGN.md, critic_rules.md, past/…, assets/fonts/…, assets/icons/…, source/…
 
@@ -21,6 +22,8 @@ from __future__ import annotations
 
 import base64
 import difflib
+import hashlib
+import hmac
 import json
 import os
 import re
@@ -45,6 +48,8 @@ TEXT_FILES = ("DESIGN.md", "critic_rules.md")
 MAX_FILE = 20 * 1024 * 1024
 MAX_CLIENT = 100 * 1024 * 1024
 CHECK_EVERY_S = 180
+PASSWORD_ITERATIONS = 200_000
+MIN_PASSWORD = 6
 PARALLEL = 8              # GitHub calls at once when sharing or installing a client
 
 
@@ -154,6 +159,7 @@ class Settings:
     declined: dict[str, int] = field(default_factory=dict)      # client → version the designer said "not now" to
     last_check: str = ""
     error: str = ""
+    manager_proof: str = ""     # the team's manager-password hash, kept once the right password was typed here
 
     @staticmethod
     def load() -> "Settings":
@@ -222,6 +228,20 @@ def text_diff(old: str, new: str) -> list[dict]:
     return out[:400]
 
 
+def hash_password(password: str, salt: bytes | None = None, iterations: int = PASSWORD_ITERATIONS) -> dict:
+    salt = salt or os.urandom(16)
+    h = hashlib.pbkdf2_hmac("sha256", password.encode(), salt, iterations)
+    return {"salt": salt.hex(), "hash": h.hex(), "iterations": iterations}
+
+
+def check_password(password: str, stored: dict) -> bool:
+    try:
+        h = hash_password(password, bytes.fromhex(stored["salt"]), int(stored["iterations"]))
+        return hmac.compare_digest(h["hash"], str(stored["hash"]))
+    except (KeyError, ValueError, TypeError):
+        return False
+
+
 class Team:
     def __init__(self, repo_factory=None):
         self.repo_factory = repo_factory or (lambda repo, key: GitHub(repo, key))
@@ -229,6 +249,7 @@ class Team:
         self.pending: list[dict] = []
         self.unshared: list[str] = []
         self.managers: list[str] = []
+        self.manager_hash = ""            # the hash in the repo's team.json (a changed password ends old manager logins)
         self.applied: list[dict] = []     # reverts installed without asking, to tell the designer
 
     # ── joining ─────────────────────────────────────────────────────────────────────────────────────
@@ -238,20 +259,42 @@ class Team:
             raise TeamError("not in a team yet: join with the team repo and key")
         return self.repo_factory(s.repo, key)
 
-    def join(self, repo: str, key: str, name: str, create: bool = False) -> dict:
-        """Join the team's repo (checked with the key). `create`: the manager sets an empty repo up, as manager."""
+    def join(self, repo: str, key: str, name: str, password: str = "") -> dict:
+        """Join the team's repo (checked with the key). With the manager password you join as a manager; the first
+        manager (an empty repo, or a team from before passwords) sets the password."""
         repo, key, name = repo.strip(), key.strip(), name.strip()
         if not name:
             raise TeamError("give your name: the team sees who shared what")
         r = self.repo_factory(repo, key)
         head = r.head()
         files = r.files(head) if head else {}
-        if "team.json" not in files:
-            if not create:
-                raise TeamError("that repo isn't set up for a team yet: the manager creates it first")
-            r.commit({"team.json": json.dumps({"managers": [name]}, indent=1).encode()}, f"Team created by {name}", head)
+        team = json.loads(r.read(files["team.json"])) if "team.json" in files else None
+        proof = ""
+        if team is None and not password:
+            raise TeamError("that repo isn't set up for a team yet: the manager joins first, with a manager password")
+        if password:
+            created = team is None
+            team = team or {"managers": []}
+            stored = team.get("manager_password")
+            changed = created
+            if stored:
+                if not check_password(password, stored):
+                    raise TeamError("wrong manager password (leave it empty to join as a designer)")
+            else:
+                if len(password) < MIN_PASSWORD:
+                    raise TeamError(f"the manager password needs at least {MIN_PASSWORD} characters")
+                stored = team["manager_password"] = hash_password(password)
+                changed = True
+            proof = str(stored["hash"])
+            managers = [str(m) for m in team.get("managers", [])]
+            if name.lower() not in {m.lower() for m in managers}:
+                team["managers"] = [*managers, name]
+                changed = True
+            if changed:
+                r.commit({"team.json": json.dumps(team, indent=1).encode()},
+                         f"{'Team created' if created else 'Manager joined'}: {name}", head)
         s = Settings.load()
-        s.repo, s.name, s.error = repo, name, ""
+        s.repo, s.name, s.error, s.manager_proof = repo, name, "", proof
         s.save()
         _save_key(key)
         return self.status(refresh=True)
@@ -263,11 +306,16 @@ class Team:
     def _load_managers(self, repo: Repo) -> None:
         head = repo.head()
         files = repo.files(head) if head else {}
-        if "team.json" in files:
-            self.managers = [str(m) for m in json.loads(repo.read(files["team.json"])).get("managers", [])]
+        self._team_from(json.loads(repo.read(files["team.json"])) if "team.json" in files else {})
+
+    def _team_from(self, team: dict) -> None:
+        self.managers = [str(m) for m in team.get("managers", [])]
+        self.manager_hash = str((team.get("manager_password") or {}).get("hash", ""))
 
     def is_manager(self) -> bool:
-        return Settings.load().name.lower() in {m.lower() for m in self.managers}
+        """Manager only with the manager password typed on this laptop (the name alone counts for nothing)."""
+        proof = Settings.load().manager_proof
+        return bool(proof and self.manager_hash and hmac.compare_digest(proof, self.manager_hash))
 
     # ── sharing ─────────────────────────────────────────────────────────────────────────────────────
     def share(self, client: str, message: str = "") -> dict:
@@ -313,7 +361,7 @@ class Team:
                 head = repo.head()
                 files = repo.files(head) if head else {}
                 team = json.loads(repo.read(files["team.json"])) if "team.json" in files else {}
-                self.managers = [str(m) for m in team.get("managers", [])]
+                self._team_from(team)
                 shared = sorted({p.split("/")[1] for p in files if p.startswith("clients/") and p.endswith("/meta.json")})
                 pending = []
                 for client in shared:

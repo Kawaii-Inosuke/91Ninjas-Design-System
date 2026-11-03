@@ -120,7 +120,7 @@ def test_the_team_through_the_api(tmp_path, monkeypatch):
     c = TestClient(create_app(TOKEN, Studio(History(data / "history.db"), bridge_factory=lambda: None), Team(lambda n, k: repo)))
     assert c.get("/api/team", headers=AUTH).json()["joined"] is False
     assert c.post("/api/team/join", headers=AUTH, json={"repo": "o/r", "key": "k", "name": "Ana"}).status_code == 422
-    st = c.post("/api/team/join", headers=AUTH, json={"repo": "o/r", "key": "k", "name": "Ana", "create": True}).json()
+    st = c.post("/api/team/join", headers=AUTH, json={"repo": "o/r", "key": "k", "name": "Ana", "password": "ninja-boss"}).json()
     assert st["joined"] and st["manager"] and st["unshared"] == ["demo"]
     assert c.post("/api/team/share", headers=AUTH, json={"client": "nobody"}).status_code == 422
     assert c.post("/api/team/reject", headers=AUTH, json={"client": "demo"}).status_code == 422
