@@ -153,3 +153,23 @@ def test_an_installed_app_starts_the_connector_with_its_own_uv_and_environment(m
     assert d["command"].endswith("MacOS/uv") and "--frozen" in d["args"] and "--no-dev" in d["args"]
     assert d["env"] == {"UV_PROJECT_ENVIRONMENT": "/Users/a/.local/share/91studio/agents-env"}
     assert ' -e "UV_PROJECT_ENVIRONMENT=/Users/a/.local/share/91studio/agents-env" 91ninjas-studio -- "/Applications/91Ninjas Studio.app/Contents/MacOS/uv"' in c["claude_code"]
+
+
+def test_the_parent_check_only_looks():
+    """It must never end the process it checks (os.kill(pid, 0) does on Windows: the app closed after 2 s)."""
+    import os
+    import subprocess
+    import sys
+    from studio_agents.server import process_alive
+    assert process_alive(os.getpid())
+    p = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(30)"])
+    try:
+        assert process_alive(p.pid) and process_alive(p.pid)
+        assert p.poll() is None, "still running after being checked"
+    finally:
+        p.kill()
+        p.wait()
+    assert not process_alive(p.pid)
+    import inspect, studio_agents.server as srv
+    win = inspect.getsource(srv.process_alive).split('if sys.platform == "win32":')[1].split("try:\n        os.kill")[0]
+    assert "os.kill" not in win, "the Windows branch must not call os.kill"

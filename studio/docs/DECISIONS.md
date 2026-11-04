@@ -570,3 +570,12 @@ Format per entry: **Context → Decision → Alternatives → Consequences**. En
 - **The prompt** (`updates_ui.rs`, works even with the AI panel closed) has three buttons: **Update and restart**, **When I close the app** (installs then, without reopening), and **Later**. It shows the release notes and the download progress.
 - **Without the local service,** craft-update still offers the download page.
 - **Consequences:** the first real test is a 1.0.2 → 1.0.3 update on Windows and Mac. The scripts log to `~/.local/share/91studio/updates/install.log`.
+
+## D-044: Windows fixes from the first install (2026-11-05)
+- **Found on the first Windows install (1.0.2):** the app closed itself about 2 seconds after starting, and a black `uv.exe` console window stayed open.
+- **Causes and fixes:**
+  - **The app closing itself:** the local service checked "is the app still running?" with `os.kill(pid, 0)` every 2 s. On Linux and Mac that only looks; on Windows it *ends* the process (TerminateProcess). Now `process_alive` uses `OpenProcess` + `GetExitCodeProcess` on Windows. A test makes sure the check leaves the process running and that the Windows branch never calls `os.kill`.
+  - **The console window:** the app started `uv` (a console program) without `CREATE_NO_WINDOW`. Now it's hidden; the update script was already started hidden.
+  - **A chosen install folder** (here `D:\91ninjas`): the MSI now reads the previous folder back from `HKCU\Software\91Ninjas Studio\InstallDir`, and the update script passes `INSTALLFOLDER` explicitly. Updates stay in that folder, and the app reopens from it.
+  - **The home folder:** on Windows the app now uses `USERPROFILE` before `HOME`, matching Python's `Path.home()`, so both find the same bridge and data folders.
+- **Consequences:** 1.0.2 on Windows can't update itself (it closes too soon). Install 1.0.3 over it by hand once; updates work from 1.0.3 on.

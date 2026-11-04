@@ -26,7 +26,7 @@ import sys
 import threading
 import urllib.error
 import urllib.request
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 from typing import Any
 
 from studio_agents import config
@@ -224,7 +224,7 @@ class Updater:
                 f"Start-Transcript -Path {q(log)} -Force | Out-Null",
                 f"try {{ Wait-Process -Id {int(pid)} -Timeout 86400 -ErrorAction SilentlyContinue }} catch {{}}",
                 "Start-Sleep -Seconds 2",
-                f"$p = Start-Process -FilePath msiexec.exe -ArgumentList @('/i', '\"{file}\"', '/passive', '/norestart') -Wait -PassThru",
+                f"$p = Start-Process -FilePath msiexec.exe -ArgumentList @('/i', '\"{file}\"', '/passive', '/norestart', 'INSTALLFOLDER=\"{PureWindowsPath(exe).parent}\"') -Wait -PassThru",
                 "Write-Output \"msiexec exit code $($p.ExitCode)\"",
                 *([f"Start-Process -FilePath {q(exe_path)}"] if restart else []),
                 "Stop-Transcript | Out-Null",

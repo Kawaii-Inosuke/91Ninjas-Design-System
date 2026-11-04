@@ -31,6 +31,10 @@
     </Feature>
 
     <Property Id="INSTALLDESKTOPSHORTCUT" Value="1" Secure="yes" />
+    <!-- A folder the designer chose (e.g. D:\91ninjas) is kept by later versions and updates (D-044). -->
+    <Property Id="INSTALLFOLDER" Secure="yes">
+      <RegistrySearch Id="PreviousInstallFolder" Root="HKCU" Key="Software\91Ninjas Studio" Name="InstallDir" Type="raw" />
+    </Property>
 
     <ui:WixUI Id="WixUI_InstallDir" InstallDirectory="INSTALLFOLDER" />
     <UI>

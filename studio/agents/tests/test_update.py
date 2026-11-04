@@ -54,6 +54,7 @@ def test_a_newer_release_is_found_downloaded_checked_and_its_script_written(wind
     script = (tmp_path / "updates" / "install-update.ps1").read_text()
     assert "Wait-Process -Id 4242" in script and "/passive" in script and "91ninjas-studio-1.0.2-windows-x64.msi" in script
     assert "Start-Process -FilePath 'C:\\Users\\priya" in script, "restarts the app"
+    assert r'INSTALLFOLDER="C:\Users\priya\AppData\Local\Programs\91Ninjas Studio"' in script, "keeps the folder"
     u.prepare(r"C:\x\91ninjas-studio.exe", 1, restart=False)
     assert "Start-Process -FilePath 'C:" not in (tmp_path / "updates" / "install-update.ps1").read_text()
 

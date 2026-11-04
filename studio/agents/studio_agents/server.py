@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 import os
+import sys
 import secrets
 import shutil
 import tempfile
@@ -446,13 +447,38 @@ def _exit_with_parent(pid: int) -> None:
     def watch() -> None:
         while True:
             time.sleep(2)
-            try:
-                os.kill(pid, 0)
-            except ProcessLookupError:
+            if not process_alive(pid):
                 os._exit(0)
-            except PermissionError:
-                pass
     threading.Thread(target=watch, name="parent-watch", daemon=True).start()
+
+
+def process_alive(pid: int) -> bool:
+    """Whether process `pid` still runs. Never `os.kill(pid, 0)` on Windows: there it *ends* the process
+    (TerminateProcess), which closed the app two seconds after it started."""
+    if sys.platform == "win32":
+        import ctypes
+        from ctypes import wintypes
+        kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+        kernel32.OpenProcess.restype = wintypes.HANDLE
+        kernel32.OpenProcess.argtypes = (wintypes.DWORD, wintypes.BOOL, wintypes.DWORD)
+        kernel32.GetExitCodeProcess.argtypes = (wintypes.HANDLE, ctypes.POINTER(wintypes.DWORD))
+        kernel32.CloseHandle.argtypes = (wintypes.HANDLE,)
+        process_query_limited_information, still_active, access_denied = 0x1000, 259, 5
+        handle = kernel32.OpenProcess(process_query_limited_information, False, pid)
+        if not handle:
+            return ctypes.get_last_error() == access_denied   # there, but not ours to look at
+        try:
+            code = wintypes.DWORD()
+            return bool(kernel32.GetExitCodeProcess(handle, ctypes.byref(code))) and code.value == still_active
+        finally:
+            kernel32.CloseHandle(handle)
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    return True
 
 
 def main() -> None:

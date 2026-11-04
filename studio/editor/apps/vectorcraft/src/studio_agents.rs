@@ -63,7 +63,7 @@ fn bundled(dir: &std::path::Path) -> bool {
 
 /// The data folder the agents use (`~/.local/share/91studio`, as `studio_agents.config.data_dir`).
 fn data_dir() -> Option<PathBuf> {
-    std::env::var_os("HOME").or_else(|| std::env::var_os("USERPROFILE")).map(|h| PathBuf::from(h).join(".local").join("share").join("91studio"))
+    vectorcraft_studio_bridge::home_dir().map(|h| h.join(".local").join("share").join("91studio"))
 }
 
 fn uv() -> Option<PathBuf> {
@@ -120,8 +120,7 @@ pub fn launch() -> Option<Sidecar> {
         // First start: uv fetches Python and the packages once (a few minutes), into the user's data folder.
         cmd.args(["--frozen", "--no-dev"]).env("UV_PROJECT_ENVIRONMENT", data.join("agents-env")).env("STUDIO_BUNDLED", "1");
     }
-    let child = cmd
-        .args(["python", "-m", "studio_agents.server"])
+    cmd.args(["python", "-m", "studio_agents.server"])
         .current_dir(&dir)
         // The connector Claude starts must run the same way (`/api/connect` reads these).
         .env("STUDIO_UV", &uv)
@@ -136,8 +135,15 @@ pub fn launch() -> Option<Sidecar> {
         .env("STUDIO_APP_ARCH", std::env::consts::ARCH)
         .stdin(Stdio::null())
         .stdout(out)
-        .stderr(err)
-        .spawn();
+        .stderr(err);
+    // Windows: `uv` and Python are console programs; without this each start opened a black window (D-044).
+    #[cfg(windows)]
+    {
+        use std::os::windows::process::CommandExt;
+        const CREATE_NO_WINDOW: u32 = 0x0800_0000;
+        cmd.creation_flags(CREATE_NO_WINDOW);
+    }
+    let child = cmd.spawn();
     match child {
         Ok(child) => {
             log::info!("91Ninjas Studio agents starting on 127.0.0.1:{port} from {} (log {})", dir.display(), log_path.display());
