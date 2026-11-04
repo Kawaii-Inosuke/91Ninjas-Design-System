@@ -220,3 +220,38 @@ def test_a_team_from_before_passwords_gets_one_from_the_first_manager(laptops):
     team["manager_password"] = hash_password("new-pass-1")
     repo.commit({"team.json": json.dumps(team).encode()}, "new password", repo.head())
     assert be("manager").check()["manager"] is False
+
+
+def test_members_list_names_only_and_leave_removes_the_name(laptops):
+    repo, _, be = laptops
+    be("manager").join("91ninjas/clients", "key", "Shrikant", password="ninja-boss")
+    be("priya").join("91ninjas/clients", "key", "Priya")
+    st = be("manager").check()
+    assert st["members"] == [{"name": "Priya", "manager": False}, {"name": "Shrikant", "manager": True}]
+    entries = {p: json.loads(b) for p, b in repo.commits[repo.head()].items() if p.startswith("members/")}
+    assert sorted(e["name"] for e in entries.values()) == ["Priya", "Shrikant"]
+    assert all(set(e) == {"name"} for e in entries.values()), "the name only: no dates, no activity"
+    heads = len(repo.order)
+    be("manager").check()
+    be("priya").check()
+    assert len(repo.order) == heads, "checking writes nothing"
+    be("priya").leave()
+    assert [m["name"] for m in be("manager").check()["members"]] == ["Shrikant"]
+
+
+def test_someone_who_joined_before_the_list_is_added_once(laptops, monkeypatch):
+    repo, homes, be = laptops
+    be("manager").join("91ninjas/clients", "key", "Shrikant", password="ninja-boss")
+    t = be("arjun")
+    t.join("91ninjas/clients", "key", "Arjun")
+    # As an older version left it: joined, but no member entry.
+    from studio_agents.team import Settings
+    s = Settings.load()
+    path = f"members/{s.member_id}.json"
+    repo.commit({path: None}, "older version", repo.head())
+    s.member_id = ""
+    s.save()
+    assert "Arjun" in [m["name"] for m in be("arjun").check()["members"]]
+    heads = len(repo.order)
+    be("arjun").check()
+    assert len(repo.order) == heads

@@ -38,7 +38,7 @@ impl PaletteFormat {
     }
     pub fn label(self) -> &'static str {
         match self {
-            PaletteFormat::Native => "VectorCraft Swatches (.vcswatches)",
+            PaletteFormat::Native => "91Ninjas Studio Swatches (.vcswatches)",
             PaletteFormat::Gpl => "GPL Palette (.gpl)",
             PaletteFormat::Ase => "Swatch Exchange (.ase)",
             PaletteFormat::Css => "CSS Custom Properties (.css)",
@@ -241,7 +241,7 @@ fn write_ase(lib: &SwatchLibrary) -> Result<Vec<u8>, String> {
     let entries = solid(&lib.swatches) + lib.groups.iter().map(|g| 1 + solid(&g.swatches)).sum::<usize>();
     if entries > ASE_MAX_ENTRIES {
         return Err(format!(
-            "VectorCraft reads at most {ASE_MAX_ENTRIES} colors and groups from a swatch exchange file, and this library has {entries}"
+            "91Ninjas Studio reads at most {ASE_MAX_ENTRIES} colors and groups from a swatch exchange file, and this library has {entries}"
         ));
     }
     let mut body = vec![];

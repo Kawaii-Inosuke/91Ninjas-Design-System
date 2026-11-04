@@ -107,7 +107,7 @@ fn the_header_follows_dsc_and_the_file_ends_with_eof() {
     let out = export(&d, &EpsOptions { title: "Poster (draft)".into(), created: Some(0), ..opts(&d) }, None, None).unwrap();
     let ps = text(&out);
     assert!(ps.starts_with("%!PS-Adobe-3.0 EPSF-3.0\n"), "{ps}");
-    assert!(dsc(&ps, "Creator").unwrap().starts_with("VectorCraft"));
+    assert!(dsc(&ps, "Creator").unwrap().starts_with("91Ninjas Studio"));
     assert_eq!(dsc(&ps, "Title").as_deref(), Some("(Poster \\(draft\\))"));
     assert_eq!(dsc(&ps, "CreationDate").as_deref(), Some("(1970-01-01 00:00:00 UTC)"));
     assert_eq!(dsc(&ps, "LanguageLevel").as_deref(), Some("3"));
@@ -872,9 +872,15 @@ fn the_native_document_and_thumbnail_come_back() {
         assert_eq!(image::load_from_memory(&png).unwrap().to_rgba8().dimensions(), (3, 2));
         let ps = text(&out);
         checked_page(&ps);
-        assert!(ps.find("%VectorCraft_BeginData: thumbnail").unwrap() < ps.find("%%BeginProlog").unwrap());
-        assert!(ps.find("%VectorCraft_BeginData: native").unwrap() > ps.find("%%Trailer").unwrap());
+        assert!(ps.find("%Studio91_BeginData: thumbnail").unwrap() < ps.find("%%BeginProlog").unwrap());
+        assert!(ps.find("%Studio91_BeginData: native").unwrap() > ps.find("%%Trailer").unwrap());
         assert!(ps.lines().all(|l| l.len() <= 255));
+        // A file written before 1.0.4 (the older markers) still gives its document back (D-046).
+        if kind == Preview::None {
+            let old = String::from_utf8(out.bytes.clone()).unwrap().replace("%Studio91_", "%VectorCraft_");
+            assert!(super::has_native(old.as_bytes()));
+            assert_eq!(super::native(old.as_bytes()).as_deref(), Some(&native[..]));
+        }
     }
     let plain = export(&d, &opts(&d), None, None).unwrap();
     assert_eq!((super::native(&plain.bytes), super::thumbnail(&plain.bytes)), (None, None));

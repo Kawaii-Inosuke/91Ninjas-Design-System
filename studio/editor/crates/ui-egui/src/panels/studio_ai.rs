@@ -643,6 +643,18 @@ fn team_card(ui: &mut Ui, st: &mut State, asks: &mut Asks, t: &Tokens) {
                     }
                 });
             }
+            // Who joined (the name only, D-045): for managers.
+            let members: Vec<&Value> = team.get("members").and_then(Value::as_array).into_iter().flatten().collect();
+            if manager && !members.is_empty() {
+                ui.add_space(6.0);
+                egui::CollapsingHeader::new(RichText::new(format!("{} ({})", tl!("Members"), members.len())).small().strong()).id_salt("team-members").show(ui, |ui| {
+                    for m in members {
+                        let is_manager = m.get("manager").and_then(Value::as_bool).unwrap_or(false);
+                        let label = if is_manager { format!("{} · {}", s(m, "name"), tl!("manager")) } else { s(m, "name") };
+                        ui.label(RichText::new(label).small());
+                    }
+                });
+            }
         },
     );
     ui.add_space(8.0);

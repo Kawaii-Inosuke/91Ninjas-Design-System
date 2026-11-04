@@ -431,7 +431,11 @@ fn native_version(ui: &mut egui::Ui, d: &mut Dialog, o: &FormatOption) {
     ui.label(egui::RichText::new(tl!("Version:")).color(t.text_dim)).on_hover_text(o.description);
     let names: Vec<String> = NATIVE_VERSIONS
         .iter()
-        .map(|(n, release)| crate::i18n::fmt(tl!("VectorCraft {release} and later (version {n})"), &[("release", release), ("n", &n.to_string())]))
+        // 91studio: the release names were VectorCraft's (0.8…), not ours: the version alone (D-045).
+        .map(|(n, _)| {
+            let which = if *n == vectorcraft_format::VERSION { tl!("Version {n} (current)") } else { tl!("Version {n} (older)") };
+            crate::i18n::fmt(which, &[("n", &n.to_string())])
+        })
         .collect();
     let names: Vec<&str> = names.iter().map(String::as_str).collect();
     let at = NATIVE_VERSIONS.iter().position(|(n, _)| *n == native_version_of(d)).unwrap_or(0);

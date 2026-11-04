@@ -54,7 +54,7 @@ pub fn specs() -> Vec<CommandSpec> {
             "Remember Import Matches",
             [],
             None,
-            "{matches: [{kind: name|key|modifiers, name: as the file writes it (codes in decimal), target: a command id, tool:<id> or panel:<id> (name), a key as Edit › Keyboard Shortcuts writes it (key), modifiers as it writes them, such as Cmd+Shift (modifiers), \"\" for no equivalent (no modifiers for kind modifiers), or null to forget the match, label?}]} remember what names and codes in another app's file stand for in VectorCraft, for later imports (at most 20,000 matches; names, targets and labels up to 1,024 bytes) → {count}",
+            "{matches: [{kind: name|key|modifiers, name: as the file writes it (codes in decimal), target: a command id, tool:<id> or panel:<id> (name), a key as Edit › Keyboard Shortcuts writes it (key), modifiers as it writes them, such as Cmd+Shift (modifiers), \"\" for no equivalent (no modifiers for kind modifiers), or null to forget the match, label?}]} remember what names and codes in another app's file stand for in 91Ninjas Studio, for later imports (at most 20,000 matches; names, targets and labels up to 1,024 bytes) → {count}",
             always,
             set
         ),

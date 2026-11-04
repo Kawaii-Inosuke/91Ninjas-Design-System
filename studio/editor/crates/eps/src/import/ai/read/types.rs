@@ -323,7 +323,7 @@ pub const VERSIONED_UNENDED: &str = "versioned content that doesn't end was read
 
 /// The note for a `/ForeignObject` (non-native art, the content of a placed PDF, which the editor
 /// shows but doesn't edit) whose PDF can't be read.
-pub const NON_NATIVE_ART_UNREAD: &str = "non-native art (a placed PDF's content) that VectorCraft can't read is left out";
+pub const NON_NATIVE_ART_UNREAD: &str = "non-native art (a placed PDF's content) that 91Ninjas Studio can't read is left out";
 
 /// The name of the group a `/ForeignObject`'s art comes in as.
 pub const NON_NATIVE_ART: &str = "Non-native art";

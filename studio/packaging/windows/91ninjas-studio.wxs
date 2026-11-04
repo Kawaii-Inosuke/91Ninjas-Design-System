@@ -28,6 +28,7 @@
       <ComponentGroupRef Id="StudioFiles" />
       <ComponentGroupRef Id="AgentsFiles" />
       <ComponentRef Id="DesktopShortcut" />
+      <ComponentRef Id="FileType" />
     </Feature>
 
     <Property Id="INSTALLDESKTOPSHORTCUT" Value="1" Secure="yes" />
@@ -89,6 +90,15 @@
     <ComponentGroup Id="AgentsFiles" Directory="AgentsFolder">
       <Files Include="$(var.StageDir)\agents\**" />
     </ComponentGroup>
+    <!-- .91studio files (and the older .vectorcraft) show as "91Ninjas Studio design" with the 91 icon and open in the
+         app on a double-click (D-045). Per user: under HKCU\Software\Classes, no admin rights. -->
+    <Component Id="FileType" Directory="INSTALLFOLDER" Guid="D4DCD0F5-7178-4A2B-93A9-24503B7E5259">
+      <RegistryValue Root="HKCU" Key="Software\Classes\NinjasStudio.Design" Value="91Ninjas Studio design" Type="string" KeyPath="yes" />
+      <RegistryValue Root="HKCU" Key="Software\Classes\NinjasStudio.Design\DefaultIcon" Value="&quot;[#StudioExe]&quot;,0" Type="string" />
+      <RegistryValue Root="HKCU" Key="Software\Classes\NinjasStudio.Design\shell\open\command" Value="&quot;[#StudioExe]&quot; &quot;%1&quot;" Type="string" />
+      <RegistryValue Root="HKCU" Key="Software\Classes\.91studio" Value="NinjasStudio.Design" Type="string" />
+      <RegistryValue Root="HKCU" Key="Software\Classes\.vectorcraft" Value="NinjasStudio.Design" Type="string" />
+    </Component>
     <Component Id="DesktopShortcut" Directory="DesktopFolder" Guid="4C219E55-79BB-4F80-B29D-55E5DDE00463" Condition="INSTALLDESKTOPSHORTCUT">
       <Shortcut Id="DesktopShortcut" Name="91Ninjas Studio" Description="On-brand design with Claude" Target="[#StudioExe]"
                 WorkingDirectory="INSTALLFOLDER" Icon="StudioIcon.ico" IconIndex="0" />

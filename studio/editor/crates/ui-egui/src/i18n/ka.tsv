@@ -16,7 +16,7 @@
 # OpenType, the built-in workspace names and the bracketed perspective grid preset names. Keep
 # placeholders, ellipses and the leading/trailing spaces of fragments when editing.
 	Glowing Edges…	მანათობელი კიდეები…
-	About VectorCraft	VectorCraft-ის შესახებ
+	About 91Ninjas Studio	91Ninjas Studio-ის შესახებ
 	Align to Path	ტრაექტორიაზე სწორება
 	Cut Path at Selected Anchor Points	ტრაექტორიის გაჭრა მონიშნულ საყრდენ წერტილებზე
 	Join Our Discord	შემოგვიერთდით Discord-ზე
@@ -26,7 +26,7 @@
 	Medium Dark	საშუალოდ ბნელი
 	Medium Light	საშუალოდ ღია
 	Light	ღია
-	Quit VectorCraft	VectorCraft-იდან გასვლა
+	Quit 91Ninjas Studio	91Ninjas Studio-იდან გასვლა
 # Artwork drag between document tabs.
 	Drop Artwork	ნამუშევრის განთავსება
 @msg	{key} must be [x, y] with finite coordinates	{key} უნდა იყოს [x, y] სასრული კოორდინატებით
@@ -636,10 +636,10 @@
 	Symbol Libraries	სიმბოლოების ბიბლიოთეკები
 	Help	დახმარება
 	ArtCraft Website	ArtCraft-ის ვებსაიტი
-	VectorCraft on getartcraft.com	VectorCraft getartcraft.com-ზე
-	VectorCraft on GitHub	VectorCraft GitHub-ზე
+	91Ninjas Studio on getartcraft.com	91Ninjas Studio getartcraft.com-ზე
+	91Ninjas Studio on GitHub	91Ninjas Studio GitHub-ზე
 	Search Commands…	ბრძანებების ძიება…
-	VectorCraft Help…	VectorCraft-ის დახმარება…
+	91Ninjas Studio Help…	91Ninjas Studio-ის დახმარება…
 	Automatic	ავტომატური
 	Isolate Selected Group	მონიშნული ჯგუფის იზოლირება
 	Exit Isolation Mode	იზოლაციის რეჟიმიდან გამოსვლა
@@ -687,7 +687,7 @@
 	Dock Panel	პანელის მიმაგრება
 	Float Tool Group	მცურავი ხელსაწყოთა ჯგუფი
 	Services	სერვისები
-	Hide VectorCraft	VectorCraft-ის დამალვა
+	Hide 91Ninjas Studio	91Ninjas Studio-ის დამალვა
 	Hide Others	სხვების დამალვა
 	Minimize	ჩაკეცვა
 	Zoom	მასშტაბი
@@ -1807,7 +1807,7 @@ digits	Malayalam	მალაიალამური
 	Select All Bound Objects	ყველა დაკავშირებული ობიექტის მონიშვნა
 	Multiple objects	რამდენიმე ობიექტი
 	Graphics: {adapter}	გრაფიკა: {adapter}
-	Part of ArtCraft. MIT OR Apache-2.0. Fonts: Source Sans 3, Inter, JetBrains Mono (OFL). Icons: Lucide (ISC) + VectorCraft.	ArtCraft-ის ნაწილი. MIT OR Apache-2.0. შრიფტები: Source Sans 3, Inter, JetBrains Mono (OFL). ხატულები: Lucide (ISC) + VectorCraft.
+	Part of ArtCraft. MIT OR Apache-2.0. Fonts: Source Sans 3, Inter, JetBrains Mono (OFL). Icons: Lucide (ISC) + 91Ninjas Studio.	ArtCraft-ის ნაწილი. MIT OR Apache-2.0. შრიფტები: Source Sans 3, Inter, JetBrains Mono (OFL). ხატულები: Lucide (ISC) + 91Ninjas Studio.
 	Version {version} — open-source vector illustration in pure Rust.	ვერსია {version} — ღია კოდის ვექტორული ილუსტრაცია სუფთა Rust-ზე.
 	Align to Page	გვერდზე სწორება
 	Smooth Color	ფერის გლუვი გადასვლა
@@ -2133,7 +2133,7 @@ digits	Malayalam	მალაიალამური
 @plural	{n} folder or file couldn't be read|{n} folders or files couldn't be read	ვერ წაიკითხა საქაღალდეები ან ფაილები: {n}
 	The search stopped at its limit: search a smaller folder.	ძიება ზღვარზე შეჩერდა: მოძებნეთ უფრო პატარა საქაღალდეში.
 	Copy only fonts you own or are licensed to install.	დააკოპირეთ მხოლოდ ის შრიფტები, რომლებიც გეკუთვნით ან რომელთა დაყენების ლიცენზია გაქვთ.
-	VectorCraft copies the fonts to {folder}.	VectorCraft შრიფტებს აკოპირებს აქ: {folder}.
+	91Ninjas Studio copies the fonts to {folder}.	91Ninjas Studio შრიფტებს აკოპირებს აქ: {folder}.
 @plural	Apply to All ({n} more missing)|Apply to All ({n} more missing)	ყველაზე გამოყენება (კიდევ დაკარგული: {n})
 	Ignore	უგულებელყოფა
 	Linked File Not Found	დაკავშირებული ფაილი ვერ მოიძებნა
@@ -2220,7 +2220,7 @@ digits	Malayalam	მალაიალამური
 	On: one locked object showing the document, updated when it changes.	ჩართული: ერთი ჩაკეტილი ობიექტი, რომელიც დოკუმენტს აჩვენებს და მისი ცვლილებისას ახლდება.
 	Off: an editable copy of its art, embedded in this document.	გამორთული: მისი ნახატის რედაქტირებადი ასლი, ჩაშენებული ამ დოკუმენტში.
 	Images: link to the file instead of only embedding it.	გამოსახულებები: ფაილის ბმული მხოლოდ ჩაშენების ნაცვლად.
-	VectorCraft documents: one locked object, updated when the file changes.	VectorCraft-ის დოკუმენტები: ერთი ჩაკეტილი ობიექტი, რომელიც ფაილის ცვლილებისას ახლდება.
+	91Ninjas Studio documents: one locked object, updated when the file changes.	91Ninjas Studio-ის დოკუმენტები: ერთი ჩაკეტილი ობიექტი, რომელიც ფაილის ცვლილებისას ახლდება.
 	Alignment:	სწორება:
 	Applies when the linked file is relinked or updated.	მოქმედებს, როცა დაკავშირებული ფაილი ხელახლა უკავშირდება ან ახლდება.
 	Bounds (Fill Proportionally)	საზღვრები (პროპორციული შევსება)
@@ -2351,7 +2351,7 @@ digits	Malayalam	მალაიალამური
 	3 Color Job	3-ფერიანი ბეჭდვა
 	Recover Documents	დოკუმენტების აღდგენა
 	Restored documents open unsaved: save them to keep them.	აღდგენილი დოკუმენტები შეუნახავად იხსნება: შესანარჩუნებლად შეინახეთ ისინი.
-	VectorCraft didn't quit normally last time. These documents had unsaved changes:	VectorCraft ბოლოს ნორმალურად არ დახურულა. ამ დოკუმენტებს შეუნახავი ცვლილებები ჰქონდა:
+	91Ninjas Studio didn't quit normally last time. These documents had unsaved changes:	91Ninjas Studio ბოლოს ნორმალურად არ დახურულა. ამ დოკუმენტებს შეუნახავი ცვლილებები ჰქონდა:
 	Do you want to save the changes you made to “{name}”?	შევინახო „{name}“-ში შეტანილი ცვლილებები?
 	Don't Save	არ შეინახო
 	Your changes will be lost if you don't save them.	თუ ცვლილებებს არ შეინახავთ, ისინი დაიკარგება.
@@ -3438,7 +3438,7 @@ effect	Regular	ჩვეულებრივი
 	Quickly start a new file	ახალი ფაილის სწრაფად შექმნა
 	Recent Files	ბოლოს გახსნილი ფაილები
 	Vector illustration — fast, open, scriptable.	ვექტორული ილუსტრაცია — სწრაფი, ღია, სკრიპტებით მართვადი.
-	Welcome to VectorCraft	კეთილი იყოს თქვენი მობრძანება VectorCraft-ში
+	Welcome to 91Ninjas Studio	კეთილი იყოს თქვენი მობრძანება 91Ninjas Studio-ში
 	ArtCraft website	ArtCraft-ის ვებსაიტი
 	Discord	Discord
 	Join our Discord	შემოგვიერთდით Discord-ზე
@@ -3482,7 +3482,7 @@ font-technology	Variable	ცვლადი
 	Installed plug-in {}	დაინსტალირდა პლაგინი {}
 	Revert to the saved version of “{name}”?	დაბრუნდეს „{name}“-ის შენახული ვერსია?
 	Replace “{name}”, the file this document was opened from?	ჩანაცვლდეს „{name}“, ფაილი, რომლიდანაც ეს დოკუმენტი გაიხსნა?
-	Opening it left out what VectorCraft can't read yet ({what}), so replacing it loses that for good. Save under another name to keep it.	გახსნისას გამოტოვდა ის, რისი წაკითხვაც VectorCraft-ს ჯერ არ შეუძლია ({what}), ამიტომ ჩანაცვლება მას სამუდამოდ დაკარგავს. შესანარჩუნებლად შეინახეთ სხვა სახელით.
+	Opening it left out what 91Ninjas Studio can't read yet ({what}), so replacing it loses that for good. Save under another name to keep it.	გახსნისას გამოტოვდა ის, რისი წაკითხვაც 91Ninjas Studio-ს ჯერ არ შეუძლია ({what}), ამიტომ ჩანაცვლება მას სამუდამოდ დაკარგავს. შესანარჩუნებლად შეინახეთ სხვა სახელით.
 	Saved {path}	შენახულია: {path}
 	Saving	შენახვა
 	Saving {}	ინახება: {}
@@ -3490,7 +3490,7 @@ font-technology	Variable	ცვლადი
 	Dashed Line	ტირეებიანი ხაზი
 	Panel menu	პანელის მენიუ
 	Unembed…	ჩაშენების მოხსნა…
-	Applies the next time VectorCraft starts.	ძალაში შევა VectorCraft-ის მომდევნო გაშვებისას.
+	Applies the next time 91Ninjas Studio starts.	ძალაში შევა 91Ninjas Studio-ის მომდევნო გაშვებისას.
 	Enable Contextual Task Bar	კონტექსტური ამოცანების ზოლის ჩართვა
 	Next	შემდეგი
 	OK	OK
@@ -3891,7 +3891,7 @@ font-technology	Variable	ცვლადი
 @msg	can't encode the document: {0}	დოკუმენტის კოდირება ვერ ხერხდება: {0}
 @msg	can't parse shortcut `{c}`	მალსახმობის `{c}` ანალიზი ვერ ხერხდება
 @msg	can't parse shortcut `{s}` for `{k}`	მალსახმობის `{s}` ანალიზი `{k}`-სთვის ვერ ხერხდება
-@msg	can't save version {0}: VectorCraft writes versions {MIN_VERSION} to {VERSION}	ვერსიის {0} შენახვა ვერ ხერხდება: VectorCraft წერს ვერსიებს {MIN_VERSION}-დან {VERSION}-მდე
+@msg	can't save version {0}: 91Ninjas Studio writes versions {MIN_VERSION} to {VERSION}	ვერსიის {0} შენახვა ვერ ხერხდება: 91Ninjas Studio წერს ვერსიებს {MIN_VERSION}-დან {VERSION}-მდე
 @msg	can't write .{ext} images	.{ext} გამოსახულებების ჩაწერა ვერ ხერხდება
 @msg	cannot distort a zero-size bounding box	ნულოვანი ზომის შემომსაზღვრელი ჩარჩოს დეფორმაცია შეუძლებელია
 @msg	cannot read PDF: {0}	PDF-ის წაკითხვა ვერ ხერხდება: {0}
@@ -3916,7 +3916,7 @@ font-technology	Variable	ცვლადი
 @msg	empty brush stroke	ცარიელი ფუნჯის შტრიხი
 @msg	empty cutter	ცარიელი საჭრელი
 @msg	empty path	ცარიელი ტრაექტორია
-@msg	file version {0} is newer than this VectorCraft supports ({VERSION})	ფაილის ვერსია {0} უფრო ახალია, ვიდრე ამ VectorCraft-ის მხარდაჭერილი ({VERSION})
+@msg	file version {0} is newer than this 91Ninjas Studio supports ({VERSION})	ფაილის ვერსია {0} უფრო ახალია, ვიდრე ამ 91Ninjas Studio-ის მხარდაჭერილი ({VERSION})
 @msg	freeform point {i} needs `at` [x, y] and a valid `color`	თავისუფალ წერტილს {i} სჭირდება `at` [x, y] და სწორი `color`
 @msg	freeform line {i} must be an array of point indices	თავისუფალი ხაზი {i} უნდა იყოს წერტილების ინდექსების მასივი
 @msg	give both `start` and `end` [x, y] (or neither)	მიუთითეთ `start` და `end` [x, y] ორივე (ან არცერთი)
@@ -3935,9 +3935,9 @@ font-technology	Variable	ცვლადი
 @msg	invalid PDF setting: {0}	PDF-ის არასწორი პარამეტრი: {0}
 @msg	invalid image data for `{0}`	არასწორი გამოსახულების მონაცემები `{0}`-სთვის
 @msg	invalid parameters for `{cmd}`: {msg}	`{cmd}`: არასწორი პარამეტრები — {msg}
-@msg	is not an image VectorCraft reads	ეს არ არის გამოსახულება, რომელსაც VectorCraft კითხულობს
-@msg	it uses `{at}`, which VectorCraft's PostScript reader doesn't know	ის იყენებს `{at}`-ს, რომელიც VectorCraft-ის PostScript-ის წამკითხველმა არ იცის
-@msg	it uses `{at}`, which VectorCraft's PostScript reader doesn't know, in {procs}	ის იყენებს `{at}`-ს, რომელიც VectorCraft-ის PostScript-ის წამკითხველმა არ იცის, {procs}-ში
+@msg	is not an image 91Ninjas Studio reads	ეს არ არის გამოსახულება, რომელსაც 91Ninjas Studio კითხულობს
+@msg	it uses `{at}`, which 91Ninjas Studio's PostScript reader doesn't know	ის იყენებს `{at}`-ს, რომელიც 91Ninjas Studio-ის PostScript-ის წამკითხველმა არ იცის
+@msg	it uses `{at}`, which 91Ninjas Studio's PostScript reader doesn't know, in {procs}	ის იყენებს `{at}`-ს, რომელიც 91Ninjas Studio-ის PostScript-ის წამკითხველმა არ იცის, {procs}-ში
 @msg	its Windows metafile preview was opened instead, which may simplify the art	სამაგიეროდ გაიხსნა მისი Windows metafile გადახედვა, რამაც შეიძლება ნახატი გაამარტივოს
 @msg	its preview was placed instead, at screen resolution	სამაგიეროდ განთავსდა მისი გადახედვა, ეკრანის გარჩევადობით
 @msg	join needs open paths	შეერთებას ღია ტრაექტორიები სჭირდება
@@ -3992,7 +3992,7 @@ font-technology	Variable	ცვლადი
 @msg	no file system here	აქ ფაილური სისტემა არ არის
 @msg	no file writer	ფაილის ჩამწერი არ არის
 @msg	no files to place	განსათავსებელი ფაილები არ არის
-@msg	`{file}` isn't a VectorCraft document, a PDF or a PDF-compatible .ai file	`{file}` არ არის VectorCraft-ის დოკუმენტი, PDF ან PDF-თან თავსებადი .ai ფაილი
+@msg	`{file}` isn't a 91Ninjas Studio document, a PDF or a PDF-compatible .ai file	`{file}` არ არის 91Ninjas Studio-ის დოკუმენტი, PDF ან PDF-თან თავსებადი .ai ფაილი
 @msg	no format to export to	ექსპორტის ფორმატი არ არის
 @msg	no free recovery area	აღდგენის თავისუფალი არე არ არის
 @msg	no gradient stop or freeform point is selected	გრადიენტის გადასვლის წერტილი ან თავისუფალი წერტილი მონიშნული არ არის
@@ -4033,7 +4033,7 @@ font-technology	Variable	ცვლადი
 @msg	not an action set file	ეს არ არის მოქმედებების ნაკრების ფაილი
 @msg	the action set file is larger than 8 MiB	მოქმედებების ნაკრების ფაილი 8 MiB-ზე დიდია
 @msg	the action set file holds more than 1,000 actions	მოქმედებების ნაკრების ფაილი 1000-ზე მეტ მოქმედებას შეიცავს
-@msg	the action set file needs a later version of VectorCraft	მოქმედებების ნაკრების ფაილს VectorCraft-ის უფრო ახალი ვერსია სჭირდება
+@msg	the action set file needs a later version of 91Ninjas Studio	მოქმედებების ნაკრების ფაილს 91Ninjas Studio-ის უფრო ახალი ვერსია სჭირდება
 @msg	an action in the action set file has more than 10,000 steps	მოქმედებების ნაკრების ფაილში ერთ-ერთ მოქმედებას 10 000-ზე მეტი ნაბიჯი აქვს
 @msg	no such anchor	ასეთი საყრდენი წერტილი არ არის
 @msg	no such artboard	ასეთი სამუშაო დაფა არ არის
@@ -4061,8 +4061,8 @@ font-technology	Variable	ცვლადი
 @msg	node {_1} is not text	კვანძი {_1} ტექსტი არ არის
 @msg	node {_1} is on a locked artboard	კვანძი {_1} ჩაკეტილ სამუშაო დაფაზეა
 @msg	not a DXF drawing	ეს არ არის DXF ნახაზი
-@msg	not a VectorCraft file: {0}	ეს არ არის VectorCraft-ის ფაილი: {0}
-@msg	not a VectorCraft shortcut set (missing `overrides`)	ეს არ არის VectorCraft-ის მალსახმობების ნაკრები (აკლია `overrides`)
+@msg	not a 91Ninjas Studio file: {0}	ეს არ არის 91Ninjas Studio-ის ფაილი: {0}
+@msg	not a 91Ninjas Studio shortcut set (missing `overrides`)	ეს არ არის 91Ninjas Studio-ის მალსახმობების ნაკრები (აკლია `overrides`)
 @msg	not a graphic style library (format `{_1}`)	ეს არ არის გრაფიკული სტილების ბიბლიოთეკა (ფორმატი `{_1}`)
 @msg	not a stored central record	ეს არ არის შენახული ცენტრალური ჩანაწერი
 @msg	not a valid plug-in module: {0}	ეს არ არის პლაგინის სწორი მოდული: {0}
@@ -4320,9 +4320,9 @@ font-technology	Variable	ცვლადი
 @msg	Sent to {_1}	გაგზავნილია: {_1}
 @msg	{_1} files	ფაილები: {_1}
 @msg	The graphics were lost and have been restarted	გრაფიკა დაიკარგა და ხელახლა გაეშვა
-@msg	The graphics processor tried first couldn't show the window, so VectorCraft started again on {summary}	პირველად ნაცდმა გრაფიკულმა პროცესორმა ფანჯარა ვერ აჩვენა, ამიტომ VectorCraft ხელახლა გაეშვა: {summary}
-@msg	Loading VectorCraft…	VectorCraft იტვირთება…
-@msg	VectorCraft failed to start: {e}	VectorCraft-ის გაშვება ვერ მოხერხდა: {e}
+@msg	The graphics processor tried first couldn't show the window, so 91Ninjas Studio started again on {summary}	პირველად ნაცდმა გრაფიკულმა პროცესორმა ფანჯარა ვერ აჩვენა, ამიტომ 91Ninjas Studio ხელახლა გაეშვა: {summary}
+@msg	Loading 91Ninjas Studio…	91Ninjas Studio იტვირთება…
+@msg	91Ninjas Studio failed to start: {e}	91Ninjas Studio-ის გაშვება ვერ მოხერხდა: {e}
 @msg	A browser with WebGPU or WebGL2 is required.	საჭიროა ბრაუზერი WebGPU-ით ან WebGL2-ით.
 @msg	The graphics were lost and couldn't be restarted.	გრაფიკა დაიკარგა და ხელახლა ვერ გაეშვა.
 @msg	Your unsaved changes are kept in this browser: reload the page to get them back.	შეუნახავი ცვლილებები ამ ბრაუზერშია შენახული: დასაბრუნებლად გადატვირთეთ გვერდი.
@@ -4353,25 +4353,25 @@ font-technology	Variable	ცვლადი
 @msg	it has more than {MAX_NODES} objects	მას {MAX_NODES}-ზე მეტი ობიექტი აქვს
 @msg	it has no layers	მას შრეები არ აქვს
 @msg	it has too many values in a row	მას ერთ რიგში ზედმეტად ბევრი მნიშვნელობა აქვს
-@msg	it has {_1}, which VectorCraft doesn't read from it yet	მას აქვს {_1}, რასაც VectorCraft მისგან ჯერ ვერ კითხულობს
+@msg	it has {_1}, which 91Ninjas Studio doesn't read from it yet	მას აქვს {_1}, რასაც 91Ninjas Studio მისგან ჯერ ვერ კითხულობს
 @msg	its objects are nested too deeply	მისი ობიექტები ზედმეტად ღრმადაა ჩადგმული
 @msg	its section ending with `%{end}` doesn't end	მისი სექცია, რომელიც `%{end}`-ით მთავრდება, არ სრულდება
 @msg	objects with several fills or strokes, effects or brushes came in as their drawn look ({_1}): their appearance isn't editable yet	რამდენიმე შევსების ან კონტურის, ეფექტის ან ფუნჯის მქონე ობიექტები შემოვიდა დახატული სახით ({_1}): მათი იერსახე ჯერ არ რედაქტირდება
 @msg	gradient “{name}” isn't defined in the file: a plain colour stands in for it	გრადიენტი „{name}“ ფაილში განსაზღვრული არ არის: მის ნაცვლად ერთგვაროვანი ფერია
-@msg	an image VectorCraft can't read was left out	გამოსახულება, რომელსაც VectorCraft ვერ კითხულობს, გამოტოვებულია
+@msg	an image 91Ninjas Studio can't read was left out	გამოსახულება, რომელსაც 91Ninjas Studio ვერ კითხულობს, გამოტოვებულია
 @msg	graphs come in as plain art, without their data or settings	დიაგრამები შემოდის როგორც ჩვეულებრივი გრაფიკა, მათი მონაცემებისა და პარამეტრების გარეშე
 @msg	an image whose data is cut short was left out	გამოსახულება, რომლის მონაცემებიც შეკვეცილია, გამოტოვებულია
 @msg	its editing data doesn't say where its art is	მისი რედაქტირების მონაცემები არ მიუთითებს, სად არის მისი ნახატი
 @msg	this file was saved without PDF compatibility, and its editing data can't be read ({why})	ეს ფაილი PDF-თავსებადობის გარეშეა შენახული და მისი რედაქტირების მონაცემების წაკითხვა ვერ ხერხდება ({why})
 @msg	the PDF part couldn't be read ({_1}): the file opened from its editing data	PDF ნაწილის წაკითხვა ვერ მოხერხდა ({_1}): ფაილი რედაქტირების მონაცემებიდან გაიხსნა
 @msg	No fonts are missing in this document	ამ დოკუმენტში შრიფტები არ აკლია
-@msg	VectorCraft doesn't search other apps' or the system's folders: {path}	VectorCraft არ ეძებს სხვა აპების ან სისტემის საქაღალდეებში: {path}
-@msg	VectorCraft doesn't search the Shared or Public folder in Users: {path}	VectorCraft არ ეძებს Users-ის Shared ან Public საქაღალდეში: {path}
+@msg	91Ninjas Studio doesn't search other apps' or the system's folders: {path}	91Ninjas Studio არ ეძებს სხვა აპების ან სისტემის საქაღალდეებში: {path}
+@msg	91Ninjas Studio doesn't search the Shared or Public folder in Users: {path}	91Ninjas Studio არ ეძებს Users-ის Shared ან Public საქაღალდეში: {path}
 @msg	{path} is not a folder	{path} საქაღალდე არ არის
 @msg	the search couldn't start: try again in a moment	ძიება ვერ დაიწყო: ცოტა ხანში სცადეთ ხელახლა
 @msg	searching a folder isn't available on the web	საქაღალდეში ძიება ვებში მიუწვდომელია
 @msg	every search thread stopped on an internal error (please report this bug)	ძიების ყველა ნაკადი შიდა შეცდომით შეჩერდა (გთხოვთ, შეგვატყობინოთ ეს ხარვეზი)
-@msg	VectorCraft's Fonts folder isn't set here: the desktop app and vectorcraft-cli set it	VectorCraft-ის შრიფტების საქაღალდე აქ დაყენებული არ არის: მას აყენებს სამაგიდო აპი და vectorcraft-cli
+@msg	91Ninjas Studio's Fonts folder isn't set here: the desktop app and vectorcraft-cli set it	91Ninjas Studio-ის შრიფტების საქაღალდე აქ დაყენებული არ არის: მას აყენებს სამაგიდო აპი და vectorcraft-cli
 @msg	choose the font files to add	აირჩიეთ დასამატებელი შრიფტის ფაილები
 @msg	not a file	ფაილი არ არის
 @msg	not a font file	შრიფტის ფაილი არ არის
@@ -4510,7 +4510,7 @@ font-technology	Variable	ცვლადი
 	All shortcuts reset to defaults.	ყველა მალსახმობი ნაგულისხმევზე დაბრუნდა.
 	Imported. Press OK to keep the imported set.	შემოტანილია. შემოტანილი ნაკრების შესანარჩუნებლად დააჭირეთ OK-ს.
 	⚠ {chord} was already used by {names} — it has been removed there.	{chord} უკვე გამოიყენებოდა აქ: {names} — იქიდან მოცილებულია.
-	VectorCraft Defaults	VectorCraft-ის ნაგულისხმევი
+	91Ninjas Studio Defaults	91Ninjas Studio-ის ნაგულისხმევი
 @plural	{n} shortcut is assigned more than once|{n} shortcuts are assigned more than once	ერთზე მეტჯერ მინიჭებული მალსახმობები: {n}
 	Simulate prints overprints as Overprint Preview shows them; separations always keep them. A preset flattens transparency before printing (PostScript files always flatten it).	„სიმულაცია“ ბეჭდავს ზედდაბეჭდვებს ისე, როგორც ზედდაბეჭდვის გადახედვა აჩვენებს; სეპარაცია მათ ყოველთვის ინარჩუნებს. პრესეტი ბეჭდვამდე აბრტყელებს გამჭვირვალობას (PostScript ფაილები მას ყოველთვის აბრტყელებს).
 	Preserve	შენარჩუნება
@@ -4738,7 +4738,7 @@ font-technology	Variable	ცვლადი
 	Artistic	მხატვრული
 	Film Grain…	ფირის მარცვლოვნება…
 	Highlight Area	ნათელი არე
-@msg	the compressed file unpacks to more than VectorCraft reads ({_1} MB of document, {_2} MB per image)	შეკუმშული ფაილი იმაზე მეტად იშლება, ვიდრე VectorCraft კითხულობს ({_1} მბ დოკუმენტი, {_2} მბ თითო გამოსახულებაზე)
+@msg	the compressed file unpacks to more than 91Ninjas Studio reads ({_1} MB of document, {_2} MB per image)	შეკუმშული ფაილი იმაზე მეტად იშლება, ვიდრე 91Ninjas Studio კითხულობს ({_1} მბ დოკუმენტი, {_2} მბ თითო გამოსახულებაზე)
 @msg	the document is too large to save compressed ({0}): save it with Use Compression off	დოკუმენტი შეკუმშვით შესანახად ზედმეტად დიდია ({0}): შეინახეთ გამორთული „შეკუმშვის გამოყენებით“
 @msg	the file stopped being read (please report this bug)	ფაილის წაკითხვა შეწყდა (გთხოვთ, შეგვატყობინოთ ამ შეცდომის შესახებ)
 	Concentric Dividers:	კონცენტრული გამყოფები:
@@ -4800,7 +4800,7 @@ file-filter	Print presets	ბეჭდვის პრესეტები
 file-filter	Export presets	ექსპორტის პრესეტები
 file-filter	SVG Compressed	შეკუმშული SVG
 file-filter	PDF-compatible .ai	PDF-თან თავსებადი .ai
-file-filter	VectorCraft Template	VectorCraft-ის შაბლონი
+file-filter	91Ninjas Studio Template	91Ninjas Studio-ის შაბლონი
 file-filter	Templates	შაბლონები
 diagnostics	render	რენდერი
 diagnostics	ui	ინტერფეისი
@@ -4842,7 +4842,7 @@ mark-style	Japanese	იაპონური
 	High Fidelity Photo	მაღალი სიზუსტის ფოტო
 	Image Trace (Make and Expand)	გამოსახულების ვექტორიზაცია (შექმნა და გაშლა)
 	Joins:	შეერთებები:
-	Keeps the document editable: VectorCraft reopens the PDF with nothing lost. For files you'll edit again.	დოკუმენტს რედაქტირებადს ტოვებს: VectorCraft PDF-ს ხელახლა ხსნის ყველაფრის შენარჩუნებით. ფაილებისთვის, რომლებსაც კიდევ დაარედაქტირებთ.
+	Keeps the document editable: 91Ninjas Studio reopens the PDF with nothing lost. For files you'll edit again.	დოკუმენტს რედაქტირებადს ტოვებს: 91Ninjas Studio PDF-ს ხელახლა ხსნის ყველაფრის შენარჩუნებით. ფაილებისთვის, რომლებსაც კიდევ დაარედაქტირებთ.
 	Lab Spot Colors	Lab სპოტ-ფერები
 	Lasso	ლასო
 	Length:	სიგრძე:
@@ -4882,9 +4882,9 @@ mark-style	Japanese	იაპონური
 	Touch Type	სენსორული ტექსტი
 	UTF-16 (Unicode)	UTF-16 (Unicode)
 	Variation	ვარიაცია
-	VectorCraft Default	VectorCraft-ის ნაგულისხმევი
-	VectorCraft Generic CMYK (SWOP-like)	VectorCraft-ის ზოგადი CMYK (SWOP-ის მსგავსი)
-	VectorCraft Swatches (.vcswatches)	VectorCraft-ის ფერის ნიმუშები (.vcswatches)
+	91Ninjas Studio Default	91Ninjas Studio-ის ნაგულისხმევი
+	91Ninjas Studio Generic CMYK (SWOP-like)	91Ninjas Studio-ის ზოგადი CMYK (SWOP-ის მსგავსი)
+	91Ninjas Studio Swatches (.vcswatches)	91Ninjas Studio-ის ფერის ნიმუშები (.vcswatches)
 	Vertical Area Type	ვერტიკალური არის ტექსტი
 	Vertical Type	ვერტიკალური ტექსტი
 	Vertical Type on a Path	ვერტიკალური ტექსტი ტრაექტორიაზე
@@ -4898,7 +4898,7 @@ mark-style	Japanese	იაპონური
 	Check Script	სკრიპტის შემოწმება
 	Check Script…	სკრიპტის შემოწმება…
 	Copy Report	ანგარიშის კოპირება
-	VectorCraft read this script without running it.	VectorCraft-მა ეს სკრიპტი წაიკითხა მისი გაშვების გარეშე.
+	91Ninjas Studio read this script without running it.	91Ninjas Studio-მა ეს სკრიპტი წაიკითხა მისი გაშვების გარეშე.
 	Needs nothing beyond plain JavaScript	საკმარისია ჩვეულებრივი JavaScript
 	Needs the script language's own objects or directives	სჭირდება სკრიპტის ენის საკუთარი ობიექტები ან დირექტივები
 	Needs the document model	სჭირდება დოკუმენტის მოდელი
@@ -4969,14 +4969,14 @@ imageTrace	Outline	კონტური
 	Coloring Controls	ფერის მართვის ელემენტები
 	Draw Mode Controls	ხატვის რეჟიმის მართვის ელემენტები
 	Drawer menu	ხელსაწყოების ჩამოსაშლელი მენიუ
-	Each entry of the file is matched to a VectorCraft tool, command or panel. Check the matches and answer what is left.	ფაილის თითოეულ ჩანაწერს შეესაბამება VectorCraft-ის ხელსაწყო, ბრძანება ან პანელი. შეამოწმეთ შესაბამისობები და უპასუხეთ დარჩენილს.
+	Each entry of the file is matched to a 91Ninjas Studio tool, command or panel. Check the matches and answer what is left.	ფაილის თითოეულ ჩანაწერს შეესაბამება 91Ninjas Studio-ის ხელსაწყო, ბრძანება ან პანელი. შეამოწმეთ შესაბამისობები და უპასუხეთ დარჩენილს.
 	Enhanced	გაუმჯობესებული
 	Fill and Stroke Controls	შევსებისა და კონტურის მართვის ელემენტები
 	Forget Import Matches	იმპორტის შესაბამისობების დავიწყება
 	Import Matches	იმპორტის შესაბამისობები
 	Import Shortcut Set	მალსახმობების ნაკრების იმპორტი
 	Import Shortcut Set…	მალსახმობების ნაკრების იმპორტი…
-	In VectorCraft	VectorCraft-ში
+	In 91Ninjas Studio	91Ninjas Studio-ში
 	In the File	ფაილში
 	Keys	კლავიშები
 	Light behind the object	სინათლე ობიექტის უკან
@@ -5002,7 +5002,7 @@ imageTrace	Outline	კონტური
 	Shortcuts	მალსახმობები
 	Single Corner Radius	კუთხის ერთიანი რადიუსი
 	Softness	სირბილე
-	Start from VectorCraft Defaults	VectorCraft-ის ნაგულისხმევიდან დაწყება
+	Start from 91Ninjas Studio Defaults	91Ninjas Studio-ის ნაგულისხმევიდან დაწყება
 	The file is too large to read in full, so only its first part is listed.	ფაილი სრულად წასაკითხად ზედმეტად დიდია, ამიტომ მხოლოდ მისი პირველი ნაწილია ნაჩვენები.
 	The file writes keys and modifiers as codes. Check the proposed meanings and answer the codes that are not known yet.	ფაილი კლავიშებსა და მოდიფიკატორებს კოდებით წერს. შეამოწმეთ შემოთავაზებული მნიშვნელობები და უპასუხეთ ჯერ უცნობ კოდებს.
 	Toolbar: Show Controls	ხელსაწყოთა ზოლი: მართვის ელემენტების ჩვენება
@@ -5013,7 +5013,7 @@ imageTrace	Outline	კონტური
 	from your earlier imports	თქვენი წინა იმპორტებიდან
 	not known yet	ჯერ უცნობია
 	{ready} of {total} ready	მზადაა: {ready} / {total}
-@msg	This shortcut file is in a form VectorCraft can't read.	მალსახმობების ეს ფაილი ისეთ ფორმატშია, რომელსაც VectorCraft ვერ კითხულობს.
+@msg	This shortcut file is in a form 91Ninjas Studio can't read.	მალსახმობების ეს ფაილი ისეთ ფორმატშია, რომელსაც 91Ninjas Studio ვერ კითხულობს.
 @msg	control must be fillStroke, coloring, drawMode or screenMode	control უნდა იყოს fillStroke, coloring, drawMode ან screenMode
 @msg	give a fraction `t` from 0 to 1	მიუთითეთ წილი `t` 0-დან 1-მდე
 @msg	give the path `id`	მიუთითეთ ტრაექტორიის `id`
@@ -5260,8 +5260,8 @@ imageTrace	Outline	კონტური
 @msg	name is empty	სახელი ცარიელია
 @msg	no symbol named `{n}`	სიმბოლო სახელით `{n}` არ არის
 @msg	no saved selection recalled	შენახული მონიშვნა გამოძახებული არ არის
-@msg	The last start of VectorCraft ended on {name} before its window appeared, so it started on {summary}. To try that graphics processor again, change Preferences › Performance › Graphics Processor or start with WGPU_BACKEND set	VectorCraft-ის ბოლო გაშვება ფანჯრის გამოჩენამდე შეწყდა (გრაფიკული პროცესორი: {name}), ამიტომ VectorCraft გაეშვა: {summary}. ამ გრაფიკული პროცესორის ხელახლა საცდელად შეცვალეთ პარამეტრები › წარმადობა › გრაფიკული პროცესორი ან გაუშვით WGPU_BACKEND ცვლადის მითითებით
-@msg	The last start of VectorCraft ended while it listed the graphics processors, so it started on {summary} with OpenGL alone. To try the other graphics backends again, change Preferences › Performance › Graphics Processor or start with WGPU_BACKEND set	VectorCraft-ის ბოლო გაშვება გრაფიკული პროცესორების ჩამოთვლისას შეწყდა, ამიტომ VectorCraft გაეშვა მხოლოდ OpenGL-ით: {summary}. სხვა გრაფიკული ინტერფეისების ხელახლა საცდელად შეცვალეთ პარამეტრები › წარმადობა › გრაფიკული პროცესორი ან გაუშვით WGPU_BACKEND ცვლადის მითითებით
+@msg	The last start of 91Ninjas Studio ended on {name} before its window appeared, so it started on {summary}. To try that graphics processor again, change Preferences › Performance › Graphics Processor or start with WGPU_BACKEND set	91Ninjas Studio-ის ბოლო გაშვება ფანჯრის გამოჩენამდე შეწყდა (გრაფიკული პროცესორი: {name}), ამიტომ 91Ninjas Studio გაეშვა: {summary}. ამ გრაფიკული პროცესორის ხელახლა საცდელად შეცვალეთ პარამეტრები › წარმადობა › გრაფიკული პროცესორი ან გაუშვით WGPU_BACKEND ცვლადის მითითებით
+@msg	The last start of 91Ninjas Studio ended while it listed the graphics processors, so it started on {summary} with OpenGL alone. To try the other graphics backends again, change Preferences › Performance › Graphics Processor or start with WGPU_BACKEND set	91Ninjas Studio-ის ბოლო გაშვება გრაფიკული პროცესორების ჩამოთვლისას შეწყდა, ამიტომ 91Ninjas Studio გაეშვა მხოლოდ OpenGL-ით: {summary}. სხვა გრაფიკული ინტერფეისების ხელახლა საცდელად შეცვალეთ პარამეტრები › წარმადობა › გრაფიკული პროცესორი ან გაუშვით WGPU_BACKEND ცვლადის მითითებით
 @msg	the image can't be read as a texture	გამოსახულების ტექსტურად წაკითხვა ვერ ხერხდება
 # Upstream sync 2026-10-18 (5e681065): SVG Interactivity, Live Paint gaps, graph column designs, Cutout/Neon Glow/Poster Edges, undo step names, blend spine errors.
 	Add Event	მოვლენის დამატება
@@ -5423,7 +5423,7 @@ imageTrace	Outline	კონტური
 	Symbol Stainer	სიმბოლოების შეფერადება
 	Symbol Styler	სიმბოლოების სტილიზაცია
 	Text Orientation	ტექსტის ორიენტაცია
-	The name in the save panel was “{typed}”; VectorCraft added the file type's extension. Replacing the file overwrites its contents.	შენახვის პანელში სახელი იყო „{typed}“; VectorCraft-მა ფაილის ტიპის გაფართოება დაამატა. ფაილის ჩანაცვლება მის შიგთავსს გადააწერს.
+	The name in the save panel was “{typed}”; 91Ninjas Studio added the file type's extension. Replacing the file overwrites its contents.	შენახვის პანელში სახელი იყო „{typed}“; 91Ninjas Studio-მა ფაილის ტიპის გაფართოება დაამატა. ფაილის ჩანაცვლება მის შიგთავსს გადააწერს.
 	Thread Text	ტექსტის დაკავშირება
 	Trackpad Gesture to Rotate View	ხედის შემობრუნება ტრეკპადის ჟესტით
 	Typing	აკრეფა
@@ -6185,7 +6185,7 @@ breakText	Glyphs	გლიფები
 	Malayalam	მალაიალამური
 	Odia	ორია
 	Urdu	ურდუ
-	VectorCraft {release} and later (version {n})	VectorCraft {release} და უფრო ახალი (ვერსია {n})
+	91Ninjas Studio {release} and later (version {n})	91Ninjas Studio {release} და უფრო ახალი (ვერსია {n})
 # Document Tools add-on: Export All Open Documents (#4920).
 	Export All Open Documents as PDF	ყველა ღია დოკუმენტის ექსპორტი PDF-ად
 	Export All Open Documents as SVG	ყველა ღია დოკუმენტის ექსპორტი SVG-ად

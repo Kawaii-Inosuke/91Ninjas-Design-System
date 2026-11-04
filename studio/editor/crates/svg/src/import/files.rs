@@ -154,7 +154,7 @@ impl Files {
                 let (path, file) = target(h, opts.folder);
                 let read = file.and_then(|file| opts.read.and_then(|read| read(&file)));
                 let source = match read {
-                    Some((bytes, link)) => files.source(bytes, link).ok_or("is not an image VectorCraft reads"),
+                    Some((bytes, link)) => files.source(bytes, link).ok_or("is not an image 91Ninjas Studio reads"),
                     None => Err("not found"),
                 };
                 let source = source.or_else(|why| {

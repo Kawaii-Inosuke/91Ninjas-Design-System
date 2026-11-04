@@ -280,6 +280,7 @@ const OWN_NAMESPACES: &[&str] = &[
     INKSCAPE,
     "http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd",
     crate::EDITING_NS,
+    crate::OLD_EDITING_NS,
 ];
 
 /// The most attributes in other applications' namespaces kept per element (the file is untrusted).

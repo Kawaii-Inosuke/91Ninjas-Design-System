@@ -5,7 +5,7 @@ use super::{AppearanceItem, Arc, BTreeSet, BlendMode, Document, Node, NodeId, No
 pub(super) const TEXT_LEFT_OUT: &str = "text objects on hidden layers or hidden objects couldn't be read, so they are left out";
 
 /// The same for a file without a page to take shown type from.
-pub(super) const TYPE_LEFT_OUT: &str = "text objects of kinds VectorCraft doesn't read from the file's text document yet are left out";
+pub(super) const TYPE_LEFT_OUT: &str = "text objects of kinds 91Ninjas Studio doesn't read from the file's text document yet are left out";
 
 pub(super) const ART_LEFT_OUT: &str = "hidden layers have art this can't read";
 

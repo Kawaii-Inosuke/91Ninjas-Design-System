@@ -17,12 +17,14 @@ use crate::import_scan::text_string;
 use crate::lab_spot::find;
 
 /// The embedded file holding the native document (its name among the PDF's attachments).
-pub const EDITING_FILE: &str = "vectorcraft-editing.vectorcraft";
+pub const EDITING_FILE: &str = "91ninjas-studio-editing.91studio";
+/// The name written before 1.0.4 (D-046): still read.
+pub const OLD_EDITING_FILE: &str = "vectorcraft-editing.vectorcraft";
 /// The editing file's name from before the project was renamed: still read.
 pub const LEGACY_EDITING_FILE: &str = "drawcraft-editing.drawcraft";
 
 /// The editing file's description: this text, then the hash of the pages.
-const DESCRIPTION: &str = "VectorCraft editing data; page hash ";
+const DESCRIPTION: &str = "91Ninjas Studio editing data; page hash ";
 /// Stands for the hash while the PDF is written: as long as a hash, so writing the hash over it
 /// keeps every offset.
 const PLACEHOLDER: &str = "0000000000000000";
@@ -126,7 +128,7 @@ fn editing_spec<'a>(node: &Dict<'a>, depth: usize, seen: &mut HashSet<ObjectIden
 fn is_editing_file(spec: &Dict<'_>) -> bool {
     [&b"UF"[..], b"F"].into_iter().filter_map(|k| spec.get::<PdfString<'_>>(k)).any(|name| {
         let name = text_string(name.as_bytes());
-        name == EDITING_FILE || name == LEGACY_EDITING_FILE
+        name == EDITING_FILE || name == OLD_EDITING_FILE || name == LEGACY_EDITING_FILE
     })
 }
 

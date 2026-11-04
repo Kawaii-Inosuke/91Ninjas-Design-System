@@ -48,7 +48,7 @@ cat >"$APP/Contents/Info.plist" <<PLIST
   <key>CFBundleName</key><string>91Ninjas Studio</string>
   <key>CFBundleDisplayName</key><string>91Ninjas Studio</string>
   <key>CFBundleExecutable</key><string>91ninjas-studio</string>
-  <key>CFBundleIdentifier</key><string>ai.storyteller.91ninjas-studio</string>
+  <key>CFBundleIdentifier</key><string>com.91ninjas.studio</string>
   <key>CFBundleIconFile</key><string>91Ninjas Studio</string>
   <key>CFBundlePackageType</key><string>APPL</string>
   <key>CFBundleShortVersionString</key><string>$SHORT</string>
@@ -56,6 +56,24 @@ cat >"$APP/Contents/Info.plist" <<PLIST
   <key>LSMinimumSystemVersion</key><string>11.0</string>
   <key>NSHighResolutionCapable</key><true/>
   <key>LSApplicationCategoryType</key><string>public.app-category.graphics-design</string>
+  <key>NSHumanReadableCopyright</key><string>© 2026 91Ninjas. All rights reserved. Internal use only.</string>
+  <key>CFBundleDocumentTypes</key>
+  <array><dict>
+    <key>CFBundleTypeName</key><string>91Ninjas Studio design</string>
+    <key>CFBundleTypeRole</key><string>Editor</string>
+    <key>LSHandlerRank</key><string>Owner</string>
+    <key>CFBundleTypeIconFile</key><string>91Ninjas Studio</string>
+    <key>LSItemContentTypes</key><array><string>com.91ninjas.studio.design</string></array>
+  </dict></array>
+  <key>UTExportedTypeDeclarations</key>
+  <array><dict>
+    <key>UTTypeIdentifier</key><string>com.91ninjas.studio.design</string>
+    <key>UTTypeDescription</key><string>91Ninjas Studio design</string>
+    <key>UTTypeConformsTo</key><array><string>public.data</string></array>
+    <key>UTTypeIconFile</key><string>91Ninjas Studio</string>
+    <key>UTTypeTagSpecification</key>
+    <dict><key>public.filename-extension</key><array><string>91studio</string><string>vectorcraft</string></array></dict>
+  </dict></array>
 </dict>
 </plist>
 PLIST

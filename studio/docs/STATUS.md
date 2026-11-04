@@ -1,6 +1,6 @@
 # 91Ninjas Studio: where it stands
 
-*Last updated: 2026-11-04. Details: `phases/PHASE-0..7.md`, decisions `DECISIONS.md` (D-001 to D-041).*
+*Last updated: 2026-11-04. Details: `phases/PHASE-0..7.md`, decisions `DECISIONS.md` (D-001 to D-045).*
 
 ## What it is now
 **91Ninjas Studio** is a desktop vector editor (a fork of VectorCraft, Rust) with the 91Ninjas look. Designers make
@@ -42,7 +42,7 @@ Later the same day: releases 1.0.0 and 1.0.1 published · manager password (D-04
 `91ninjas-studio` (D-042) · one-click updates without signing, checked against SHA256SUMS (D-043).
 
 ## Next
-1. **Release `v1.0.2`** (rename + one-click updates); install it on a Windows and a Mac laptop.
-2. **Test an update:** release `v1.0.3` and check Update and restart on both.
+1. **1.0.3** (Windows fixes, D-044): install by hand over 1.0.2 on Windows; check the app stays open with no console window.
+2. **1.0.4** (`.91studio`, members list, JPEG/PDF/EPS in Export, D-045): the first one-click update to try (1.0.3 → 1.0.4).
 3. A short designer guide; send designers the releases link, team repo and key.
 4. Real use with designers, then tune Claude's instructions (`studio_agents/claude/`).

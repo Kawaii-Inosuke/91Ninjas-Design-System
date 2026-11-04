@@ -74,4 +74,4 @@ uv run python -m studio_agents.render.layered_svg design.html -o design.svg --na
 The sidecar server comes in Phase 3.
 
 ## Troubleshooting
-- **GPU or window problems on Linux:** see `editor/docs/development.md`, sections "Linux: Wayland and X11" and "Desktop graphics processor". `WGPU_POWER_PREF=high` and `WAYLAND_DISPLAY=` are the usual fixes.
+- **GPU or window problems on Linux:** `WGPU_POWER_PREF=high` (use the faster graphics card) or `WAYLAND_DISPLAY=` (run under X11) are the usual fixes.

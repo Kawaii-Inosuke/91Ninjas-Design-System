@@ -171,7 +171,7 @@ fn as_printed(doc: &Document, o: &LegacyAiOptions) -> Document {
     d
 }
 
-/// The legacy `.ai` `bytes` run as a PostScript program (VectorCraft's PostScript reader, with the
+/// The legacy `.ai` `bytes` run as a PostScript program (91Ninjas Studio's PostScript reader, with the
 /// file's prolog) draws as `doc`, written with options `o` (its first artboard the file's), prints
 /// ([`as_printed`]): the same art in the same places, in the same colours.
 fn prints_as(bytes: &[u8], doc: &Document, o: &LegacyAiOptions) {
@@ -523,7 +523,7 @@ fn radials() -> Document {
 
 /// Every radial gradient instance has its highlight `Bh` (§3.5.5): `0 0 0 0 Bh` when it is at the
 /// center (§3.5.6), on fills, strokes, in groups, compound paths and clipping groups, and an
-/// off-center one within the gradient's circle. Linear instances have none. VectorCraft reads
+/// off-center one within the gradient's circle. Linear instances have none. 91Ninjas Studio reads
 /// back one linear and at least seven radial gradients, each with its stops, and the circle, the
 /// square and the off-center square in their place.
 #[test]

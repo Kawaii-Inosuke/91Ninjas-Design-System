@@ -27,7 +27,7 @@ pub const OPTIONS: &[FormatOption] = &[
         name: "version",
         ty: "integer",
         default: "4",
-        description: "the format version to write: 4 (current), or 3, 2 or 1 for older VectorCraft versions (1 and 2 are never compressed; newer features they don't know are lost there)",
+        description: "the format version to write: 4 (current), or 3, 2 or 1 for older 91Ninjas Studio versions (1 and 2 are never compressed; newer features they don't know are lost there)",
     },
     FormatOption {
         name: "preview",
@@ -103,7 +103,7 @@ pub const AI_OPTIONS: &[FormatOption] = &[
         name: "aiVersion",
         ty: "string",
         default: "\"pdf\"",
-        description: "pdf (a PDF-compatible .ai carrying the VectorCraft document) or 7 (the legacy, PostScript-form .ai of version 7, which keeps layers, groups, compound paths and clipping groups in apps that read it; one file per artboard, transparent objects opaque; the other .ai options don't apply; an error for a .ait template)",
+        description: "pdf (a PDF-compatible .ai carrying the 91Ninjas Studio document) or 7 (the legacy, PostScript-form .ai of version 7, which keeps layers, groups, compound paths and clipping groups in apps that read it; one file per artboard, transparent objects opaque; the other .ai options don't apply; an error for a .ait template)",
     },
     FormatOption {
         name: "transparentImages",

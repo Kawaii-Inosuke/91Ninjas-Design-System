@@ -383,12 +383,12 @@ impl<'a> Reader<'a> {
     pub(super) fn image_from(&mut self, vals: Vec<V>, data: &[u8]) -> Result<(), String> {
         let space = self.raster.as_ref().and_then(|r| r.space.clone()).unwrap_or_default();
         let Some(m) = vals.iter().find_map(|v| if let V::Arr(a) = v { Some(Self::nums(a)) } else { None }) else {
-            self.warn("an image VectorCraft can't read was left out");
+            self.warn("an image 91Ninjas Studio can't read was left out");
             return Ok(());
         };
         let n = Self::nums(&vals);
         let [_, _, _, _, w, h, bits, kind, alpha, _, binary, ..] = n.as_slice() else {
-            self.warn("an image VectorCraft can't read was left out");
+            self.warn("an image 91Ninjas Studio can't read was left out");
             return Ok(());
         };
         let (w, h) = (*w as u64, *h as u64);
@@ -397,7 +397,7 @@ impl<'a> Reader<'a> {
             return Ok(());
         }
         if w == 0 || h == 0 || ![1.0, 8.0].contains(bits) {
-            self.warn("an image VectorCraft can't read was left out");
+            self.warn("an image 91Ninjas Studio can't read was left out");
             return Ok(());
         }
         let channels: usize = match space.as_str() {
@@ -461,12 +461,12 @@ impl<'a> Reader<'a> {
             }
         }
         let Some(img) = image::RgbaImage::from_raw(w as u32, h as u32, rgba) else {
-            self.warn("an image VectorCraft can't read was left out");
+            self.warn("an image 91Ninjas Studio can't read was left out");
             return Ok(());
         };
         let mut png = vec![];
         if img.write_to(&mut std::io::Cursor::new(&mut png), image::ImageFormat::Png).is_err() {
-            self.warn("an image VectorCraft can't read was left out");
+            self.warn("an image 91Ninjas Studio can't read was left out");
             return Ok(());
         }
         self.add_raster(ImageBlob::new("image/png", png), None, &m, (w as u32, h as u32))
@@ -480,13 +480,13 @@ impl<'a> Reader<'a> {
         // downwards, (u, -v): pixels → (u, -v) → art space. Flipping the matrix's result instead
         // gives the same place only when the image isn't rotated (b = c = 0).
         let [a, b, c, d, tx, ty] = m else {
-            self.warn("an image VectorCraft can't read was left out");
+            self.warn("an image 91Ninjas Studio can't read was left out");
             return Ok(());
         };
         let to_doc = self.space();
         let xf = to_doc * Affine::new([*a, *b, *c, *d, *tx, *ty]) * FLIP;
         if !xf.as_coeffs().iter().all(|v| v.is_finite()) || xf.determinant().abs() < 1e-12 {
-            self.warn("an image VectorCraft can't read was left out");
+            self.warn("an image 91Ninjas Studio can't read was left out");
             return Ok(());
         }
         let mask = alpha.and_then(|a| self.alpha_mask(a, w, h, xf));

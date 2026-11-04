@@ -141,13 +141,13 @@ fn dialogs(app: &mut VectorcraftApp, ui: &mut egui::Ui) {
     crate::dialogs::show(app, ui.ctx());
 }
 
-/// The active document written to `Poster.vectorcraft` in a folder of its own named after `tag`
+/// The active document written to `Poster.91studio` in a folder of its own named after `tag`
 /// → (the folder, the file).
 fn saved_document(app: &mut VectorcraftApp, tag: &str) -> (std::path::PathBuf, String) {
     let b64 = app.run("document.serialize", json!({})).unwrap()["dataBase64"].as_str().unwrap().to_string();
     let dir = std::env::temp_dir().join(format!("vc-picks-{tag}-{}", std::process::id()));
     std::fs::create_dir_all(&dir).unwrap();
-    let file = dir.join("Poster.vectorcraft");
+    let file = dir.join("Poster.91studio");
     std::fs::write(&file, vectorcraft_format::base64_decode(&b64).unwrap()).unwrap();
     (dir, file.to_string_lossy().into_owned())
 }
@@ -479,7 +479,7 @@ fn preset_dialogs_export_asks_off_the_ui_thread() {
 #[test]
 fn a_sheets_answer_given_its_extension_asks_before_replacing() {
     let (mut app, shown, written) = app();
-    app.services.exists = Some(Box::new(|p: &str| p == "/art/card.vectorcraft"));
+    app.services.exists = Some(Box::new(|p: &str| p == "/art/card.91studio"));
     app.run("file.new", json!({"width": 100, "height": 80})).unwrap();
     assert!(app.run("file.save", json!({})).is_err());
     shown.answer(&["/art/card"]);
@@ -489,7 +489,7 @@ fn a_sheets_answer_given_its_extension_asks_before_replacing() {
     poll(&mut app);
     assert_eq!(app.ui.status, "");
     crate::dialogs::confirm(&mut app).unwrap();
-    assert_eq!(*written.borrow(), ["/art/card.vectorcraft"]);
+    assert_eq!(*written.borrow(), ["/art/card.91studio"]);
     assert!(shown.requests().is_empty(), "{:?}", shown.requests());
 }
 
@@ -739,7 +739,7 @@ fn save_changes_answers_for_its_own_document() {
     modified(&mut app);
     app.run("file.new", json!({"width": 100, "height": 80})).unwrap();
     modified(&mut app);
-    app.session.active_mut().unwrap().path = Some("/art/c.vectorcraft".into());
+    app.session.active_mut().unwrap().path = Some("/art/c.91studio".into());
     let uids: Vec<u64> = app.session.documents().iter().map(|d| d.uid).collect();
     app.run("file.closeAll", json!({})).unwrap();
     assert_eq!(app.ui.dialog.as_ref().map(|d| d.fields["uid"].clone()), Some(json!(uids[1])), "asks about A");
@@ -747,9 +747,9 @@ fn save_changes_answers_for_its_own_document() {
     assert!(crate::dialogs::confirm(&mut app).is_err());
     assert!(matches!(shown.requests().as_slice(), [PickRequest::Save(_)]));
     app.run("file.close", json!({"index": 0})).unwrap();
-    shown.answer(&["/art/a.vectorcraft"]);
+    shown.answer(&["/art/a.91studio"]);
     poll(&mut app);
-    assert_eq!(*written.borrow(), ["/art/a.vectorcraft"], "{}", app.ui.status);
+    assert_eq!(*written.borrow(), ["/art/a.91studio"], "{}", app.ui.status);
     assert_eq!(app.session.documents().iter().map(|d| d.uid).collect::<Vec<_>>(), [uids[2]], "A closed, C untouched");
     let d = app.ui.dialog.as_ref().expect("Save Changes asks about C next");
     assert_eq!((d.kind.as_str(), &d.fields["uid"]), (crate::unsaved::KIND, &json!(uids[2])));
@@ -1061,7 +1061,7 @@ fn missing_fonts_says_why_the_folder_picked_wasnt_searched() {
     let root = std::fs::canonicalize(vectorcraft_testkit::temp_dir("missing-fonts-refused")).unwrap();
     app.run("file.new", json!({"width": 400, "height": 300})).unwrap();
     app.run("text.create", json!({"x": 10, "y": 40, "text": "Type", "font": "Findme Sans 3"})).unwrap();
-    let doc = root.join("doc.vectorcraft");
+    let doc = root.join("doc.91studio");
     app.run("document.save", json!({"path": doc.to_string_lossy()})).unwrap();
     app.session.execute("file.close", &json!({})).unwrap();
     crate::io::open_path(&mut app, &doc.to_string_lossy()).unwrap();
@@ -1086,6 +1086,6 @@ fn missing_fonts_says_why_the_folder_picked_wasnt_searched() {
     }
     assert_eq!(app.ui.dialog.as_ref().map(|d| d.str("state")).as_deref(), Some("failed"));
     let text = crate::tests_labels::painted_text(&mut app, |app, ui| crate::dialogs::show(app, ui.ctx()));
-    assert!(text.contains("VectorCraft doesn't search other apps' or the system's folders"), "{text}");
+    assert!(text.contains("91Ninjas Studio doesn't search other apps' or the system's folders"), "{text}");
     assert!(!text.contains("Not found"), "the folder wasn't searched: {text}");
 }

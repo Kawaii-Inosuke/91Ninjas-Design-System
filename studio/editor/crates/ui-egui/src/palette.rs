@@ -11,7 +11,9 @@ use crate::{VectorcraftApp, menus};
 pub fn items() -> Vec<(String, String, String)> {
     let mut items = vec![];
     // Aliases kept for older scripts run a command that is listed already.
-    for c in vectorcraft_engine::command_specs().iter().filter(|c| !vectorcraft_engine::cmd::is_alias(c.id)) {
+    // 91studio: the original makers' community and project links aren't offered (an internal tool; D-045).
+    let upstream_links = ["help.discord", "help.website", "help.appPage", "help.github", "help.links"];
+    for c in vectorcraft_engine::command_specs().iter().filter(|c| !vectorcraft_engine::cmd::is_alias(c.id) && !upstream_links.contains(&c.id)) {
         let path = c.menu.join(" › ");
         let label = if path.is_empty() { c.label.to_string() } else { format!("{path} › {}", c.label) };
         items.push((label, c.id.to_string(), menus::shortcut_of(c.id).unwrap_or("").to_string()));

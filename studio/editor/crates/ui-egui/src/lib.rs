@@ -11,7 +11,7 @@
 pub const UPDATE_APP: craft_update::app::App = craft_update::app::App {
     // 91studio: 91Ninjas Studio, updated from the team's public releases repo (D-040, D-042). The id is the
     // program's file name (`91ninjas-studio.exe`), the installers' asset names (`91ninjas-studio-<v>-<os>-<arch>`)
-    // and the Mac bundle id (`ai.storyteller.91ninjas-studio`, which the updater checks); the name is the
+    // (the Mac bundle id is `com.91ninjas.studio`: our own updater, D-043/D-046, doesn't use craft-update's); the name is the
     // install folder, the Mac app and what installers register. 1.0.0 and 1.0.1 used `vectorcraft`.
     id: "91ninjas-studio",
     former_ids: &["vectorcraft"],
@@ -48,7 +48,6 @@ mod brand;
 pub mod canvas;
 pub mod chrome;
 mod clipboard_probe;
-pub mod community;
 pub mod control;
 pub mod credits;
 pub mod cursors;

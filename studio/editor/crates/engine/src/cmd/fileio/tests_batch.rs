@@ -143,7 +143,7 @@ fn document_formats_write_one_artboard_each() {
     s.execute("shape.ellipse", &json!({"x": second.x0 + 5.0, "y": 5, "width": 10, "height": 10})).unwrap();
     let r = export(&mut s, json!({"formats": [{"format": "vectorcraft"}, {"format": "ai"}, {"format": "eps"}]}));
     let n = names(&r);
-    assert_eq!(n, ["Artboard-1.vectorcraft", "Artboard-1.ai", "Artboard-1.eps", "Artboard-2.vectorcraft", "Artboard-2.ai", "Artboard-2.eps"]);
+    assert_eq!(n, ["Artboard-1.91studio", "Artboard-1.ai", "Artboard-1.eps", "Artboard-2.91studio", "Artboard-2.ai", "Artboard-2.eps"]);
     let all = files(&r);
     for (name, bytes) in &all {
         let mut t = Session::new();

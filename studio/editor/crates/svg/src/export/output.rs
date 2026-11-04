@@ -248,7 +248,7 @@ impl Writer<'_> {
         if let Some(p) = self.foreign_ns.get(ns) {
             return p.clone();
         }
-        const OURS: [&str; 5] = ["svg", "xlink", "rdf", "dc", "vectorcraft"];
+        const OURS: [&str; 6] = ["svg", "xlink", "rdf", "dc", "studio", "vectorcraft"];
         let base = if wanted.to_ascii_lowercase().starts_with("xml") { "ns" } else { wanted };
         let taken = |p: &str| OURS.contains(&p) || self.foreign_ns.values().any(|q| q == p);
         let mut prefix = base.to_string();
@@ -366,7 +366,7 @@ impl Writer<'_> {
             line(
                 2,
                 &format!(
-                    "<vectorcraft:document xmlns:vectorcraft=\"{EDITING_NS}\" hash=\"{hash}\"><![CDATA[{}]]></vectorcraft:document>",
+                    "<studio:document xmlns:studio=\"{EDITING_NS}\" hash=\"{hash}\"><![CDATA[{}]]></studio:document>",
                     base64_encode(bytes)
                 ),
             );

@@ -145,7 +145,7 @@
 	[Press Quality]	[Nyomdai minőség]
 	[Smallest File Size]	[Legkisebb fájlméret]
 	[Unnamed]	[Névtelen]
-	[VectorCraft Default]	[VectorCraft alapértelmezés]
+	[91Ninjas Studio Default]	[91Ninjas Studio alapértelmezés]
 	A file dialog is open: choose there first	Egy fájlválasztó ablak nyitva van: előbb ott válassz
 	A File…	Fájlba…
 	A lower value follows the stroke closely; a higher one gives fewer points and smoother curves.	Kisebb értéknél az útvonal szorosan követi a vonást, nagyobbnál kevesebb pont és simább görbék keletkeznek.
@@ -156,7 +156,7 @@
 	A5	A5
 	A6	A6
 	About	Névjegy
-	About VectorCraft	A VectorCraft névjegye
+	About 91Ninjas Studio	A 91Ninjas Studio névjegye
 	above	fölötte
 	Above Text	Szöveg fölött
 	Absolute	Abszolút
@@ -286,7 +286,7 @@ font-technology	Variable	Változó
 	Appearance of Black	A fekete megjelenése
 	Appearance panel	Megjelenés panel
 	Appearance Panel	Megjelenés panel
-	Applies the next time VectorCraft starts.	A VectorCraft következő indításakor lép életbe.
+	Applies the next time 91Ninjas Studio starts.	A 91Ninjas Studio következő indításakor lép életbe.
 	Applies when the linked file is relinked or updated.	A csatolt fájl újracsatolásakor vagy frissítésekor érvényes.
 	Apply	Alkalmaz
 	Apply Brush	Ecset alkalmazása
@@ -562,7 +562,7 @@ font-technology	Variable	Változó
 	Check Script	Szkript ellenőrzése
 	Check Script…	Szkript ellenőrzése…
 	Copy Report	Jelentés másolása
-	VectorCraft read this script without running it.	A VectorCraft futtatás nélkül olvasta be ezt a szkriptet.
+	91Ninjas Studio read this script without running it.	A 91Ninjas Studio futtatás nélkül olvasta be ezt a szkriptet.
 	Needs nothing beyond plain JavaScript	Csak egyszerű JavaScript kell hozzá
 	Needs the script language's own objects or directives	A szkriptnyelv saját objektumai vagy direktívái kellenek hozzá
 	Needs the document model	A dokumentummodell kell hozzá
@@ -1015,7 +1015,7 @@ font-technology	Variable	Változó
 	Diamond (open)	Rombusz (nyitott)
 	Difference	Különbség
 	Differences from [Default]:	Eltérések az [Alapértelmezett] beállítástól:
-	Differences from VectorCraft Default:	Eltérések a VectorCraft alapértelmezésétől:
+	Differences from 91Ninjas Studio Default:	Eltérések a 91Ninjas Studio alapértelmezésétől:
 	Differences from {preset}:	Eltérések ettől: {preset}:
 	Diffuse Glow	Szórt ragyogás
 	Diffuse Glow…	Szórt ragyogás…
@@ -1515,7 +1515,7 @@ file-filter	Print presets	Nyomtatási előbeállítások
 file-filter	Export presets	Exportálási előbeállítások
 file-filter	SVG Compressed	Tömörített SVG
 file-filter	PDF-compatible .ai	PDF-kompatibilis .ai
-file-filter	VectorCraft Template	VectorCraft-sablon
+file-filter	91Ninjas Studio Template	91Ninjas Studio-sablon
 file-filter	Templates	Sablonok
 	Flattener Preview	Lapítás előnézete
 	Flip	Tükrözés
@@ -1806,7 +1806,7 @@ file-filter	Templates	Sablonok
 	Hide Thumbnail	Bélyegkép elrejtése
 	Hide Thumbnails	Bélyegképek elrejtése
 	Hide Transparency Grid	Átlátszósági rács elrejtése
-	Hide VectorCraft	VectorCraft elrejtése
+	Hide 91Ninjas Studio	91Ninjas Studio elrejtése
 	High	Magas
 	High (300 ppi)	Magas (300 ppi)
 	High Contrast	Erős kontraszt
@@ -2079,7 +2079,7 @@ file-filter	Templates	Sablonok
 	Keep this row's colors (exclude)	A sor színeinek megtartása (kizárás)
 	Keep visible surfaces only when expanding	Kibontáskor csak a látható felületek megtartása
 	Keep:	Megtartás:
-	Keeps the document editable: VectorCraft reopens the PDF with nothing lost. For files you'll edit again.	Szerkeszthető marad a dokumentum: a VectorCraft veszteség nélkül nyitja meg újra a PDF-et. Azokhoz a fájlokhoz, amelyeket még szerkesztesz.
+	Keeps the document editable: 91Ninjas Studio reopens the PDF with nothing lost. For files you'll edit again.	Szerkeszthető marad a dokumentum: a 91Ninjas Studio veszteség nélkül nyitja meg újra a PDF-et. Azokhoz a fájlokhoz, amelyeket még szerkesztesz.
 	Key Color:	Kulcsszín:
 	Kerning	Alávágás
 	Keyboard Increment	Billentyűzetes lépésköz
@@ -2090,7 +2090,7 @@ file-filter	Templates	Sablonok
 # Import Shortcut Set (Keyboard Shortcuts › Import…, File › Open of a .kys file) and its commands.
 	Import Shortcut Set	Billentyűparancs-készlet importálása
 	Import Shortcut Set…	Billentyűparancs-készlet importálása…
-	Each entry of the file is matched to a VectorCraft tool, command or panel. Check the matches and answer what is left.	A VectorCraft a fájl minden bejegyzését megfelelteti valamelyik eszközének, parancsának vagy paneljének. Ellenőrizd a megfeleltetéseket, és válaszolj a még nyitott kérdésekre.
+	Each entry of the file is matched to a 91Ninjas Studio tool, command or panel. Check the matches and answer what is left.	A 91Ninjas Studio a fájl minden bejegyzését megfelelteti valamelyik eszközének, parancsának vagy paneljének. Ellenőrizd a megfeleltetéseket, és válaszolj a még nyitott kérdésekre.
 	Keys	Billentyűk
 	The file writes keys and modifiers as codes. Check the proposed meanings and answer the codes that are not known yet.	A fájl a billentyűket és a módosítóbillentyűket kódként tárolja. Ellenőrizd a javasolt jelentéseket, és add meg a még ismeretlen kódok jelentését.
 	Click, then press the key this code stands for (Esc cancels)	Kattints, majd nyomd le azt a billentyűt, amelyet ez a kód jelöl (Esc: mégse)
@@ -2101,7 +2101,7 @@ file-filter	Templates	Sablonok
 	not known yet	még ismeretlen
 	Shortcuts	Billentyűparancsok
 	In the File	A fájlban
-	In VectorCraft	A VectorCraftban
+	In 91Ninjas Studio	A 91Ninjas Studioban
 	Needs Attention Only	Csak a figyelmet igénylő sorok
 	Ready	Kész
 	Needs a choice	Választás szükséges
@@ -2110,7 +2110,7 @@ file-filter	Templates	Sablonok
 	Tools take a single key (optionally with Shift)	Eszközhöz egyetlen billentyű rendelhető (Shifttel vagy anélkül)
 	A later row takes this shortcut	Ezt a billentyűparancsot egy későbbi sor kapja meg
 	Same item as a later row	Ugyanaz az elem, mint egy későbbi sorban
-	Start from VectorCraft Defaults	Kiindulás a VectorCraft-alapértékekből
+	Start from 91Ninjas Studio Defaults	Kiindulás a 91Ninjas Studio-alapértékekből
 	Add to the Current Shortcuts	Hozzáadás a jelenlegi billentyűparancsokhoz
 	Remember My Choices	Választásaim megjegyzése
 	{ready} of {total} ready	Kész: {ready}/{total}
@@ -2124,7 +2124,7 @@ file-filter	Templates	Sablonok
 	Forget Import Matches	Importálási megfeleltetések elfelejtése
 @plural	agrees with {n} default shortcut|agrees with {n} default shortcuts	{n} alapértelmezett billentyűparanccsal egyezik
 @plural	{n} part of the file wasn't read|{n} parts of the file weren't read	Be nem olvasott fájlrész: {n}
-@msg	This shortcut file is in a form VectorCraft can't read.	Ez a billentyűparancsfájl olyan formátumú, amelyet a VectorCraft nem tud beolvasni.
+@msg	This shortcut file is in a form 91Ninjas Studio can't read.	Ez a billentyűparancsfájl olyan formátumú, amelyet a 91Ninjas Studio nem tud beolvasni.
 @msg	not a shortcut set: the text doesn't start with a slash name and an opening brace	nem billentyűparancs-készlet: a szöveg nem perjeles névvel és nyitó kapcsos zárójellel kezdődik
 	Keywords:	Kulcsszavak:
 	Kind	Típus
@@ -2723,9 +2723,9 @@ file-filter	Templates	Sablonok
 	Open Recent Files	Legutóbbi fájlok megnyitása
 	Open Swatch Library	Színminta-könyvtár megnyitása
 	Open the URL in the web browser	URL megnyitása a böngészőben
-	Opening it left out what VectorCraft can't read yet ({what}), so replacing it loses that for good. Save under another name to keep it.	Megnyitáskor kimaradt, amit a VectorCraft még nem tud beolvasni ({what}), ezért a fájl felülírásával ez végleg elvész. A megtartásához mentsd más néven.
+	Opening it left out what 91Ninjas Studio can't read yet ({what}), so replacing it loses that for good. Save under another name to keep it.	Megnyitáskor kimaradt, amit a 91Ninjas Studio még nem tud beolvasni ({what}), ezért a fájl felülírásával ez végleg elvész. A megtartásához mentsd más néven.
 	“{name}” already exists. Replace it?	„{name}” már létezik. Felülírod?
-	The name in the save panel was “{typed}”; VectorCraft added the file type's extension. Replacing the file overwrites its contents.	A mentési panelen megadott név ez volt: „{typed}”, a VectorCraft pedig hozzáadta a fájltípus kiterjesztését. A fájl felülírásakor a tartalma elvész.
+	The name in the save panel was “{typed}”; 91Ninjas Studio added the file type's extension. Replacing the file overwrites its contents.	A mentési panelen megadott név ez volt: „{typed}”, a 91Ninjas Studio pedig hozzáadta a fájltípus kiterjesztését. A fájl felülírásakor a tartalma elvész.
 	Open…	Megnyitás…
 	Optical	Optikai
 	Optical Margin Alignment	Optikai margóigazítás
@@ -2814,8 +2814,8 @@ file-filter	Templates	Sablonok
 	Paragraph Style Options	Bekezdésstílus beállításai
 	Paragraph Styles	Bekezdésstílusok
 	Paragraph Symbol	Bekezdésjel
-	Part of ArtCraft. MIT OR Apache-2.0. Fonts: Source Sans 3, Inter, JetBrains Mono (OFL). Icons: Lucide (ISC) + VectorCraft.	Az ArtCraft része. MIT OR Apache-2.0. Betűtípusok: Source Sans 3, Inter, JetBrains Mono (OFL). Ikonok: Lucide (ISC) + VectorCraft.
-	Part of ArtCraft. MIT OR Apache-2.0. Fonts: Source Sans 3, Inter, JetBrains Mono, Noto Sans SC (OFL). Icons: Lucide (ISC) + VectorCraft.	Az ArtCraft része. MIT OR Apache-2.0. Betűtípusok: Source Sans 3, Inter, JetBrains Mono, Noto Sans SC (OFL). Ikonok: Lucide (ISC) + VectorCraft.
+	Part of ArtCraft. MIT OR Apache-2.0. Fonts: Source Sans 3, Inter, JetBrains Mono (OFL). Icons: Lucide (ISC) + 91Ninjas Studio.	Az ArtCraft része. MIT OR Apache-2.0. Betűtípusok: Source Sans 3, Inter, JetBrains Mono (OFL). Ikonok: Lucide (ISC) + 91Ninjas Studio.
+	Part of ArtCraft. MIT OR Apache-2.0. Fonts: Source Sans 3, Inter, JetBrains Mono, Noto Sans SC (OFL). Icons: Lucide (ISC) + 91Ninjas Studio.	Az ArtCraft része. MIT OR Apache-2.0. Betűtípusok: Source Sans 3, Inter, JetBrains Mono, Noto Sans SC (OFL). Ikonok: Lucide (ISC) + 91Ninjas Studio.
 	Password	Jelszó
 	Paste	Beillesztés
 	Paste in Back	Beillesztés mögé
@@ -3049,7 +3049,7 @@ mark-style	Japanese	Japán
 	Quarter Space	Negyedkvirt-szóköz
 	Quick Actions	Gyorsműveletek
 	Quickly start a new file	Új fájl gyors létrehozása
-	Quit VectorCraft	Kilépés a VectorCraftból
+	Quit 91Ninjas Studio	Kilépés a 91Ninjas Studioból
 	Radar Graph Tool	Sugárdiagram
 	Radial	Körkörös
 	Radial Blur	Körkörös elmosás
@@ -4338,16 +4338,16 @@ mark-style	Japanese	Japán
 	Vector Halftone	Vektoros rácspontos raszter
 	Vector Halftone…	Vektoros rácspontos raszter…
 	Vector illustration — fast, open, scriptable.	Vektoros illusztráció – gyors, nyílt, szkriptelhető.
-	VectorCraft copies the fonts to {folder}.	A VectorCraft ide másolja a betűtípusokat: {folder}.
-	VectorCraft Default	VectorCraft alapértelmezés
-	VectorCraft Defaults	VectorCraft-alapértékek
-	VectorCraft didn't quit normally last time. These documents had unsaved changes:	A VectorCraft legutóbb nem szabályosan lépett ki. Ezekben a dokumentumokban mentetlen módosítások voltak:
-	VectorCraft documents: one locked object, updated when the file changes.	VectorCraft-dokumentumok: egyetlen zárolt objektum, amely a fájl változásakor frissül.
-	VectorCraft Generic CMYK (SWOP-like)	VectorCraft általános CMYK (SWOP-szerű)
-	VectorCraft Help…	VectorCraft súgó…
-	VectorCraft on getartcraft.com	A VectorCraft a getartcraft.com oldalon
-	VectorCraft on GitHub	A VectorCraft a GitHubon
-	VectorCraft Swatches (.vcswatches)	VectorCraft-színminták (.vcswatches)
+	91Ninjas Studio copies the fonts to {folder}.	A 91Ninjas Studio ide másolja a betűtípusokat: {folder}.
+	91Ninjas Studio Default	91Ninjas Studio alapértelmezés
+	91Ninjas Studio Defaults	91Ninjas Studio-alapértékek
+	91Ninjas Studio didn't quit normally last time. These documents had unsaved changes:	A 91Ninjas Studio legutóbb nem szabályosan lépett ki. Ezekben a dokumentumokban mentetlen módosítások voltak:
+	91Ninjas Studio documents: one locked object, updated when the file changes.	91Ninjas Studio-dokumentumok: egyetlen zárolt objektum, amely a fájl változásakor frissül.
+	91Ninjas Studio Generic CMYK (SWOP-like)	91Ninjas Studio általános CMYK (SWOP-szerű)
+	91Ninjas Studio Help…	91Ninjas Studio súgó…
+	91Ninjas Studio on getartcraft.com	A 91Ninjas Studio a getartcraft.com oldalon
+	91Ninjas Studio on GitHub	A 91Ninjas Studio a GitHubon
+	91Ninjas Studio Swatches (.vcswatches)	91Ninjas Studio-színminták (.vcswatches)
 	Vectors	Vektorok
 	Version	Verzió
 	Version {version} — open-source vector illustration in pure Rust.	Verzió: {version} – nyílt forráskódú vektoros illusztráció, tisztán Rustban.
@@ -4413,7 +4413,7 @@ mark-style	Japanese	Japán
 	WebP	WebP
 	Weight	Vastagság
 	Weight:	Vastagság:
-	Welcome to VectorCraft	Üdvözöl a VectorCraft
+	Welcome to 91Ninjas Studio	Üdvözöl a 91Ninjas Studio
 	When pasting text	Szöveg beillesztésekor
 	White	Fehér
 	White Intensity	Fehér erőssége
@@ -4646,7 +4646,7 @@ imageTrace	Outline	Körvonal
 @msg	action is required	az action kötelező
 @msg	add a format to export	adj meg egy exportálási formátumot
 @msg	already editing a pattern	már folyik egy mintázat szerkesztése
-@msg	an image VectorCraft can't read was left out	kimaradt egy kép, amelyet a VectorCraft nem tud olvasni
+@msg	an image 91Ninjas Studio can't read was left out	kimaradt egy kép, amelyet a 91Ninjas Studio nem tud olvasni
 @msg	graphs come in as plain art, without their data or settings	a diagramok egyszerű grafikaként kerülnek be, adataik és beállításaik nélkül
 @msg	an image whose data is cut short was left out	kimaradt egy csonka adatú kép
 @msg	linked pictures show the low-resolution preview saved in the file until their files are found: relink them in the Links panel	a csatolt képek a fájlban mentett kis felbontású előnézetet mutatják, amíg a fájljaik elő nem kerülnek: csatold őket újra a Csatolások panelen
@@ -4692,7 +4692,7 @@ imageTrace	Outline	Körvonal
 @msg	can't encode the document: {0}	a dokumentum nem kódolható: {0}
 @msg	can't parse shortcut `{c}`	a billentyűparancs nem értelmezhető: `{c}`
 @msg	can't parse shortcut `{s}` for `{k}`	a billentyűparancs nem értelmezhető: `{s}` (ehhez: `{k}`)
-@msg	can't save version {0}: VectorCraft writes versions {MIN_VERSION} to {VERSION}	ez a verzió nem menthető: {0}; a VectorCraft ezeket a verziókat írja: {MIN_VERSION}–{VERSION}
+@msg	can't save version {0}: 91Ninjas Studio writes versions {MIN_VERSION} to {VERSION}	ez a verzió nem menthető: {0}; a 91Ninjas Studio ezeket a verziókat írja: {MIN_VERSION}–{VERSION}
 @msg	can't write .{ext} images	ilyen kép nem írható: .{ext}
 @msg	cannot distort a zero-size bounding box	nulla méretű befoglaló keret nem torzítható
 @msg	cannot read PDF: {0}	a PDF nem olvasható: {0}
@@ -4761,7 +4761,7 @@ imageTrace	Outline	Körvonal
 @msg	Packaging {_1}	Csomagolás: {_1}
 @msg	Placing {_1}	Elhelyezés: {_1}
 @msg	Pasting	Beillesztés
-@msg	file version {0} is newer than this VectorCraft supports ({VERSION})	a fájl verziója újabb, mint amit ez a VectorCraft támogat: {0} (támogatott: {VERSION})
+@msg	file version {0} is newer than this 91Ninjas Studio supports ({VERSION})	a fájl verziója újabb, mint amit ez a 91Ninjas Studio támogat: {0} (támogatott: {VERSION})
 @msg	Flatten Transparency: select objects to flatten	Átlátszóság lapítása: jelöld ki a lapítandó objektumokat
 @msg	Flatten Transparency: {e}	Átlátszóság lapítása: {e}
 @msg	freeform line {i} must be an array of point indices	a szabad formájú vonal pontindexek tömbje kell legyen: {i}
@@ -4802,7 +4802,7 @@ imageTrace	Outline	Körvonal
 @msg	invalid parameters for `{cmd}`: {msg}	érvénytelen paraméterek (`{cmd}`): {msg}
 @msg	invalid PDF setting: {0}	érvénytelen PDF-beállítás: {0}
 @msg	invalid restored panel group	érvénytelen visszaállított panelcsoport
-@msg	is not an image VectorCraft reads	nem olyan kép, amelyet a VectorCraft olvas
+@msg	is not an image 91Ninjas Studio reads	nem olyan kép, amelyet a 91Ninjas Studio olvas
 @msg	it ends inside a group or compound path	egy csoporton vagy összetett útvonalon belül ér véget
 @msg	it ends inside a layer	egy rétegen belül ér véget
 @msg	it ends inside a multi-layer mask	egy többrétegű maszkon belül ér véget
@@ -4817,9 +4817,9 @@ imageTrace	Outline	Körvonal
 @msg	it has too many text objects	túl sok szövegobjektumot tartalmaz
 @msg	it has too many values in a row	túl sok érték áll benne egymás után
 @msg	it has too much text	túl sok szöveget tartalmaz
-@msg	it has {_1}, which VectorCraft doesn't read from it yet	olyat tartalmaz, amelyet a VectorCraft még nem olvas be belőle: {_1}
-@msg	it uses `{at}`, which VectorCraft's PostScript reader doesn't know	olyan elemet használ, amelyet a VectorCraft PostScript-olvasója nem ismer: `{at}`
-@msg	it uses `{at}`, which VectorCraft's PostScript reader doesn't know, in {procs}	olyan elemet használ, amelyet a VectorCraft PostScript-olvasója nem ismer: `{at}` (itt: {procs})
+@msg	it has {_1}, which 91Ninjas Studio doesn't read from it yet	olyat tartalmaz, amelyet a 91Ninjas Studio még nem olvas be belőle: {_1}
+@msg	it uses `{at}`, which 91Ninjas Studio's PostScript reader doesn't know	olyan elemet használ, amelyet a 91Ninjas Studio PostScript-olvasója nem ismer: `{at}`
+@msg	it uses `{at}`, which 91Ninjas Studio's PostScript reader doesn't know, in {procs}	olyan elemet használ, amelyet a 91Ninjas Studio PostScript-olvasója nem ismer: `{at}` (itt: {procs})
 @msg	its editing data doesn't say where its art is	a szerkesztési adataiból nem derül ki, hol van a grafikája
 @msg	its editing data doesn't say where its artboard is	a szerkesztési adataiból nem derül ki, hol van a rajztáblája
 @msg	its editing data has no layers	a szerkesztési adataiban nincsenek rétegek
@@ -4847,7 +4847,7 @@ imageTrace	Outline	Körvonal
 @msg	Live Paint takes paths and compound paths: convert type, images and other objects to paths first	Az élő festés útvonalakat és összetett útvonalakat fogad: előbb alakítsd útvonallá a szöveget, a képeket és a többi objektumot
 @msg	Live Paint: select paths or compound paths	Élő festés: jelölj ki útvonalakat vagy összetett útvonalakat
 @msg	Live Paint: these paths are too degenerate to paint	Élő festés: ezek az útvonalak túlságosan elfajultak a festéshez
-@msg	Loading VectorCraft…	A VectorCraft betöltése…
+@msg	Loading 91Ninjas Studio…	A 91Ninjas Studio betöltése…
 @msg	Make Guides: select paths	Segédvonalak létrehozása: jelölj ki útvonalakat
 @msg	missing `folder`	hiányzik: `folder`
 @msg	missing `id` (see plugin.list)	hiányzik: `id` (lásd: plugin.list)
@@ -4899,7 +4899,7 @@ imageTrace	Outline	Körvonal
 @msg	no file system here	itt nincs fájlrendszer
 @msg	no file writer	nincs fájlíró
 @msg	no files to place	nincs elhelyezendő fájl
-@msg	`{file}` isn't a VectorCraft document, a PDF or a PDF-compatible .ai file	nem VectorCraft-dokumentum, PDF- vagy PDF-kompatibilis .ai-fájl: `{file}`
+@msg	`{file}` isn't a 91Ninjas Studio document, a PDF or a PDF-compatible .ai file	nem 91Ninjas Studio-dokumentum, PDF- vagy PDF-kompatibilis .ai-fájl: `{file}`
 @msg	No fonts are missing in this document	Ebből a dokumentumból nem hiányzik betűtípus
 @msg	no format to export to	nincs exportálási formátum
 @msg	no free recovery area	nincs szabad helyreállítási terület
@@ -4948,7 +4948,7 @@ imageTrace	Outline	Körvonal
 @msg	not an action set file	nem műveletkészlet-fájl
 @msg	the action set file is larger than 8 MiB	a műveletkészlet-fájl nagyobb 8 MiB-nál
 @msg	the action set file holds more than 1,000 actions	a műveletkészlet-fájl több mint 1000 műveletet tartalmaz
-@msg	the action set file needs a later version of VectorCraft	a műveletkészlet-fájlhoz a VectorCraft újabb verziója kell
+@msg	the action set file needs a later version of 91Ninjas Studio	a műveletkészlet-fájlhoz a 91Ninjas Studio újabb verziója kell
 @msg	an action in the action set file has more than 10,000 steps	a műveletkészlet-fájl egyik műveletében több mint 10 000 lépés van
 @msg	no such anchor	nincs ilyen horgonypont
 @msg	no such artboard	nincs ilyen rajztábla
@@ -4984,8 +4984,8 @@ imageTrace	Outline	Körvonal
 @msg	not a PSD file	nem PSD-fájl
 @msg	not a stored central record	nem tárolt központi rekord
 @msg	not a valid plug-in module: {0}	nem érvényes bővítménymodul: {0}
-@msg	not a VectorCraft file: {0}	nem VectorCraft-fájl: {0}
-@msg	not a VectorCraft shortcut set (missing `overrides`)	nem VectorCraft-billentyűparancskészlet (hiányzik: `overrides`)
+@msg	not a 91Ninjas Studio file: {0}	nem 91Ninjas Studio-fájl: {0}
+@msg	not a 91Ninjas Studio shortcut set (missing `overrides`)	nem 91Ninjas Studio-billentyűparancskészlet (hiányzik: `overrides`)
 @msg	not a blend	nem összemosás
 @msg	not an EMF or WMF file	nem EMF- vagy WMF-fájl
 @msg	not found	nem található
@@ -5196,9 +5196,9 @@ imageTrace	Outline	Körvonal
 @msg	the file was read up to an error ({why}): what follows it was left out	a fájl beolvasása egy hibáig jutott ({why}): az utána következő rész kimaradt
 @msg	the file's preview header points outside the file	a fájl előnézeti fejléce a fájlon kívülre mutat
 @msg	the files come to more than 1 GB: add fewer at a time	a fájlok együtt nagyobbak 1 GB-nál: egyszerre kevesebbet adj hozzá
-@msg	The graphics processor tried first couldn't show the window, so VectorCraft started again on {summary}	Az először kipróbált grafikus processzor nem tudta megjeleníteni az ablakot, ezért a VectorCraft újraindult ezen: {summary}
-@msg	The last start of VectorCraft ended on {name} before its window appeared, so it started on {summary}. To try that graphics processor again, change Preferences › Performance › Graphics Processor or start with WGPU_BACKEND set	A VectorCraft legutóbbi indítása még az ablak megjelenése előtt véget ért ezen: {name}, ezért most ezen indult el: {summary}. Ha újra ki szeretnéd próbálni ezt a grafikus processzort, módosítsd a Beállítások › Teljesítmény › Grafikus processzor értékét, vagy indítsd a WGPU_BACKEND változó beállításával
-@msg	The last start of VectorCraft ended while it listed the graphics processors, so it started on {summary} with OpenGL alone. To try the other graphics backends again, change Preferences › Performance › Graphics Processor or start with WGPU_BACKEND set	A VectorCraft legutóbbi indítása a grafikus processzorok listázása közben ért véget, ezért most csak OpenGL-lel indult el ezen: {summary}. Ha újra ki szeretnéd próbálni a többi grafikus felületet, módosítsd a Beállítások › Teljesítmény › Grafikus processzor értékét, vagy indítsd a WGPU_BACKEND változó beállításával
+@msg	The graphics processor tried first couldn't show the window, so 91Ninjas Studio started again on {summary}	Az először kipróbált grafikus processzor nem tudta megjeleníteni az ablakot, ezért a 91Ninjas Studio újraindult ezen: {summary}
+@msg	The last start of 91Ninjas Studio ended on {name} before its window appeared, so it started on {summary}. To try that graphics processor again, change Preferences › Performance › Graphics Processor or start with WGPU_BACKEND set	A 91Ninjas Studio legutóbbi indítása még az ablak megjelenése előtt véget ért ezen: {name}, ezért most ezen indult el: {summary}. Ha újra ki szeretnéd próbálni ezt a grafikus processzort, módosítsd a Beállítások › Teljesítmény › Grafikus processzor értékét, vagy indítsd a WGPU_BACKEND változó beállításával
+@msg	The last start of 91Ninjas Studio ended while it listed the graphics processors, so it started on {summary} with OpenGL alone. To try the other graphics backends again, change Preferences › Performance › Graphics Processor or start with WGPU_BACKEND set	A 91Ninjas Studio legutóbbi indítása a grafikus processzorok listázása közben ért véget, ezért most csak OpenGL-lel indult el ezen: {summary}. Ha újra ki szeretnéd próbálni a többi grafikus felületet, módosítsd a Beállítások › Teljesítmény › Grafikus processzor értékét, vagy indítsd a WGPU_BACKEND változó beállításával
 @msg	The graphics were lost and couldn't be restarted.	A grafikus megjelenítés megszakadt, és nem sikerült újraindítani.
 @msg	The graphics were lost and have been restarted	A grafikus megjelenítés megszakadt, és újraindult
 @msg	the guide is on a hidden or locked layer	a segédvonal rejtett vagy zárolt rétegen van
@@ -5303,10 +5303,10 @@ imageTrace	Outline	Körvonal
 @msg	a new document won't read these variables back with their kind: {names}	egy új dokumentum nem a fajtájukkal olvassa vissza ezeket a változókat: {names}
 @msg	a new document refuses this file because of these variables: {names}	egy új dokumentum ezen változók miatt elutasítja ezt a fájlt: {names}
 @msg	the header `{header}` for `{name}` would read back as the variable `{other}`: rename one of them	a(z) `{name}` változó `{header}` fejléce a(z) `{other}` változóként olvasódna vissza: nevezze át az egyiket
-@msg	VectorCraft doesn't search other apps' or the system's folders: {path}	a VectorCraft nem keres más alkalmazások és a rendszer mappáiban: {path}
-@msg	VectorCraft doesn't search the Shared or Public folder in Users: {path}	a VectorCraft nem keres a Users alatti Shared és Public mappában: {path}
-@msg	VectorCraft failed to start: {e}	A VectorCraft nem tudott elindulni: {e}
-@msg	VectorCraft's Fonts folder isn't set here: the desktop app and vectorcraft-cli set it	a VectorCraft Fonts mappája itt nincs beállítva: az asztali alkalmazás és a vectorcraft-cli állítja be
+@msg	91Ninjas Studio doesn't search other apps' or the system's folders: {path}	a 91Ninjas Studio nem keres más alkalmazások és a rendszer mappáiban: {path}
+@msg	91Ninjas Studio doesn't search the Shared or Public folder in Users: {path}	a 91Ninjas Studio nem keres a Users alatti Shared és Public mappában: {path}
+@msg	91Ninjas Studio failed to start: {e}	A 91Ninjas Studio nem tudott elindulni: {e}
+@msg	91Ninjas Studio's Fonts folder isn't set here: the desktop app and vectorcraft-cli set it	a 91Ninjas Studio Fonts mappája itt nincs beállítva: az asztali alkalmazás és a vectorcraft-cli állítja be
 @msg	`{key}: {top}` and `options.{key}: {inner}` disagree: give the option once	`{key}: {top}` és `options.{key}: {inner}` ellentmond egymásnak: a beállítást csak egyszer adja meg
 @msg	version {0} files can't be compressed: only version {COMPRESSED_SINCE} and later open compressed files	ilyen verziójú fájl nem tömöríthető: {0}; tömörített fájlt csak ez a verzió és az újabbak nyitnak meg: {COMPRESSED_SINCE}
 @msg	width and height are at least 1 pixel	a szélesség és a magasság legalább 1 pixel
@@ -5350,7 +5350,7 @@ imageTrace	Outline	Körvonal
 @msg	{path}: {e}	{path}: {e}
 @msg	{status} ({e})	{status} ({e})
 @msg	{tool} isn't in a toolbar group of several tools	az eszköz nincs többeszközös eszköztár-csoportban: {tool}
-@msg	the compressed file unpacks to more than VectorCraft reads ({_1} MB of document, {_2} MB per image)	a tömörített fájl kicsomagolva nagyobb lenne, mint amennyit a VectorCraft beolvas ({_1} MB dokumentum, képenként {_2} MB)
+@msg	the compressed file unpacks to more than 91Ninjas Studio reads ({_1} MB of document, {_2} MB per image)	a tömörített fájl kicsomagolva nagyobb lenne, mint amennyit a 91Ninjas Studio beolvas ({_1} MB dokumentum, képenként {_2} MB)
 @msg	the document is too large to save compressed ({0}): save it with Use Compression off	a dokumentum túl nagy a tömörített mentéshez ({0}): mentsd a Tömörítés használata beállítás kikapcsolásával
 @msg	the file stopped being read (please report this bug)	a fájl beolvasása megszakadt (kérjük, jelentsd ezt a hibát)
 	Concentric Dividers:	Koncentrikus osztók:
@@ -6181,7 +6181,7 @@ breakText	Glyphs	Glifák
 	Malayalam	Malajálam
 	Odia	Odia
 	Urdu	Urdu
-	VectorCraft {release} and later (version {n})	VectorCraft {release} és újabb (verzió: {n})
+	91Ninjas Studio {release} and later (version {n})	91Ninjas Studio {release} és újabb (verzió: {n})
 # Document Tools add-on: Export All Open Documents (#4920).
 	Export All Open Documents as PDF	Az összes megnyitott dokumentum exportálása PDF-ként
 	Export All Open Documents as SVG	Az összes megnyitott dokumentum exportálása SVG-ként

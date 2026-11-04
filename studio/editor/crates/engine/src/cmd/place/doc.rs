@@ -208,7 +208,7 @@ impl Fib {
         if field(2)? < 0x00C1 {
             return Err(bad(
                 cmd,
-                "the Word document was saved by Word 6.0 or Word 95, which VectorCraft doesn't read; save it as a Word 97-2003 document",
+                "the Word document was saved by Word 6.0 or Word 95, which 91Ninjas Studio doesn't read; save it as a Word 97-2003 document",
             ));
         }
         let flags = field(10)?;
@@ -220,7 +220,7 @@ impl Fib {
         if flags & 0x0004 != 0 {
             return Err(bad(
                 cmd,
-                "the Word document was last saved with fast save, which VectorCraft doesn't read; save it again with fast save turned off",
+                "the Word document was last saved with fast save, which 91Ninjas Studio doesn't read; save it again with fast save turned off",
             ));
         }
         // csw (14 16-bit values) and cslw (22 32-bit values) are fixed.

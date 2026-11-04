@@ -221,7 +221,7 @@ fn finish_destination(s: &mut Session, run: &Run<'_>, stem: &str, ext: &str, sou
         }
         "folder" => {
             let folder = run.dest_folder.ok_or_else(|| bad("action.batch", "missing destination folder"))?;
-            let out_ext = if ext.is_empty() { "vectorcraft" } else { ext };
+            let out_ext = if ext.is_empty() { vectorcraft_format::STUDIO_EXTENSION } else { ext };
             let out = output_path(folder, stem, out_ext).ok_or_else(|| bad("action.batch", "unsafe destination file name"))?;
             let out = out.to_string_lossy().into_owned();
             // When `close` is false (data sets), write a copy so the template keeps its path.
@@ -408,7 +408,7 @@ fn output_path(folder: &str, stem: &str, ext: &str) -> Option<std::path::PathBuf
 #[cfg(not(target_arch = "wasm32"))]
 fn write_result(s: &mut Session, path: &str, ext: &str, as_copy: bool) -> Result<()> {
     use super::SAVE_FORMATS;
-    let id = if ext == "drawcraft" { "vectorcraft" } else { ext };
+    let id = if matches!(ext, "drawcraft" | "91studio") { "vectorcraft" } else { ext };
     if SAVE_FORMATS.contains(&id) {
         let cmd = if as_copy { "file.saveCopy" } else { "document.save" };
         s.execute(cmd, &json!({"path": path}))?;

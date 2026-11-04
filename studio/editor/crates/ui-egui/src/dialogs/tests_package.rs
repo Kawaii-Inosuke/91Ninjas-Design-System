@@ -48,7 +48,7 @@ fn saved(dir: &Folder) -> VectorcraftApp {
         .unwrap();
     std::fs::write(dir.path("pic.png"), &png).unwrap();
     app.run("file.place", json!({"path": dir.path("pic.png")})).unwrap();
-    app.run("document.save", json!({"path": dir.path("card.vectorcraft")})).unwrap();
+    app.run("document.save", json!({"path": dir.path("card.91studio")})).unwrap();
     app
 }
 
@@ -80,7 +80,7 @@ fn package_writes_the_folder_then_offers_to_show_it() {
     let r = confirm(&mut app).unwrap();
     assert!(!app.session.active().unwrap().is_dirty());
     let root = std::path::Path::new(&out).join("card Folder");
-    assert!(root.join("card.vectorcraft").is_file() && root.join("Links/pic.png").is_file(), "{r}");
+    assert!(root.join("card.91studio").is_file() && root.join("Links/pic.png").is_file(), "{r}");
     let d = app.ui.dialog.as_ref().unwrap();
     assert_eq!((d.kind.as_str(), d.str("__command")), (confirm::KIND, "file.showPackage".to_string()));
     let opened: Rc<RefCell<Vec<String>>> = Rc::default();
@@ -169,7 +169,7 @@ fn edits_after_ok_do_not_reach_the_package() {
     assert_eq!(app.ui.dialog.as_ref().map(|d| d.kind.as_str()), Some("package"));
     assert!(app.ui.status.starts_with("Packaged 3 files in "), "{}", app.ui.status);
     let files = files.lock().unwrap();
-    let (_, bytes) = files.iter().find(|(p, _)| p.ends_with("card.vectorcraft")).unwrap();
+    let (_, bytes) = files.iter().find(|(p, _)| p.ends_with("card.91studio")).unwrap();
     assert_eq!(vectorcraft_format::load(bytes).unwrap().node_count(), nodes, "the document as it was at OK");
     assert!(files.iter().any(|(p, _)| p.ends_with("pic.png")), "its linked file");
 }
@@ -179,7 +179,7 @@ fn a_dirty_documents_save_is_written_before_its_package() {
     let dir = Folder::new("dirty");
     let gate = Gate::default();
     let (mut app, files) = saved_with_worker(&dir, &gate);
-    let (doc, out) = (dir.path("card.vectorcraft"), dir.path("out"));
+    let (doc, out) = (dir.path("card.91studio"), dir.path("out"));
     // With Background Export on, the save and the package both run in the background, and the
     // worker writes the save first.
     app.run("shape.rectangle", json!({"x": 0, "y": 0, "width": 10, "height": 10})).unwrap();
@@ -237,7 +237,7 @@ fn a_package_made_at_once_waits_for_one_in_the_background() {
     assert!(app.background.jobs.is_empty(), "the package in the background was written first");
     release.join().unwrap();
     assert_eq!(written(&files).len(), 3);
-    assert!(std::path::Path::new(&out).join("card Folder/card.vectorcraft").is_file());
+    assert!(std::path::Path::new(&out).join("card Folder/card.91studio").is_file());
 }
 
 #[test]
@@ -374,7 +374,7 @@ fn a_refused_file_is_named_once() {
     let (out, elsewhere, other) = (dir.path("out"), dir.path("elsewhere"), dir.path("other"));
     std::fs::create_dir_all(&elsewhere).unwrap();
     std::fs::create_dir_all(&other).unwrap();
-    let doc = std::path::Path::new(&out).join("card Folder").join("card.vectorcraft").to_string_lossy().into_owned();
+    let doc = std::path::Path::new(&out).join("card Folder").join("card.91studio").to_string_lossy().into_owned();
     let (elsewhere, other) = (std::path::Path::new(&elsewhere), std::path::Path::new(&other));
     for write_roots in [vec![elsewhere], vec![elsewhere, other]] {
         let roots = AutomationRoots::new(&[], &write_roots).unwrap().unwrap();

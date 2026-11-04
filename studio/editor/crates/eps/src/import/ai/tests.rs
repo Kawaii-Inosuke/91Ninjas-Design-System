@@ -1243,7 +1243,7 @@ fn ai_variable_library_state() {
     let (vars, _) = read_library(&sample_variable_sets("none", &[]));
     assert!(!vars.locked);
     assert_eq!(vars.active_dataset.as_deref(), Some("ds_two"));
-    // A lock VectorCraft doesn't know reads as unlocked, with a note.
+    // A lock 91Ninjas Studio doesn't know reads as unlocked, with a note.
     let (vars, notes) = read_library(&sample_variable_sets("everything", &[]));
     assert!(!vars.locked);
     assert_eq!(notes, [partly_read(1)]);
@@ -1304,7 +1304,7 @@ fn ai_variable_library_edge_cases() {
         var("  ", "textcontent"),
         var(&"n".repeat(256), "textcontent"),
         xml_node(1, "variable", XmlValue::Str(""), &[("varName", XmlValue::Bool(true))], &[]),
-        // A trait VectorCraft doesn't know: unknown kind.
+        // A trait 91Ninjas Studio doesn't know: unknown kind.
         var("Fancy", "sparkle"),
         var("Shown", "visibility"),
         var("File", "fileref"),
@@ -1528,11 +1528,11 @@ fn images_with_alpha_channels() {
     assert!(art(&r.doc).is_empty() && r.warnings.iter().any(|w| w.contains("cut short")));
 }
 
-/// Editing data `data` opens without its one image and with the warning "an image VectorCraft can't read was left out" once.
+/// Editing data `data` opens without its one image and with the warning "an image 91Ninjas Studio can't read was left out" once.
 fn image_left_out_with_a_warning(data: &[u8]) {
     let r = read(data).unwrap();
     assert!(art(&r.doc).is_empty(), "{:#?}", art(&r.doc));
-    let left_out = r.warnings.iter().filter(|w| *w == "an image VectorCraft can't read was left out").count();
+    let left_out = r.warnings.iter().filter(|w| *w == "an image 91Ninjas Studio can't read was left out").count();
     assert_eq!(left_out, 1, "{:?}", r.warnings);
 }
 
@@ -2667,7 +2667,7 @@ fn an_undefined_highlight_is_a_gradient_without_one() {
 #[test]
 fn an_undefined_number_anywhere_else_is_still_an_operator_the_reader_doesnt_know() {
     let err = read(stream(&layer(&format!("{RED}-- 5 m\n0 10 L\n10 10 L\nf\n"))).as_bytes()).unwrap_err();
-    assert!(err.contains("operators VectorCraft doesn't know (`--`)"), "{err}");
+    assert!(err.contains("operators 91Ninjas Studio doesn't know (`--`)"), "{err}");
 }
 
 #[test]
@@ -4603,7 +4603,7 @@ fn a_graphs_settings_paint_nothing_and_its_drawn_art_paints_as_usual() {
 fn graph_operators_outside_a_graph_are_unknown() {
     for stray in ["Gs\n", "Go\n", "1 2 Gc\n"] {
         let err = read(stream7(&layer7("L", &format!("{}{stray}", rect_path(0.0, 0.0, 5.0, 5.0)))).as_bytes()).unwrap_err();
-        assert!(err.contains("operators VectorCraft doesn't know"), "{stray}: {err}");
+        assert!(err.contains("operators 91Ninjas Studio doesn't know"), "{stray}: {err}");
     }
     for (stray, op) in [("%_2 0 0 0 Go\n", "`Go`"), ("%_GS\n", "`GS`"), ("%_1 2 Gc\n", "`Gc`")] {
         let r = read(stream7(&layer7("L", &format!("{}f\n{stray}", rect_path(0.0, 0.0, 5.0, 5.0)))).as_bytes()).unwrap();

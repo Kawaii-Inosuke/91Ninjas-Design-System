@@ -401,7 +401,7 @@ fn export_extensions_name_every_writable_format() {
     assert_eq!(
         exts,
         [
-            "vectorcraft",
+            "91studio",
             "svg",
             "svgz",
             "pdf",
@@ -607,7 +607,7 @@ fn export_for_screens_one_page_per_pdf_unique_names() {
     assert_eq!(image::load_from_memory(&b64(&r["files"][0])).unwrap().width(), 50);
     // A native row: each artboard as a document of its own to edit.
     let r = s.execute("document.exportForScreens", &json!({"range": "1", "formats": [{"format": "vectorcraft"}]})).unwrap();
-    assert!(r["files"][0]["name"].as_str().unwrap().ends_with(".vectorcraft"), "{r}");
+    assert!(r["files"][0]["name"].as_str().unwrap().ends_with(".91studio"), "{r}");
     let _ = std::fs::remove_dir_all(dir);
 }
 

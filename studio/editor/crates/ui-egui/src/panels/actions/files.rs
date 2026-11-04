@@ -77,7 +77,7 @@ pub fn read_set(text: &str, name: &str) -> Result<ActionSet, String> {
         return Err("not an action set file".into());
     }
     if f.version != 1 {
-        return Err("the action set file needs a later version of VectorCraft".into());
+        return Err("the action set file needs a later version of 91Ninjas Studio".into());
     }
     if f.actions.len() > MAX_SET_ACTIONS {
         return Err("the action set file holds more than 1,000 actions".into());

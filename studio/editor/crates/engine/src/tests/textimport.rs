@@ -419,7 +419,7 @@ fn malformed_docx_fails_cleanly() {
     let e = place(&mut s, "a.docx", &store(&[("readme.txt", b"x")])).unwrap_err();
     assert!(e.contains("no main document part"), "{e}");
     let e = place(&mut s, "a.zip", &store(&[("readme.txt", b"x")])).unwrap_err();
-    assert!(e.contains("not a format VectorCraft reads"), "a ZIP archive of something else isn't read as a Word document: {e}");
+    assert!(e.contains("not a format 91Ninjas Studio reads"), "a ZIP archive of something else isn't read as a Word document: {e}");
     let sheet = r#"<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"/>"#;
     let e = place(&mut s, "a.docx", &store(&[("word/document.xml", sheet.as_bytes())])).unwrap_err();
     assert!(e.contains("not a WordprocessingML document"), "{e}");
@@ -833,14 +833,14 @@ fn malformed_doc_fails_cleanly() {
     };
     let words = || Word97 { pieces: vec![("words\r", true)], ..Word97::default() };
     let e = place(&mut s, "a.doc", b"Plain words, not a compound file").unwrap_err();
-    assert!(e.contains("not a format VectorCraft reads"), "{e}");
+    assert!(e.contains("not a format 91Ninjas Studio reads"), "{e}");
     // An RTF file named `.doc` is still placed as RTF.
     let r = place(&mut s, "a.doc", br"{\rtf1 Rich}").unwrap();
     assert_eq!((r["format"].as_str(), placed(&s, &r).0.as_str()), (Some("rtf"), "Rich"));
     let e = place(&mut s, "a.doc", &compound_file(&[("Other", b"x")])).unwrap_err();
     assert!(e.contains("no WordDocument stream"), "{e}");
     let e = place(&mut s, "a.bin", &compound_file(&[("Other", b"x")])).unwrap_err();
-    assert!(e.contains("not a format VectorCraft reads"), "a compound file of something else isn't read as a Word document: {e}");
+    assert!(e.contains("not a format 91Ninjas Studio reads"), "a compound file of something else isn't read as a Word document: {e}");
     let e = place(&mut s, "a.doc", &[&[0xD0, 0xCF, 0x11, 0xE0, 0xA1, 0xB1, 0x1A, 0xE1][..], &[0; 600]].concat()).unwrap_err();
     assert!(e.contains("compound file structure is damaged"), "{e}");
     let e = place(&mut s, "a.doc", &compound_file(&[("WordDocument", &[0; 900])])).unwrap_err();

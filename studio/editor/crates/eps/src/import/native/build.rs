@@ -599,10 +599,10 @@ fn unread_error(unread: &[(NodeId, Vec<String>)]) -> String {
     let (ops, other): (Vec<&str>, Vec<&str>) = kinds.into_iter().partition(|k| k.starts_with('`'));
     let mut list: BTreeSet<String> = other.into_iter().map(String::from).collect();
     if !ops.is_empty() {
-        list.insert(format!("operators VectorCraft doesn't know ({})", ops.join(", ")));
+        list.insert(format!("operators 91Ninjas Studio doesn't know ({})", ops.join(", ")));
     }
     let list: Vec<&str> = list.iter().map(String::as_str).collect();
-    format!("it has {}, which VectorCraft doesn't read from it yet", ai::join_and(&list))
+    format!("it has {}, which 91Ninjas Studio doesn't read from it yet", ai::join_and(&list))
 }
 
 /// The page's text objects in `shown` that the page objects replacing `doc`'s unread objects hold

@@ -45,9 +45,10 @@ fn prefs_path_with(os: &str, legacy: bool, env: impl Fn(&str) -> Option<OsString
     platform_dir(os, legacy, &env).map(|p| p.join("ui.json"))
 }
 
-/// The platform's settings folder of VectorCraft, or of DrawCraft (`legacy`).
+/// The platform's settings folder: 91Ninjas Studio's, or the one before 1.0.4 (`legacy`), whose settings
+/// the first start of 1.0.4 reads in (D-046).
 fn platform_dir(os: &str, legacy: bool, env: &impl Fn(&str) -> Option<OsString>) -> Option<PathBuf> {
-    let (name, lower) = if legacy { ("DrawCraft", "drawcraft") } else { ("VectorCraft", "vectorcraft") };
+    let (name, lower) = if legacy { ("VectorCraft", "vectorcraft") } else { ("91Ninjas Studio", "91ninjas-studio") };
     match os {
         "macos" => env("HOME").map(|p| PathBuf::from(p).join("Library/Application Support").join(name)),
         "windows" => env("APPDATA").map(|p| PathBuf::from(p).join(name)),
@@ -214,13 +215,13 @@ mod tests {
 
     #[test]
     fn unset_override_keeps_platform_paths_and_legacy_migration() {
-        assert_eq!(prefs_path_with("macos", false, environment, installed), Some("/user/Library/Application Support/VectorCraft/ui.json".into()));
-        assert_eq!(prefs_path_with("macos", true, environment, installed), Some("/user/Library/Application Support/DrawCraft/ui.json".into()));
-        assert_eq!(prefs_path_with("windows", false, environment, installed), Some("/roaming/VectorCraft/ui.json".into()));
-        assert_eq!(prefs_path_with("linux", false, environment, installed), Some("/xdg-config/vectorcraft/ui.json".into()));
+        assert_eq!(prefs_path_with("macos", false, environment, installed), Some("/user/Library/Application Support/91Ninjas Studio/ui.json".into()));
+        assert_eq!(prefs_path_with("macos", true, environment, installed), Some("/user/Library/Application Support/VectorCraft/ui.json".into()));
+        assert_eq!(prefs_path_with("windows", false, environment, installed), Some("/roaming/91Ninjas Studio/ui.json".into()));
+        assert_eq!(prefs_path_with("linux", false, environment, installed), Some("/xdg-config/91ninjas-studio/ui.json".into()));
         assert_eq!(
             prefs_path_with("linux", true, |key| if key == "HOME" { environment(key) } else { None }, installed),
-            Some("/user/.config/drawcraft/ui.json".into())
+            Some("/user/.config/vectorcraft/ui.json".into())
         );
     }
 
@@ -246,8 +247,8 @@ mod tests {
     fn a_run_without_preferences_never_looks_for_the_portable_folder() {
         let env = |key: &str| if key == "VECTORCRAFT_NO_PREFS" { Some("1".into()) } else { environment(key) };
         let portable = || -> Option<PathBuf> { panic!("the portable folder is not looked for under VECTORCRAFT_NO_PREFS") };
-        assert_eq!(prefs_path_with("windows", false, env, portable), Some("/roaming/VectorCraft/ui.json".into()));
-        assert_eq!(prefs_path_with("windows", true, env, portable), Some("/roaming/DrawCraft/ui.json".into()));
+        assert_eq!(prefs_path_with("windows", false, env, portable), Some("/roaming/91Ninjas Studio/ui.json".into()));
+        assert_eq!(prefs_path_with("windows", true, env, portable), Some("/roaming/VectorCraft/ui.json".into()));
     }
 
     #[test]

@@ -17,7 +17,7 @@ fn main() -> Result<(), String> {
         .set("ProductName", "91Ninjas Studio")
         .set("FileDescription", "91Ninjas Studio: on-brand design with Claude")
         .set("CompanyName", "91Ninjas")
-        .set("LegalCopyright", "Built on VectorCraft (MIT OR Apache-2.0). 91Ninjas name and mark: 91Ninjas.")
+        .set("LegalCopyright", "© 2026 91Ninjas. All rights reserved. Internal use only.")
         .set("OriginalFilename", "91ninjas-studio.exe")
         .set("InternalName", "91ninjas-studio");
     if let Err(e) = res.compile() {

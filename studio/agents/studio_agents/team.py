@@ -7,6 +7,7 @@ its salted hash is in the repo); without it you join as a designer, whatever nam
 designs stay on each laptop.
 
     repo/team.json                      {"managers": ["Shrikant"], "manager_password": {"salt", "hash", "iterations"}}
+    repo/members/<member id>.json       {"name": "Priya"}   (who joined: the name only, nothing else; D-045)
     repo/clients/<id>/meta.json         {"version", "updated_by", "updated_at", "message", "previous_commit", "reverted"}
     repo/clients/<id>/DESIGN.md, critic_rules.md, past/…, assets/fonts/…, assets/icons/…, source/…
 
@@ -160,6 +161,7 @@ class Settings:
     last_check: str = ""
     error: str = ""
     manager_proof: str = ""     # the team's manager-password hash, kept once the right password was typed here
+    member_id: str = ""         # this laptop's entry in members/ (random), so Leave removes exactly it
 
     @staticmethod
     def load() -> "Settings":
@@ -250,6 +252,8 @@ class Team:
         self.unshared: list[str] = []
         self.managers: list[str] = []
         self.manager_hash = ""            # the hash in the repo's team.json (a changed password ends old manager logins)
+        self.members: list[str] = []      # the names in members/ (the name only: D-045)
+        self._member_names: dict[str, str] = {}   # blob sha → name, so each entry is read once
         self.applied: list[dict] = []     # reverts installed without asking, to tell the designer
 
     # ── joining ─────────────────────────────────────────────────────────────────────────────────────
@@ -270,6 +274,9 @@ class Team:
         files = r.files(head) if head else {}
         team = json.loads(r.read(files["team.json"])) if "team.json" in files else None
         proof = ""
+        member_id = os.urandom(6).hex()
+        changes: dict[str, bytes | None] = {f"members/{member_id}.json": json.dumps({"name": name}).encode()}
+        what = "Joined"
         if team is None and not password:
             raise TeamError("that repo isn't set up for a team yet: the manager joins first, with a manager password")
         if password:
@@ -291,17 +298,29 @@ class Team:
                 team["managers"] = [*managers, name]
                 changed = True
             if changed:
-                r.commit({"team.json": json.dumps(team, indent=1).encode()},
-                         f"{'Team created' if created else 'Manager joined'}: {name}", head)
+                changes["team.json"] = json.dumps(team, indent=1).encode()
+                what = "Team created" if created else "Manager joined"
+        r.commit(changes, f"{what}: {name}", head)
         s = Settings.load()
-        s.repo, s.name, s.error, s.manager_proof = repo, name, "", proof
+        s.repo, s.name, s.error, s.manager_proof, s.member_id = repo, name, "", proof, member_id
         s.save()
         _save_key(key)
         return self.status(refresh=True)
 
     def leave(self) -> None:
+        """Leave: this laptop's name comes off the members list (best effort: offline, it stays listed), then the
+        key and settings are deleted. Installed clients stay."""
+        s = Settings.load()
+        try:
+            repo = self._repo()
+            head = repo.head()
+            path = f"members/{s.member_id}.json"
+            if s.member_id and head and path in repo.files(head):
+                repo.commit({path: None}, f"Left: {s.name}", head)
+        except (TeamError, OSError, ValueError):
+            pass
         shutil.rmtree(team_dir(), ignore_errors=True)
-        self.pending, self.unshared, self.managers = [], [], []
+        self.pending, self.unshared, self.managers, self.members = [], [], [], []
 
     def _load_managers(self, repo: Repo) -> None:
         head = repo.head()
@@ -311,6 +330,19 @@ class Team:
     def _team_from(self, team: dict) -> None:
         self.managers = [str(m) for m in team.get("managers", [])]
         self.manager_hash = str((team.get("manager_password") or {}).get("hash", ""))
+
+    def _members_from(self, repo: Repo, files: dict[str, str]) -> None:
+        names = []
+        for path, sha in files.items():
+            if path.startswith("members/") and path.endswith(".json"):
+                if sha not in self._member_names:
+                    try:
+                        self._member_names[sha] = str(json.loads(repo.read(sha)).get("name", ""))[:80]
+                    except ValueError:
+                        self._member_names[sha] = ""
+                if name := self._member_names[sha].strip():
+                    names.append(name)
+        self.members = sorted(names, key=str.lower)
 
     def is_manager(self) -> bool:
         """Manager only with the manager password typed on this laptop (the name alone counts for nothing)."""
@@ -362,6 +394,12 @@ class Team:
                 files = repo.files(head) if head else {}
                 team = json.loads(repo.read(files["team.json"])) if "team.json" in files else {}
                 self._team_from(team)
+                self._members_from(repo, files)
+                if not s.member_id and s.name:
+                    # Joined before the members list (1.0.3 and older): added once, the name only.
+                    s.member_id = os.urandom(6).hex()
+                    repo.commit({f"members/{s.member_id}.json": json.dumps({"name": s.name}).encode()}, f"Joined: {s.name}", head)
+                    self.members = sorted([*self.members, s.name], key=str.lower)
                 shared = sorted({p.split("/")[1] for p in files if p.startswith("clients/") and p.endswith("/meta.json")})
                 pending = []
                 for client in shared:
@@ -509,7 +547,9 @@ class Team:
         s = Settings.load()
         applied, self.applied = self.applied, []
         return {"joined": bool(s.repo and load_key()), "repo": s.repo, "name": s.name, "manager": self.is_manager(),
-                "managers": self.managers, "pending": self.pending, "unshared": self.unshared, "applied": applied,
+                "managers": self.managers,
+                "members": [{"name": m, "manager": m.lower() in {x.lower() for x in self.managers}} for m in self.members],
+                "pending": self.pending, "unshared": self.unshared, "applied": applied,
                 "last_check": s.last_check, "error": s.error}
 
     def watch(self) -> None:

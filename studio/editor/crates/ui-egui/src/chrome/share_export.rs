@@ -10,16 +10,19 @@ use crate::{VectorcraftApp, icons, menus};
 /// Height of both buttons.
 pub(super) const HEIGHT: f32 = 24.0;
 
-/// Export's menu: (label, command).
-const EXPORT_ITEMS: &[(&str, &str)] = &[
-    ("Export As PNG…", "file.export.png"),
-    ("Export As SVG…", "file.export.svg"),
-    ("Export As…", "file.exportAs"),
-    ("Export for Screens…", "file.exportForScreens"),
+/// Export's menu: (label, command, format for Export As). JPEG and EPS open Export As on that format (D-045).
+const EXPORT_ITEMS: &[(&str, &str, Option<&str>)] = &[
+    ("Export As PNG…", "file.export.png", None),
+    ("Export As JPEG…", "file.exportAs", Some("jpg")),
+    ("Export As SVG…", "file.export.svg", None),
+    ("Export As PDF…", "file.export.pdf", None),
+    ("Export As EPS…", "file.exportAs", Some("eps")),
+    ("Export As…", "file.exportAs", None),
+    ("Export for Screens…", "file.exportForScreens", None),
 ];
 
 /// Share's menu: hand a design to another designer.
-const SHARE_ITEMS: &[(&str, &str)] = &[("Package…", "ui.packageDialog"), ("Save a Copy…", "file.saveCopy")];
+const SHARE_ITEMS: &[(&str, &str, Option<&str>)] = &[("Package…", "ui.packageDialog", None), ("Save a Copy…", "file.saveCopy", None)];
 
 fn label_width(ui: &Ui, text: &str) -> f32 {
     ui.painter().layout_no_wrap(text.to_string(), theme::semibold(12.5), egui::Color32::WHITE).size().x
@@ -39,11 +42,11 @@ fn share_width(ui: &Ui) -> f32 {
     label_width(ui, tl!("Share")) + 26.0
 }
 
-fn items_menu(app: &mut VectorcraftApp, ui: &mut Ui, items: &[(&str, &str)]) {
-    for (label, id) in items {
+fn items_menu(app: &mut VectorcraftApp, ui: &mut Ui, items: &[(&str, &str, Option<&str>)]) {
+    for (label, id, format) in items {
         let on = menus::enabled(app, id);
         if ui.add_enabled(on, egui::Button::new(tl!(label))).clicked() {
-            menus::invoke(app, id, json!({}));
+            menus::invoke(app, id, format.map_or_else(|| json!({}), |f| json!({ "format": f })));
             ui.close();
         }
     }

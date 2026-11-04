@@ -1359,7 +1359,7 @@ mod tests {
             (json!(" ".repeat(files::MAX_SET_FILE + 1)), "the action set file is larger than 8 MiB"),
             (
                 json!("{\"format\": \"vcactions\", \"version\": 2, \"name\": \"S\", \"actions\": []}"),
-                "the action set file needs a later version of VectorCraft",
+                "the action set file needs a later version of 91Ninjas Studio",
             ),
         ] {
             assert_eq!(app.run(LOAD_SET, json!({ "data": data })).unwrap_err(), want);

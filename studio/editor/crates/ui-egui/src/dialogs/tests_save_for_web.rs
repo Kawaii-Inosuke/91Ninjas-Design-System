@@ -341,7 +341,7 @@ fn a_later_browser_preview_leaves_an_earlier_one_alone() {
     let gif = page(second.run("file.saveForWeb.browser", json!({"format": "gif"})).unwrap());
     let png = page(first.run("file.saveForWeb.browser", json!({"format": "png24"})).unwrap());
     assert!(jpg != gif && jpg != png && gif != png, "{jpg} {gif} {png}");
-    let root = std::env::temp_dir().join("VectorCraft Save for Web").to_string_lossy().replace('\\', "/");
+    let root = std::env::temp_dir().join("91Ninjas Studio Save for Web").to_string_lossy().replace('\\', "/");
     for (page, image) in [(&jpg, "images/Untitled-1.jpg"), (&gif, "images/Untitled-1.gif"), (&png, "images/Untitled-1.png")] {
         assert!(page.starts_with(&root) && page.ends_with("/Untitled-1.html"), "{page}");
         assert!(std::fs::read_to_string(page).unwrap().contains(image), "{page}");
@@ -397,12 +397,12 @@ fn a_browser_preview_removes_only_preview_folders() {
     assert_eq!(std::fs::read_dir(&root).unwrap().count(), folders.len() + files.len() + 1);
 }
 
-/// When `VectorCraft Save for Web` in the temporary folder is a file, the preview goes to a new
+/// When `91Ninjas Studio Save for Web` in the temporary folder is a file, the preview goes to a new
 /// folder of its own in the temporary folder, and the file stays as it was.
 #[test]
 fn a_browser_preview_goes_beside_a_root_that_is_not_a_folder() {
     let tmp = vectorcraft_testkit::temp_dir("sfw-browser-file-root");
-    let root = tmp.join("VectorCraft Save for Web");
+    let root = tmp.join("91Ninjas Studio Save for Web");
     std::fs::write(&root, b"a file").unwrap();
     let keep = std::time::Duration::ZERO;
     let e = save_for_web::preview_folder(&root, keep).unwrap_err();
@@ -410,7 +410,7 @@ fn a_browser_preview_goes_beside_a_root_that_is_not_a_folder() {
     let dir = save_for_web::preview_folder_in(&tmp, keep).unwrap();
     let dir = std::path::Path::new(&dir);
     assert!(dir.is_dir() && dir.parent() == Some(tmp.as_path()), "{}", dir.display());
-    assert!(dir.file_name().unwrap().to_string_lossy().starts_with("VectorCraft Save for Web "), "{}", dir.display());
+    assert!(dir.file_name().unwrap().to_string_lossy().starts_with("91Ninjas Studio Save for Web "), "{}", dir.display());
     assert_eq!(std::fs::read(&root).unwrap(), b"a file");
 }
 
@@ -420,14 +420,14 @@ fn a_browser_preview_goes_beside_a_root_that_is_not_a_folder() {
 #[test]
 fn a_browser_preview_removes_old_folders_made_beside_the_root() {
     let tmp = vectorcraft_testkit::temp_dir("sfw-browser-beside-old");
-    let root = tmp.join("VectorCraft Save for Web");
+    let root = tmp.join("91Ninjas Studio Save for Web");
     let _ = std::fs::remove_dir_all(&root);
     std::fs::write(&root, b"a file").unwrap();
     let hour = std::time::Duration::from_secs(3600);
     let first = save_for_web::preview_folder_in(&tmp, hour).unwrap();
     let second = save_for_web::preview_folder_in(&tmp, hour).unwrap();
     assert!(std::path::Path::new(&first).is_dir() && std::path::Path::new(&second).is_dir(), "{first} {second}");
-    let others = ["VectorCraft Save for Web 7-7", "VectorCraft Save for Web 7-7.html", "VectorCraft Save for Web notes"];
+    let others = ["91Ninjas Studio Save for Web 7-7", "91Ninjas Studio Save for Web 7-7.html", "91Ninjas Studio Save for Web notes"];
     std::fs::write(tmp.join(others[0]), b"kept").unwrap();
     std::fs::write(tmp.join(others[1]), b"kept").unwrap();
     std::fs::create_dir_all(tmp.join(others[2])).unwrap();
@@ -461,7 +461,7 @@ fn a_browser_preview_makes_private_folders() {
     assert_eq!((mode(&root), mode(&dir)), (0o700, 0o700));
     // Beside a root it can't use, too.
     std::fs::set_permissions(&root, std::fs::Permissions::from_mode(0o777)).unwrap();
-    let shared = tmp.join("VectorCraft Save for Web");
+    let shared = tmp.join("91Ninjas Studio Save for Web");
     let _ = std::fs::remove_dir_all(&shared);
     std::fs::rename(&root, &shared).unwrap();
     let own = save_for_web::preview_folder_in(&tmp, std::time::Duration::from_secs(3600)).unwrap();
@@ -478,7 +478,7 @@ fn a_browser_preview_refuses_a_linked_root() {
     let tmp = vectorcraft_testkit::temp_dir("sfw-browser-linked-root");
     let elsewhere = tmp.join("elsewhere");
     std::fs::create_dir_all(elsewhere.join("5-1")).unwrap();
-    let root = tmp.join("VectorCraft Save for Web");
+    let root = tmp.join("91Ninjas Studio Save for Web");
     let _ = std::fs::remove_file(&root);
     symlink(&elsewhere, &root).unwrap();
     let keep = std::time::Duration::ZERO;

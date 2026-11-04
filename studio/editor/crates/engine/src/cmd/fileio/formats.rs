@@ -347,8 +347,9 @@ const fn reader(id: &'static str, label: &'static str, extensions: &'static [&'s
 pub const FORMATS: &[Format] = &[
     Format {
         id: "vectorcraft",
-        label: "VectorCraft",
-        extensions: &[vectorcraft_format::EXTENSION, vectorcraft_format::LEGACY_EXTENSION],
+        // 91studio: saved as .91studio; .vectorcraft and .drawcraft still open (D-045).
+        label: "91Ninjas Studio",
+        extensions: &[vectorcraft_format::STUDIO_EXTENSION, vectorcraft_format::EXTENSION, vectorcraft_format::LEGACY_EXTENSION],
         mime: "application/json",
         read: true,
         write: true,
@@ -451,7 +452,7 @@ pub const FORMATS: &[Format] = &[
     Format { id: "bmp", label: "BMP", extensions: &["bmp"], mime: "image/bmp", read: true, write: true, raster: true, options: BMP_OPTIONS },
     Format {
         id: "template",
-        label: "VectorCraft Template",
+        label: "91Ninjas Studio Template",
         extensions: &["vctemplate"],
         mime: "application/json",
         read: true,
@@ -502,6 +503,7 @@ pub const FORMATS: &[Format] = &[
 
 /// Every extension `document.open` reads (the "All readable files" filter of open dialogs).
 pub const OPEN_EXTS: &[&str] = &[
+    "91studio",
     "vectorcraft",
     "drawcraft",
     "svg",
@@ -586,6 +588,7 @@ const WORD_EXTS: &[&str] = &["docx", "doc"];
 /// Every extension File → Place reads: [`OPEN_EXTS`], [`TEXT_EXTS`], [`RTF_EXTS`],
 /// [`DOCX_EXTS`] and [`DOC_EXTS`].
 pub const PLACE_EXTS: &[&str] = &[
+    "91studio",
     "vectorcraft",
     "drawcraft",
     "svg",

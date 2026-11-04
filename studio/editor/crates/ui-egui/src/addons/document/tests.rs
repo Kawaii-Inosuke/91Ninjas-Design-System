@@ -36,12 +36,12 @@ fn files(dir: &PathBuf) -> Vec<String> {
 fn save_a_timestamped_copy_writes_beside_the_document() {
     let dir = folder("beside");
     let mut app = app();
-    app.run("document.save", json!({"path": dir.join("card.vectorcraft")})).unwrap();
+    app.run("document.save", json!({"path": dir.join("card.91studio")})).unwrap();
     assert_eq!(menus::menu_entries(&app).iter().find(|e| e.label == "Save a Timestamped Copy").and_then(|e| e.command.as_deref()), Some(SAVE_COPY));
     click(&mut app, "Save a Timestamped Copy");
     let names = files(&dir);
     assert_eq!(names.len(), 2, "{names:?}");
-    assert!(names.iter().any(|n| n.starts_with("card_20") && n.ends_with(".vectorcraft")), "{names:?}");
+    assert!(names.iter().any(|n| n.starts_with("card_20") && n.ends_with(".91studio")), "{names:?}");
     assert!(app.ui.status.starts_with("Saved "), "{}", app.ui.status);
     let _ = std::fs::remove_dir_all(&dir);
 }
@@ -90,7 +90,7 @@ fn export_all_open_documents_writes_each_to_the_folder_picked() {
     let dir = folder("export-all");
     let mut app = app();
     app.run("shape.rectangle", json!({"x": 10, "y": 10, "width": 50, "height": 40})).unwrap();
-    app.run("document.save", json!({"path": dir.join("card.vectorcraft")})).unwrap();
+    app.run("document.save", json!({"path": dir.join("card.91studio")})).unwrap();
     app.run("file.new", json!({"width": 200, "height": 100, "name": "card"})).unwrap();
     app.run("file.new", json!({"width": 200, "height": 100})).unwrap();
     let untitled = app.session.doc().unwrap().doc.title.clone();
@@ -110,7 +110,7 @@ fn export_all_open_documents_writes_each_to_the_folder_picked() {
     assert!(std::fs::read(out.join("card.pdf")).unwrap().starts_with(b"%PDF"));
     assert_eq!(app.session.active_index(), active, "the active document stays active");
     assert!(
-        app.session.documents().iter().all(|d| d.path.as_ref().is_none_or(|p| p.ends_with("card.vectorcraft"))),
+        app.session.documents().iter().all(|d| d.path.as_ref().is_none_or(|p| p.ends_with("card.91studio"))),
         "no document takes a copy's path"
     );
     assert!(app.ui.status.starts_with("Exported 3 documents"), "{}", app.ui.status);

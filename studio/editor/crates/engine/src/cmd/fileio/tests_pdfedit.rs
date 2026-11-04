@@ -72,7 +72,7 @@ fn pages_changed_elsewhere_open_as_artwork_with_a_warning() {
 /// `pdf` with its editing file's description rewritten by another app in UTF-16BE with a byte
 /// order mark: "hash " and the hash it held, padded with spaces to its length.
 fn utf16_described(pdf: &[u8]) -> Vec<u8> {
-    let from = b"(VectorCraft editing data; page hash ";
+    let from = b"(91Ninjas Studio editing data; page hash ";
     let at = pdf.windows(from.len()).position(|w| w == from).unwrap_or_else(|| panic!("no description"));
     let (hash, len) = (&pdf[at + from.len()..at + from.len() + 16], from.len() + 17);
     let mut desc = b"(\xFE\xFF".to_vec();

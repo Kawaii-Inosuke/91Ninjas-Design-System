@@ -1135,7 +1135,7 @@ fn format_label(d: &Document, im: &ImageObject) -> &'static str {
 /// instead of pixels.
 fn document_row(p: &PlacedDocument) -> Value {
     let pdf = fileio::format_for_name(p.link.name()).filter(|f| matches!(f.id, "pdf" | "ai" | "ait"));
-    json!({ "format": pdf.map_or("VectorCraft", |f| f.label), "document": true, "pageWidth": p.width, "pageHeight": p.height })
+    json!({ "format": pdf.map_or("91Ninjas Studio", |f| f.label), "document": true, "pageWidth": p.width, "pageHeight": p.height })
 }
 
 /// Sort rank of a `links.list` status: missing, modified, ok, embedded.

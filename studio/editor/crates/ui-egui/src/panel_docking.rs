@@ -704,7 +704,7 @@ fn shared_command_with(app: &mut VectorcraftApp, id: &str, params: &Value, legac
         DockCommand::NewWorkspace { name } => return app.run("window.workspace.new", json!({"name": name})),
         DockCommand::DeleteWorkspace { name } => return app.run("window.workspace.delete", json!({"name": name})),
         DockCommand::ResetWorkspace {} => return app.run("window.workspace.reset", json!({})),
-        DockCommand::Lock { .. } => return Err("Lock Workspace is not available in VectorCraft".into()),
+        DockCommand::Lock { .. } => return Err("Lock Workspace is not available in 91Ninjas Studio".into()),
         DockCommand::Window { .. } => return Err("Move Panel to New Window is not available: floating panels stay in the main window".into()),
         _ => {}
     }

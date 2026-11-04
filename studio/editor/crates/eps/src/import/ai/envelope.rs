@@ -35,7 +35,7 @@ use crate::import::native::compare::{MAX_DIFFERENCE, MAX_SOLID_DIFFERENCE, compa
 /// The plugin that writes envelopes.
 pub(super) const PLUGIN: &str = "Adobe Deform Plugin"; // brand-ok: the plugin name the files use
 /// The note for an envelope that keeps its drawn art.
-pub(crate) const DRAWN: &str = "an envelope VectorCraft couldn't read as a live envelope comes in as its drawn art";
+pub(crate) const DRAWN: &str = "an envelope 91Ninjas Studio couldn't read as a live envelope comes in as its drawn art";
 /// The most envelopes waiting for their drawn art at once.
 pub(super) const MAX_PENDING: usize = 64;
 /// The most envelopes one import draws to check; more keep their drawn art.

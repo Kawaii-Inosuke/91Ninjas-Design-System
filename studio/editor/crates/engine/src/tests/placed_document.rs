@@ -386,7 +386,7 @@ fn a_changed_file_is_modified_and_update_links_reads_it_again() {
     assert_eq!((c["modified"].as_u64(), c["links"][0]["status"].as_str()), (Some(0), Some("ok")), "{c}");
     let list = s.execute("links.list", &json!({})).unwrap();
     let row = &list["links"][0];
-    assert_eq!((row["format"].as_str(), row["document"].as_bool(), row["status"].as_str()), (Some("VectorCraft"), Some(true), Some("ok")), "{row}");
+    assert_eq!((row["format"].as_str(), row["document"].as_bool(), row["status"].as_str()), (Some("91Ninjas Studio"), Some(true), Some("ok")), "{row}");
     // A blue document, wider, and a different file size.
     source(&src, 200.0, 50.0, BLUE, 1);
     assert_eq!(s.execute("links.check", &json!({})).unwrap()["links"][0]["status"], "modified");
@@ -526,7 +526,7 @@ fn a_changed_pdf_is_modified_and_update_links_reads_it_again() {
     let notes = dir.file("notes.txt");
     write(&notes, b"not a page");
     let e = s.execute("links.relink", &json!({"ids": [id.0], "path": notes})).unwrap_err().to_string();
-    assert!(e.contains("isn't a VectorCraft document, a PDF or a PDF-compatible .ai file"), "{e}");
+    assert!(e.contains("isn't a 91Ninjas Studio document, a PDF or a PDF-compatible .ai file"), "{e}");
     assert_eq!(placed(&s, id).link.path, other);
 }
 

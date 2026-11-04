@@ -41,7 +41,7 @@ const PLACE_TOLERANCE: f64 = 0.5;
 /// How far a step's colour (each channel, 0 to 1) may be from the drawn one.
 const COLOR_TOLERANCE: f32 = 0.02;
 /// The note for a blend that keeps its drawn steps.
-pub(super) const DRAWN: &str = "a blend VectorCraft couldn't read as a live blend comes in as its drawn steps";
+pub(super) const DRAWN: &str = "a blend 91Ninjas Studio couldn't read as a live blend comes in as its drawn steps";
 
 /// A blend part an object's dictionary names: its type (`K`, `S`) and its id.
 pub(super) type Roles = HashMap<NodeId, (String, Option<String>)>;

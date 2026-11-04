@@ -674,7 +674,7 @@ pub fn show(app: &mut VectorcraftApp, ctx: &egui::Context) {
         ui.add_space(4.0);
         ui.label(
             egui::RichText::new(tl!(
-                "Each entry of the file is matched to a VectorCraft tool, command or panel. Check the matches and answer what is left."
+                "Each entry of the file is matched to a 91Ninjas Studio tool, command or panel. Check the matches and answer what is left."
             ))
             .color(t.text_dim)
             .size(11.5),

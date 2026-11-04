@@ -2172,7 +2172,7 @@ const RENDER_SITE_ROWS: &[(&str, &str)] = &[
     ("file-filter", "Export presets"),
     ("file-filter", "SVG Compressed"),
     ("file-filter", "PDF-compatible .ai"),
-    ("file-filter", "VectorCraft Template"),
+    ("file-filter", "91Ninjas Studio Template"),
     ("file-filter", "Templates"),
     ("anchor", "Points:"),
     ("diagnostics", "render"),

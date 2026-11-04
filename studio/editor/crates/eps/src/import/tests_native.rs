@@ -904,11 +904,11 @@ fn unknown_operator_between_objects_falls_back() {
 fn unread_object_without_page_art_names_what_is_unread() {
     let art = native(&layer("Mixed", true, &os1_group(&format!("{}\nZZ", square(50, 10)))));
     let e = crate::ai_alone(&private(&art)).unwrap_err();
-    assert_eq!(e, "it has operators VectorCraft doesn't know (`ZZ`), which VectorCraft doesn't read from it yet");
+    assert_eq!(e, "it has operators 91Ninjas Studio doesn't know (`ZZ`), which 91Ninjas Studio doesn't read from it yet");
     let pattern = os1_group(&format!("(Absent) 0 0 1 1 0 0 0 0 0 [1 0 0 1 0 0] p\n{}", square_path(70, 10)));
     let art = native(&layer("Mixed", true, &format!("{}\n{pattern}", os1_group(&format!("{}\nZZ", square(50, 10))))));
     let e = crate::ai_alone(&private(&art)).unwrap_err();
-    assert_eq!(e, "it has operators VectorCraft doesn't know (`ZZ`) and pattern fills, which VectorCraft doesn't read from it yet");
+    assert_eq!(e, "it has operators 91Ninjas Studio doesn't know (`ZZ`) and pattern fills, which 91Ninjas Studio doesn't read from it yet");
 }
 
 #[test]

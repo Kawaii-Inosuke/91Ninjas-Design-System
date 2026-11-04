@@ -92,7 +92,7 @@
 	A lower value follows the stroke closely; a higher one gives fewer points and smoother curves.	Менше значення точніше відтворює обведення; більше дає менше точок і плавніші криві.
 	A new preset starting from the selected one	Новий набір на основі вибраного
 	A saved copy of the selected preset	Збережена копія вибраного набору
-	About VectorCraft	Про програму VectorCraft
+	About 91Ninjas Studio	Про програму 91Ninjas Studio
 	above	зверху
 	Absolute Position	Абсолютна позиція
 	Accurate	Точний
@@ -198,7 +198,7 @@ font-technology	Variable	Варіативні
 	Appearance Panel	Панель «Оформлення»
 	Appearance panel	Панель «Оформлення»
 	Applies when the linked file is relinked or updated.	Використовується при повторній прив’язці або оновленні пов’язаного файлу.
-	Applies the next time VectorCraft starts.	Застосовується при наступному запуску VectorCraft.
+	Applies the next time 91Ninjas Studio starts.	Застосовується при наступному запуску 91Ninjas Studio.
 	Apply	Застосувати
 	Apply Brush	Застосувати пензель
 	Apply Character Style	Застосувати стиль символу
@@ -396,7 +396,7 @@ font-technology	Variable	Варіативні
 	Check Script	Перевірити сценарій
 	Check Script…	Перевірити сценарій…
 	Copy Report	Копіювати звіт
-	VectorCraft read this script without running it.	VectorCraft прочитав цей сценарій, не запускаючи його.
+	91Ninjas Studio read this script without running it.	91Ninjas Studio прочитав цей сценарій, не запускаючи його.
 	Needs nothing beyond plain JavaScript	Потрібен лише звичайний JavaScript
 	Needs the script language's own objects or directives	Потрібні власні об’єкти або директиви мови сценаріїв
 	Needs the document model	Потрібна модель документа
@@ -1221,7 +1221,7 @@ file-filter	Print presets	Набори друку
 file-filter	Export presets	Набори параметрів експорту
 file-filter	SVG Compressed	Стиснутий SVG
 file-filter	PDF-compatible .ai	.ai, сумісний з PDF
-file-filter	VectorCraft Template	Шаблон VectorCraft
+file-filter	91Ninjas Studio Template	Шаблон 91Ninjas Studio
 file-filter	Templates	Шаблони
 	Flattener Preview	Попередній перегляд зведення
 	Flip Across	Відобразити поперек
@@ -1679,7 +1679,7 @@ file-filter	Templates	Шаблони
 # Import Shortcut Set (Keyboard Shortcuts › Import…, File › Open of a .kys file) and its commands.
 	Import Shortcut Set	Імпорт набору сполучень клавіш
 	Import Shortcut Set…	Імпортувати набір сполучень клавіш…
-	Each entry of the file is matched to a VectorCraft tool, command or panel. Check the matches and answer what is left.	Кожен запис файлу зіставляється з інструментом, командою або панеллю VectorCraft. Перевірте зіставлення й дайте відповідь на решту.
+	Each entry of the file is matched to a 91Ninjas Studio tool, command or panel. Check the matches and answer what is left.	Кожен запис файлу зіставляється з інструментом, командою або панеллю 91Ninjas Studio. Перевірте зіставлення й дайте відповідь на решту.
 	Keys	Клавіші
 	The file writes keys and modifiers as codes. Check the proposed meanings and answer the codes that are not known yet.	Файл записує клавіші та модифікатори як коди. Перевірте запропоновані значення й укажіть коди, які ще невідомі.
 	Click, then press the key this code stands for (Esc cancels)	Клацніть, потім натисніть клавішу, яку позначає цей код (Esc скасовує)
@@ -1690,7 +1690,7 @@ file-filter	Templates	Шаблони
 	Shortcuts	Сполучення клавіш
 	Shortcut	Сполучення клавіш
 	In the File	У файлі
-	In VectorCraft	У VectorCraft
+	In 91Ninjas Studio	У 91Ninjas Studio
 	Needs Attention Only	Лише ті, що потребують уваги
 	Ready	Готово
 	Needs a choice	Потрібен вибір
@@ -1699,7 +1699,7 @@ file-filter	Templates	Шаблони
 	Tools take a single key (optionally with Shift)	Інструментам призначається одна клавіша (можна із Shift)
 	A later row takes this shortcut	Це сполучення забирає рядок нижче
 	Same item as a later row	Той самий елемент, що й у рядку нижче
-	Start from VectorCraft Defaults	Почати зі значень VectorCraft за промовчанням
+	Start from 91Ninjas Studio Defaults	Почати зі значень 91Ninjas Studio за промовчанням
 	Add to the Current Shortcuts	Додати до поточних сполучень клавіш
 	Remember My Choices	Запам’ятати мій вибір
 	{ready} of {total} ready	Готово: {ready} з {total}
@@ -2341,7 +2341,7 @@ file-filter	Templates	Шаблони
 	Paragraph Style Options	Параметри стилю абзацу
 	Paragraph Styles	Стилі абзаців
 	Paragraph Symbol	Символ абзацу
-	Part of ArtCraft. MIT OR Apache-2.0. Fonts: Source Sans 3, Inter, JetBrains Mono (OFL). Icons: Lucide (ISC) + VectorCraft.	Частина ArtCraft. MIT OR Apache-2.0. Шрифти: Source Sans 3, Inter, JetBrains Mono (OFL). Значки: Lucide (ISC) + VectorCraft.
+	Part of ArtCraft. MIT OR Apache-2.0. Fonts: Source Sans 3, Inter, JetBrains Mono (OFL). Icons: Lucide (ISC) + 91Ninjas Studio.	Частина ArtCraft. MIT OR Apache-2.0. Шрифти: Source Sans 3, Inter, JetBrains Mono (OFL). Значки: Lucide (ISC) + 91Ninjas Studio.
 	Password	Пароль
 	Paste	Вставити
 	Paste in Back	Вставити позаду
@@ -2541,7 +2541,7 @@ digits	Malayalam	Малаялам
 	Quarter Space	Четверта шпація
 	Quick Actions	Швидкі дії
 	Quickly start a new file	Швидко створити новий файл
-	Quit VectorCraft	Вийти з VectorCraft
+	Quit 91Ninjas Studio	Вийти з 91Ninjas Studio
 	Radar Graph Tool	Інструмент «Пелюсткова діаграма»
 	Radial	Радіальний
 	Radial Glows	Радіальні світіння
@@ -2669,7 +2669,7 @@ digits	Malayalam	Малаялам
 @plural	{n} folder or file couldn't be read|{n} folders or files couldn't be read	Не вдалося прочитати папок або файлів: {n}|Не вдалося прочитати папок або файлів: {n}|Не вдалося прочитати папок або файлів: {n}
 	The search stopped at its limit: search a smaller folder.	Пошук зупинився на межі: виберіть меншу папку.
 	Copy only fonts you own or are licensed to install.	Копіюйте лише шрифти, які належать вам або які ви маєте право встановлювати за ліцензією.
-	VectorCraft copies the fonts to {folder}.	VectorCraft копіює шрифти в {folder}.
+	91Ninjas Studio copies the fonts to {folder}.	91Ninjas Studio копіює шрифти в {folder}.
 	Registered Trademark Symbol	Символ зареєстрованого товарного знаку
 	Registration marks	Мітки поєднання
 	Registry name:	Ім’я у реєстрі:
@@ -2777,9 +2777,9 @@ digits	Malayalam	Малаялам
 	Revert	Повернути
 	Revert to the saved version of “{name}”?	Повернутися до збереженої версії «{name}»?
 	Replace “{name}”, the file this document was opened from?	Замінити «{name}» — файл, з якого відкрито цей документ?
-	Opening it left out what VectorCraft can't read yet ({what}), so replacing it loses that for good. Save under another name to keep it.	При відкритті було пропущено те, що VectorCraft поки що не вміє читати ({what}), тому заміна файлу втратить це назавжди. Щоб зберегти це, збережіть документ під іншим ім’ям.
+	Opening it left out what 91Ninjas Studio can't read yet ({what}), so replacing it loses that for good. Save under another name to keep it.	При відкритті було пропущено те, що 91Ninjas Studio поки що не вміє читати ({what}), тому заміна файлу втратить це назавжди. Щоб зберегти це, збережіть документ під іншим ім’ям.
 	“{name}” already exists. Replace it?	«{name}» уже існує. Замінити?
-	The name in the save panel was “{typed}”; VectorCraft added the file type's extension. Replacing the file overwrites its contents.	Назва у вікні збереження була «{typed}», а VectorCraft додав розширення типу файлу. Заміна файлу перезапише його вміст.
+	The name in the save panel was “{typed}”; 91Ninjas Studio added the file type's extension. Replacing the file overwrites its contents.	Назва у вікні збереження була «{typed}», а 91Ninjas Studio додав розширення типу файлу. Заміна файлу перезапише його вміст.
 	Revolve…	Обертання…
 	RGB Color	Колір RGB
 	Right	Праворуч
@@ -3680,10 +3680,10 @@ effect	Points	Точки
 	Vector Halftone	Векторний напівтон
 	Vector Halftone…	Векторний напівтон…
 	Vector illustration — fast, open, scriptable.	Векторне малювання — швидке, відкрите, кероване сценаріями.
-	VectorCraft didn't quit normally last time. These documents had unsaved changes:	VectorCraft не завершився нормально минулого разу. У цих документах були незбережені зміни:
-	VectorCraft Help…	Довідка VectorCraft…
-	VectorCraft on getartcraft.com	VectorCraft на getartcraft.com
-	VectorCraft on GitHub	VectorCraft на GitHub
+	91Ninjas Studio didn't quit normally last time. These documents had unsaved changes:	91Ninjas Studio не завершився нормально минулого разу. У цих документах були незбережені зміни:
+	91Ninjas Studio Help…	Довідка 91Ninjas Studio…
+	91Ninjas Studio on getartcraft.com	91Ninjas Studio на getartcraft.com
+	91Ninjas Studio on GitHub	91Ninjas Studio на GitHub
 	Vectors	Вектори
 	Version {version} — open-source vector illustration in pure Rust.	Версія {version} — векторне малювання з відкритим кодом, написане на Rust.
 	Version:	Версія:
@@ -3723,7 +3723,7 @@ effect	Points	Точки
 	Web Snap:	Прив’язка до web:
 	Weight	Товщина
 	Weight:	Товщина:
-	Welcome to VectorCraft	Ласкаво просимо до VectorCraft
+	Welcome to 91Ninjas Studio	Ласкаво просимо до 91Ninjas Studio
 	When pasting text	При вставці тексту
 	White	Білий
 	Widget Position:	Положення віджету:
@@ -4021,7 +4021,7 @@ axis	Both	Обидві
 @msg	Split Into Grid: select paths large enough for the grid	Поділ на сітку: виділіть контури, досить великі для сітки
 @msg	Targa files are RGB: colorModel rgb	Файли Targa є RGB: colorModel rgb
 @msg	Text Wrap: select a wrap object	Обтікання текстом: виділіть об’єкт обтікання
-@msg	This shortcut file is in a form VectorCraft can't read.	Цей файл сполучень клавіш записано у форматі, який VectorCraft не може прочитати.
+@msg	This shortcut file is in a form 91Ninjas Studio can't read.	Цей файл сполучень клавіш записано у форматі, який 91Ninjas Studio не може прочитати.
 @msg	`aspect` must be a number (%)	`aspect` має бути числом (%)
 @msg	`at` must be [x, y]	`at` має бути [x, y]
 @msg	`color` must be a colour	`color` має бути кольором
@@ -4151,7 +4151,7 @@ axis	Both	Обидві
 @msg	can't encode the document: {0}	не вдалося закодувати документ: {0}
 @msg	can't parse shortcut `{c}`	не вдалося розібрати поєднання `{c}`
 @msg	can't parse shortcut `{s}` for `{k}`	не вдалося розібрати поєднання `{s}` для `{k}`
-@msg	can't save version {0}: VectorCraft writes versions {MIN_VERSION} to {VERSION}	не вдалося зберегти версію {0}: VectorCraft записує версії від {MIN_VERSION} до {VERSION}
+@msg	can't save version {0}: 91Ninjas Studio writes versions {MIN_VERSION} to {VERSION}	не вдалося зберегти версію {0}: 91Ninjas Studio записує версії від {MIN_VERSION} до {VERSION}
 @msg	can't write .{ext} images	не вдалося записати зображення .{ext}
 @msg	cannot distort a zero-size bounding box	не можна спотворити обмежувальну рамку нульового розміру
 @msg	cannot read PDF: {0}	не вдалося прочитати PDF: {0}
@@ -4178,7 +4178,7 @@ axis	Both	Обидві
 @msg	empty brush stroke	порожній мазок пензля
 @msg	empty cutter	порожній різак
 @msg	empty path	порожній контур
-@msg	file version {0} is newer than this VectorCraft supports ({VERSION})	версія файлу {0} новіша, ніж підтримує цей VectorCraft ({VERSION})
+@msg	file version {0} is newer than this 91Ninjas Studio supports ({VERSION})	версія файлу {0} новіша, ніж підтримує цей 91Ninjas Studio ({VERSION})
 @msg	freeform point {i} needs `at` [x, y] and a valid `color`	довільній точці {i} потрібні `at` [x, y] та допустимий `color`
 @msg	freeform line {i} must be an array of point indices	довільна лінія {i} має бути масивом індексів точок
 @msg	give both `start` and `end` [x, y] (or neither)	вкажіть `start`, `end` [x, y] (або жодного)
@@ -4199,9 +4199,9 @@ axis	Both	Обидві
 @msg	invalid PDF setting: {0}	неприпустимий параметр PDF: {0}
 @msg	invalid image data for `{0}`	неприпустимі дані зображення для `{0}`
 @msg	invalid parameters for `{cmd}`: {msg}	неприпустимі параметри для `{cmd}`: {msg}
-@msg	is not an image VectorCraft reads	не є зображенням, яке читає VectorCraft
-@msg	it uses `{at}`, which VectorCraft's PostScript reader doesn't know	використовує `{at}`, яке не знає читач PostScript у VectorCraft
-@msg	it uses `{at}`, which VectorCraft's PostScript reader doesn't know, in {procs}	використовує `{at}`, яке не знає читач PostScript у VectorCraft, у {procs}
+@msg	is not an image 91Ninjas Studio reads	не є зображенням, яке читає 91Ninjas Studio
+@msg	it uses `{at}`, which 91Ninjas Studio's PostScript reader doesn't know	використовує `{at}`, яке не знає читач PostScript у 91Ninjas Studio
+@msg	it uses `{at}`, which 91Ninjas Studio's PostScript reader doesn't know, in {procs}	використовує `{at}`, яке не знає читач PostScript у 91Ninjas Studio, у {procs}
 @msg	its Windows metafile preview was opened instead, which may simplify the art	натомість було відкрито його попереднє подання метафайлу Windows, що може спростити малюнок
 @msg	its preview was placed instead, at screen resolution	замість цього було вміщено його попереднє подання у роздільній здатності екрану
 @msg	join needs open paths	з’єднання вимагає відкритих контурів
@@ -4258,7 +4258,7 @@ axis	Both	Обидві
 @msg	no file system here	тут немає файлової системи
 @msg	no file writer	немає засобу запису файлів
 @msg	no files to place	немає файлів для розміщення
-@msg	`{file}` isn't a VectorCraft document, a PDF or a PDF-compatible .ai file	`{file}` не є документом VectorCraft, PDF або файлом .ai, сумісним із PDF
+@msg	`{file}` isn't a 91Ninjas Studio document, a PDF or a PDF-compatible .ai file	`{file}` не є документом 91Ninjas Studio, PDF або файлом .ai, сумісним із PDF
 @msg	no format to export to	немає формату для експорту
 @msg	no free recovery area	немає вільної області відновлення
 @msg	no gradient stop or freeform point is selected	не виділено ні точку переходу градієнта, ні довільну точку
@@ -4300,7 +4300,7 @@ axis	Both	Обидві
 @msg	not an action set file	це не файл набору дій
 @msg	the action set file is larger than 8 MiB	файл набору дій більший за 8 MiB
 @msg	the action set file holds more than 1,000 actions	файл набору дій містить понад 1000 дій
-@msg	the action set file needs a later version of VectorCraft	для файлу набору дій потрібна новіша версія VectorCraft
+@msg	the action set file needs a later version of 91Ninjas Studio	для файлу набору дій потрібна новіша версія 91Ninjas Studio
 @msg	an action in the action set file has more than 10,000 steps	у файлі набору дій є дія з понад 10 000 кроків
 @msg	no such anchor	такої опорної точки немає
 @msg	no such artboard	такої монтажної області немає
@@ -4330,8 +4330,8 @@ axis	Both	Обидві
 @msg	node {_1} is not text	вузол {_1} не є текстом
 @msg	node {_1} is on a locked artboard	вузол {_1} розташований на заблокованій монтажній області
 @msg	not a DXF drawing	не є кресленням DXF
-@msg	not a VectorCraft file: {0}	не є файлом VectorCraft: {0}
-@msg	not a VectorCraft shortcut set (missing `overrides`)	не є набором поєднань клавіш VectorCraft (відсутнє `overrides`)
+@msg	not a 91Ninjas Studio file: {0}	не є файлом 91Ninjas Studio: {0}
+@msg	not a 91Ninjas Studio shortcut set (missing `overrides`)	не є набором поєднань клавіш 91Ninjas Studio (відсутнє `overrides`)
 @msg	not a blend	це не перехід
 @msg	not a graphic style library (format `{_1}`)	не є бібліотекою графічних стилів (формат `{_1}`)
 @msg	not a shortcut set: the text doesn't start with a slash name and an opening brace	це не набір сполучень клавіш: текст не починається з імені зі скісною рискою та відкривної фігурної дужки
@@ -4615,11 +4615,11 @@ axis	Both	Обидві
 @msg	Sent to {_1}	Відправлено до {_1}
 @msg	{_1} files	{_1} файлів
 @msg	The graphics were lost and have been restarted	Графіка була втрачена та перезапущена
-@msg	The graphics processor tried first couldn't show the window, so VectorCraft started again on {summary}	Графічний процесор, обраний першим, не зміг показати вікно, тому VectorCraft запустився знову на {summary}
-@msg	The last start of VectorCraft ended on {name} before its window appeared, so it started on {summary}. To try that graphics processor again, change Preferences › Performance › Graphics Processor or start with WGPU_BACKEND set	Попередній запуск VectorCraft завершився на {name} до появи вікна, тому VectorCraft запустився на {summary}. Щоб знову спробувати цей графічний процесор, змініть Налаштування › Продуктивність › Графічний процесор або запустіть застосунок із заданою змінною WGPU_BACKEND
-@msg	The last start of VectorCraft ended while it listed the graphics processors, so it started on {summary} with OpenGL alone. To try the other graphics backends again, change Preferences › Performance › Graphics Processor or start with WGPU_BACKEND set	Попередній запуск VectorCraft завершився під час переліку графічних процесорів, тому VectorCraft запустився на {summary} лише з OpenGL. Щоб знову спробувати інші графічні інтерфейси, змініть Налаштування › Продуктивність › Графічний процесор або запустіть застосунок із заданою змінною WGPU_BACKEND
-@msg	Loading VectorCraft…	Завантаження VectorCraft…
-@msg	VectorCraft failed to start: {e}	VectorCraft не вдалося запустити: {e}
+@msg	The graphics processor tried first couldn't show the window, so 91Ninjas Studio started again on {summary}	Графічний процесор, обраний першим, не зміг показати вікно, тому 91Ninjas Studio запустився знову на {summary}
+@msg	The last start of 91Ninjas Studio ended on {name} before its window appeared, so it started on {summary}. To try that graphics processor again, change Preferences › Performance › Graphics Processor or start with WGPU_BACKEND set	Попередній запуск 91Ninjas Studio завершився на {name} до появи вікна, тому 91Ninjas Studio запустився на {summary}. Щоб знову спробувати цей графічний процесор, змініть Налаштування › Продуктивність › Графічний процесор або запустіть застосунок із заданою змінною WGPU_BACKEND
+@msg	The last start of 91Ninjas Studio ended while it listed the graphics processors, so it started on {summary} with OpenGL alone. To try the other graphics backends again, change Preferences › Performance › Graphics Processor or start with WGPU_BACKEND set	Попередній запуск 91Ninjas Studio завершився під час переліку графічних процесорів, тому 91Ninjas Studio запустився на {summary} лише з OpenGL. Щоб знову спробувати інші графічні інтерфейси, змініть Налаштування › Продуктивність › Графічний процесор або запустіть застосунок із заданою змінною WGPU_BACKEND
+@msg	Loading 91Ninjas Studio…	Завантаження 91Ninjas Studio…
+@msg	91Ninjas Studio failed to start: {e}	91Ninjas Studio не вдалося запустити: {e}
 @msg	A browser with WebGPU or WebGL2 is required.	Потрібен браузер із WebGPU або WebGL2.
 @msg	The graphics were lost and couldn't be restarted.	Графіку було втрачено, і її не вдалося перезапустити.
 @msg	Your unsaved changes are kept in this browser: reload the page to get them back.	Ваші незбережені зміни зберігаються у цьому браузері: перезавантажте сторінку, щоб повернути їх.
@@ -4650,12 +4650,12 @@ axis	Both	Обидві
 @msg	it has more than {MAX_NODES} objects	в них більше {MAX_NODES} об’єктів
 @msg	it has no layers	у них немає шарів
 @msg	it has too many values in a row	у них занадто багато значень поспіль
-@msg	it has {_1}, which VectorCraft doesn't read from it yet	у них є {_1}, які VectorCraft поки не читає
+@msg	it has {_1}, which 91Ninjas Studio doesn't read from it yet	у них є {_1}, які 91Ninjas Studio поки не читає
 @msg	its objects are nested too deeply	об’єкти в них вкладені надто глибоко
 @msg	its section ending with `%{end}` doesn't end	розділ, що закінчується на `%{end}`, не закінчується
 @msg	objects with several fills or strokes, effects or brushes came in as their drawn look ({_1}): their appearance isn't editable yet	об’єкти з кількома заливками або обведеннями, ефектами або пензлями імпортовані в намальованому вигляді ({_1}): їх оформлення поки що не можна редагувати
 @msg	gradient “{name}” isn't defined in the file: a plain colour stands in for it	градієнт «{name}» не визначено у файлі: замість нього використовується суцільний колір
-@msg	an image VectorCraft can't read was left out	зображення, яке VectorCraft не може прочитати, пропущено
+@msg	an image 91Ninjas Studio can't read was left out	зображення, яке 91Ninjas Studio не може прочитати, пропущено
 @msg	graphs come in as plain art, without their data or settings	діаграми імпортуються як звичайна графіка, без їхніх даних і налаштувань
 @msg	an image whose data is cut short was left out	зображення з обрізаними даними пропущено
 @msg	linked pictures show the low-resolution preview saved in the file until their files are found: relink them in the Links panel	пов’язані зображення показуються як збережений у файлі перегляд низької роздільності, доки їхні файли не знайдено: відновіть зв’язки на панелі «Зв’язки»
@@ -4664,13 +4664,13 @@ axis	Both	Обидві
 @msg	this file was saved without PDF compatibility, and its editing data can't be read ({why})	цей файл збережений без сумісності з PDF, і його дані редагування не вдається прочитати ({why})
 @msg	the PDF part couldn't be read ({_1}): the file opened from its editing data	не вдалося прочитати PDF-частину ({_1}): файл відкрито з його даних для редагування
 @msg	No fonts are missing in this document	У цьому документі немає відсутніх шрифтів
-@msg	VectorCraft doesn't search other apps' or the system's folders: {path}	VectorCraft не шукає в папках інших програм і системи: {path}
-@msg	VectorCraft doesn't search the Shared or Public folder in Users: {path}	VectorCraft не шукає в папках Shared і Public у Users: {path}
+@msg	91Ninjas Studio doesn't search other apps' or the system's folders: {path}	91Ninjas Studio не шукає в папках інших програм і системи: {path}
+@msg	91Ninjas Studio doesn't search the Shared or Public folder in Users: {path}	91Ninjas Studio не шукає в папках Shared і Public у Users: {path}
 @msg	{path} is not a folder	{path} не є папкою
 @msg	the search couldn't start: try again in a moment	не вдалося почати пошук: спробуйте ще раз за мить
 @msg	searching a folder isn't available on the web	пошук у папці недоступний у веб-версії
 @msg	every search thread stopped on an internal error (please report this bug)	усі потоки пошуку зупинилися через внутрішню помилку (повідомте про цю помилку)
-@msg	VectorCraft's Fonts folder isn't set here: the desktop app and vectorcraft-cli set it	Папку Fonts VectorCraft тут не задано: її задають настільна програма та vectorcraft-cli
+@msg	91Ninjas Studio's Fonts folder isn't set here: the desktop app and vectorcraft-cli set it	Папку Fonts 91Ninjas Studio тут не задано: її задають настільна програма та vectorcraft-cli
 @msg	choose the font files to add	виберіть файли шрифтів для додавання
 @msg	not a file	не файл
 @msg	not a font file	не файл шрифту
@@ -4681,7 +4681,7 @@ axis	Both	Обидві
 @msg	every numbered name for {name} is taken in the document's folder	усі нумеровані імена для {name} уже зайняті в папці документа
 @msg	No linked files to look for	Немає пов’язаних файлів для пошуку
 	Services	Служби
-	Hide VectorCraft	Приховати VectorCraft
+	Hide 91Ninjas Studio	Приховати 91Ninjas Studio
 	Zoom	Масштаб
 	Bring All to Front	Усі вікна на передній план
 	Settings	Налаштування
@@ -4689,7 +4689,7 @@ axis	Both	Обидві
 	On: one locked object showing the document, updated when it changes.	Увімк.: один заблокований об’єкт, який показує документ і оновлюється під час його зміни.
 	Off: an editable copy of its art, embedded in this document.	Вимк.: редагована копія графіки, вбудована в цей документ.
 	Images: link to the file instead of only embedding it.	Зображення: пов’язувати із файлом замість простого впровадження.
-	VectorCraft documents: one locked object, updated when the file changes.	Документи VectorCraft: один заблокований об’єкт, який оновлюється під час зміни файлу.
+	91Ninjas Studio documents: one locked object, updated when the file changes.	Документи 91Ninjas Studio: один заблокований об’єкт, який оновлюється під час зміни файлу.
 	A file dialog is open: choose there first	Відкрито вікно вибору файлу: спочатку зробіть вибір у ньому
 	The document was closed while its file dialog was open	Документ було закрито, поки було відкрито його вікно вибору файлу
 	The dialog was closed before its file dialog answered	Діалогове вікно було закрито раніше, ніж відповіло його вікно вибору файлу
@@ -4955,7 +4955,7 @@ lighting	Light	Світло
 	Edge Intensity	Інтенсивність країв
 	Posterization	Постеризація
 	Highlight Area	Область світлих тонів
-@msg	the compressed file unpacks to more than VectorCraft reads ({_1} MB of document, {_2} MB per image)	стислий файл розпаковується в обсяг більший, ніж читає VectorCraft ({_1} МБ документа, {_2} МБ на зображення)
+@msg	the compressed file unpacks to more than 91Ninjas Studio reads ({_1} MB of document, {_2} MB per image)	стислий файл розпаковується в обсяг більший, ніж читає 91Ninjas Studio ({_1} МБ документа, {_2} МБ на зображення)
 @msg	the document is too large to save compressed ({0}): save it with Use Compression off	документ завеликий для збереження зі стиском ({0}): збережіть його з вимкненим параметром «Використовувати стиск»
 @msg	the file stopped being read (please report this bug)	читання файлу перервалося (будь ласка, повідомте про цю помилку)
 	Concentric Dividers:	Концентричні розділювачі:
@@ -5797,7 +5797,7 @@ breakText	Glyphs	Гліфи
 	Malayalam	Малаялам
 	Odia	Одія
 	Urdu	Урду
-	VectorCraft {release} and later (version {n})	VectorCraft {release} і новіші (версія {n})
+	91Ninjas Studio {release} and later (version {n})	91Ninjas Studio {release} і новіші (версія {n})
 # Document Tools add-on: Export All Open Documents (#4920).
 	Export All Open Documents as PDF	Експортувати всі відкриті документи як PDF
 	Export All Open Documents as SVG	Експортувати всі відкриті документи як SVG

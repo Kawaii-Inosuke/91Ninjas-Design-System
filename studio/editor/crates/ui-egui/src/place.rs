@@ -213,7 +213,7 @@ fn open_dialog(app: &mut VectorcraftApp, files: Vec<Value>) {
 /// which `file.place` embeds whether Link is on or not.
 fn is_vectorcraft_file(app: &VectorcraftApp, file: &Value) -> bool {
     let Some(path) = file.get("path").and_then(Value::as_str) else { return false };
-    let native = ["vectorcraft", vectorcraft_format::LEGACY_EXTENSION, "vctemplate"];
+    let native = [vectorcraft_format::STUDIO_EXTENSION, "vectorcraft", vectorcraft_format::LEGACY_EXTENSION, "vctemplate"];
     match fileio::extension(path).as_str() {
         e if native.contains(&e) => true,
         "pdf" | "ai" | "ait" => app.services.read.as_ref().and_then(|r| r(path).ok()).is_none_or(|b| !vectorcraft_pdf::is_postscript(&b)),

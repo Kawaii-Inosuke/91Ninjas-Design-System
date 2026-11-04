@@ -34,12 +34,12 @@ fn stamp(s: &mut Session, p: Value) -> crate::Result<Value> {
 fn a_timestamped_copy_goes_next_to_the_document_which_stays_as_it_was() {
     let dir = folder("next-to");
     let mut s = session();
-    let own = dir.join("poster.vectorcraft");
+    let own = dir.join("poster.91studio");
     s.execute("document.save", &json!({"path": own})).unwrap();
     s.execute("shape.ellipse", &json!({"x": 0, "y": 0, "width": 10, "height": 10})).unwrap();
     let (steps, title) = (s.doc().unwrap().history.undo.len(), s.doc().unwrap().doc.title.clone());
     let r = stamp(&mut s, json!({"time": TIME})).unwrap();
-    let copy = dir.join("poster_2026-10-05_14-03.vectorcraft");
+    let copy = dir.join("poster_2026-10-05_14-03.91studio");
     assert_eq!(Path::new(r["path"].as_str().unwrap()), copy);
     assert!(copy.is_file());
     let st = s.doc().unwrap();
@@ -51,7 +51,7 @@ fn a_timestamped_copy_goes_next_to_the_document_which_stays_as_it_was() {
     assert_eq!(other.doc().unwrap().doc.layers[0].children().unwrap().len(), 2);
     // The same minute again: numbered.
     let r = stamp(&mut s, json!({"time": TIME})).unwrap();
-    assert!(r["path"].as_str().unwrap().ends_with("poster_2026-10-05_14-03-2.vectorcraft"), "{r}");
+    assert!(r["path"].as_str().unwrap().ends_with("poster_2026-10-05_14-03-2.91studio"), "{r}");
     let _ = std::fs::remove_dir_all(&dir);
 }
 

@@ -245,8 +245,11 @@ pub fn export(doc: &Document, opts: &EpsOptions, preview: Option<&Raster>, thumb
 
 /// Comment lines that start a data section the file carries (`%VectorCraft_BeginData: <name>`)
 /// and end it; between them, ASCII85 lines after `% `.
-const BEGIN_DATA: &str = "%VectorCraft_BeginData: ";
-const END_DATA: &str = "%VectorCraft_EndData";
+const BEGIN_DATA: &str = "%Studio91_BeginData: ";
+const END_DATA: &str = "%Studio91_EndData";
+/// The markers written before 1.0.4 (D-046): still read.
+const OLD_BEGIN_DATA: &str = "%VectorCraft_BeginData: ";
+const OLD_END_DATA: &str = "%VectorCraft_EndData";
 /// The data sections.
 const NATIVE: &str = "native";
 const THUMBNAIL: &str = "thumbnail";
@@ -257,7 +260,7 @@ const MAX_NATIVE: u64 = 1 << 30;
 /// language level, data, and the spot colours `custom` with their CMYK equivalents.
 pub(crate) fn comments(s: &mut String, title: &str, created: Option<i64>, level: Level, custom: &[(String, [f32; 4])]) {
     use std::fmt::Write;
-    let _ = writeln!(s, "%%Creator: VectorCraft {}", env!("CARGO_PKG_VERSION"));
+    let _ = writeln!(s, "%%Creator: 91Ninjas Studio {}", env!("CARGO_PKG_VERSION"));
     let _ = writeln!(s, "%%Title: {}", ps::string(title));
     if let Some(t) = created {
         let [y, mo, d, h, mi, se] = vectorcraft_doc::metadata::civil(t);
@@ -328,10 +331,11 @@ fn data_section(s: &mut String, name: &str, bytes: &[u8]) {
 fn read_data(ps: &[u8], name: &str) -> Option<Vec<u8>> {
     let text = String::from_utf8_lossy(ps);
     let mut lines = text.lines();
-    lines.find(|l| l.strip_prefix(BEGIN_DATA).is_some_and(|n| n.trim() == name))?;
+    let begin = |l: &str| l.strip_prefix(BEGIN_DATA).or_else(|| l.strip_prefix(OLD_BEGIN_DATA)).is_some_and(|n| n.trim() == name);
+    lines.find(|l| begin(l))?;
     let mut encoded = String::new();
     for l in lines {
-        if l.starts_with(END_DATA) {
+        if l.starts_with(END_DATA) || l.starts_with(OLD_END_DATA) {
             return ps::ascii85_decode(&encoded);
         }
         encoded.push_str(l.strip_prefix('%').unwrap_or(l));
@@ -407,8 +411,8 @@ pub fn native(bytes: &[u8]) -> Option<Vec<u8>> {
 
 /// Does the EPS file carry a native document (readable or not)?
 pub fn has_native(bytes: &[u8]) -> bool {
-    let marker = format!("{BEGIN_DATA}{NATIVE}");
-    sections(bytes).is_some_and(|(ps, _)| ps.windows(marker.len()).any(|w| w == marker.as_bytes()))
+    let markers = [format!("{BEGIN_DATA}{NATIVE}"), format!("{OLD_BEGIN_DATA}{NATIVE}")];
+    sections(bytes).is_some_and(|(ps, _)| markers.iter().any(|m| ps.windows(m.len()).any(|w| w == m.as_bytes())))
 }
 
 /// The PNG thumbnail an EPS file written by [`export`] carries, if any.

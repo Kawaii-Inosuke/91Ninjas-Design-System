@@ -25,7 +25,7 @@ fn three_boards(app: &mut crate::VectorcraftApp) {
 
 #[test]
 fn save_as_native_asks_for_its_options_and_writes_every_artboard() {
-    let (mut app, written) = app("/tmp/doc.vectorcraft");
+    let (mut app, written) = app("/tmp/doc.91studio");
     three_boards(&mut app);
     let r = app.run("file.saveAs", Value::Null).unwrap();
     assert_eq!(r["pending"], "saveOptions");
@@ -47,9 +47,9 @@ fn save_as_native_asks_for_its_options_and_writes_every_artboard() {
     app.ui.dialog.as_mut().unwrap().fields.insert("range".into(), json!("2-3"));
     let r = dialogs::confirm(&mut app).unwrap();
     let names: Vec<String> = written.borrow().iter().map(|(p, _)| p.clone()).collect();
-    assert_eq!(names, ["/tmp/doc.vectorcraft", "/tmp/doc-B.vectorcraft", "/tmp/doc-C.vectorcraft"], "{r}");
+    assert_eq!(names, ["/tmp/doc.91studio", "/tmp/doc-B.91studio", "/tmp/doc-C.91studio"], "{r}");
     let st = app.session.active().unwrap();
-    assert_eq!((st.path.as_deref(), st.is_dirty()), (Some("/tmp/doc.vectorcraft"), false));
+    assert_eq!((st.path.as_deref(), st.is_dirty()), (Some("/tmp/doc.91studio"), false));
     // Save writes them again with the same options, without asking.
     app.run("shape.ellipse", json!({"x": 50, "y": 40, "width": 10, "height": 10})).unwrap();
     app.run("file.save", Value::Null).unwrap();
@@ -66,7 +66,7 @@ fn save_as_native_asks_for_its_options_and_writes_every_artboard() {
 
 #[test]
 fn save_a_copy_and_save_dont_ask_and_options_reach_the_file() {
-    let (mut app, written) = app("/tmp/plain.vectorcraft");
+    let (mut app, written) = app("/tmp/plain.91studio");
     // Save of an untitled document goes straight to the file, as before.
     app.run("file.save", Value::Null).unwrap();
     assert!(app.ui.dialog.is_none());
@@ -102,5 +102,5 @@ fn the_web_save_as_dialog_shows_the_native_options() {
     d.fields.insert("separateArtboards".into(), json!(true));
     dialogs::confirm(&mut app).unwrap();
     let names: Vec<String> = written.borrow().iter().map(|(p, _)| p.clone()).collect();
-    assert_eq!(names, ["Untitled-1.vectorcraft", "Untitled-1-Artboard-1.vectorcraft", "Untitled-1-B.vectorcraft", "Untitled-1-C.vectorcraft"]);
+    assert_eq!(names, ["Untitled-1.91studio", "Untitled-1-Artboard-1.91studio", "Untitled-1-B.91studio", "Untitled-1-C.91studio"]);
 }

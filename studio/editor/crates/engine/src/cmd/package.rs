@@ -466,7 +466,7 @@ impl Package {
 fn collect_and_write(package: Package, write: &mut dyn FnMut(&str, &[u8]) -> Result<()>) -> Result<Value> {
     let Package { o, doc_path, stem, name, root, info, doc } = package;
     let mut doc = (*doc).clone();
-    let doc_name = format!("{stem}.{}", vectorcraft_format::EXTENSION);
+    let doc_name = format!("{stem}.{}", vectorcraft_format::STUDIO_EXTENSION);
     // Prepare original links for the destination *before* rebasing copied links.
     // Recalculating afterward would overwrite the portable relative paths.
     if let Some(root) = &root

@@ -99,7 +99,7 @@ fn bake_tree(node: &mut Node, work: &mut u64, depth: usize, warn: &mut dyn FnMut
     *work = left;
     for o in &overlays {
         if matches!(o.blend, Blend::Erase | Blend::PassThrough) {
-            warn("overlay effects in a blend mode VectorCraft doesn't have (imported as Normal)");
+            warn("overlay effects in a blend mode 91Ninjas Studio doesn't have (imported as Normal)");
         }
         bake_node(node, o, 0, warn);
     }

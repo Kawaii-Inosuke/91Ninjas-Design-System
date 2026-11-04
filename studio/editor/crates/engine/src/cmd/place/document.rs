@@ -118,7 +118,7 @@ pub(crate) fn document_art(
     let file = fileio::file_name(name);
     let pdf = is_pdf(name, bytes);
     if !pdf && !is_native(name, bytes) {
-        return Err(bad(cmd, format!("`{file}` isn't a VectorCraft document, a PDF or a PDF-compatible .ai file")));
+        return Err(bad(cmd, format!("`{file}` isn't a 91Ninjas Studio document, a PDF or a PDF-compatible .ai file")));
     }
     if bytes.len() > MAX_FILE {
         return Err(bad(cmd, format!("`{file}` is over {} MB", MAX_FILE >> 20)));

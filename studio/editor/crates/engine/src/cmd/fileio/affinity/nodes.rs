@@ -60,7 +60,7 @@ impl Builder {
             Blend::Color => BlendMode::Color,
             Blend::Luminosity => BlendMode::Luminosity,
             _ => {
-                self.warn("blend modes VectorCraft doesn't have (Add, Linear Light, Vivid Light, Pin Light, Hard Mix, Subtract, Darker/Lighter Colour, Average, Negation, Reflect, Glow, Erase) import as Normal");
+                self.warn("blend modes 91Ninjas Studio doesn't have (Add, Linear Light, Vivid Light, Pin Light, Hard Mix, Subtract, Darker/Lighter Colour, Average, Negation, Reflect, Glow, Erase) import as Normal");
                 BlendMode::Normal
             }
         }
@@ -103,7 +103,7 @@ impl Builder {
         if let Some(b) = af::kind_bounds(&n.kind) {
             let r = to_doc.transform_rect_bbox(rect_of(b));
             if ![r.x0, r.y0, r.x1, r.y1].iter().all(|v| v.is_finite() && v.abs() <= crate::MAX_COORD) {
-                self.warn("objects beyond the document range VectorCraft supports (left out)");
+                self.warn("objects beyond the document range 91Ninjas Studio supports (left out)");
                 return None;
             }
         }

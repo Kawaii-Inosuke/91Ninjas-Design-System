@@ -371,7 +371,14 @@ pub fn export_full(doc: &Document, opts: &ExportOptions, native: Option<&[u8]>) 
 }
 
 /// The XML namespace of the editing data [`ExportOptions::preserve_editing`] embeds.
-pub const EDITING_NS: &str = "urn:vectorcraft:editing";
+pub const EDITING_NS: &str = "urn:91ninjas-studio:editing";
+/// The namespace written before 1.0.4 (D-046): still read.
+pub const OLD_EDITING_NS: &str = "urn:vectorcraft:editing";
+
+/// An editing-data namespace, current or older.
+pub fn is_editing_ns(ns: Option<&str>) -> bool {
+    ns == Some(EDITING_NS) || ns == Some(OLD_EDITING_NS)
+}
 
 /// The native document an SVG carries ([`ExportOptions::preserve_editing`]).
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -387,12 +394,12 @@ pub struct Editing {
 /// The native document an SVG carries, if any, and whether the SVG was edited since.
 pub fn editing(svg: &str) -> Option<Editing> {
     // (An SVG nested too deep for the XML reader carries none: it isn't one of ours.)
-    if !svg.contains(EDITING_NS) || import::xml_too_deep(svg) || entities::expansion_too_large(svg) {
+    if !(svg.contains(EDITING_NS) || svg.contains(OLD_EDITING_NS)) || import::xml_too_deep(svg) || entities::expansion_too_large(svg) {
         return None;
     }
     let opts = usvg::roxmltree::ParsingOptions { allow_dtd: true, ..Default::default() };
     let xml = usvg::roxmltree::Document::parse_with_options(svg, opts).ok()?;
-    let el = xml.descendants().find(|n| n.tag_name().namespace() == Some(EDITING_NS) && n.tag_name().name() == "document")?;
+    let el = xml.descendants().find(|n| is_editing_ns(n.tag_name().namespace()) && n.tag_name().name() == "document")?;
     let data: String = el.children().filter_map(|c| c.text()).flat_map(|t| t.chars().filter(|c| !c.is_whitespace())).collect();
     if data.is_empty() {
         return None;

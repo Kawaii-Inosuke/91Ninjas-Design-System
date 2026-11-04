@@ -108,7 +108,7 @@
 	A lower value follows the stroke closely; a higher one gives fewer points and smoother curves.	Um valor menor segue o traço de perto; um valor maior gera menos pontos e curvas mais suaves.
 	A new preset starting from the selected one	Um novo predefinido a partir do selecionado
 	A saved copy of the selected preset	Uma cópia salva do predefinido selecionado
-	About VectorCraft	Sobre o VectorCraft
+	About 91Ninjas Studio	Sobre o 91Ninjas Studio
 	Absolute Position	Posição Absoluta
 	Accurate	Preciso
 	Abutting	Contíguo
@@ -200,7 +200,7 @@
 	Appearance Panel	Painel Aparência
 	Appearance of Black	Aparência do Preto
 	Appearance panel	Painel de Aparência
-	Applies the next time VectorCraft starts.	Aplica na próxima inicialização do VectorCraft.
+	Applies the next time 91Ninjas Studio starts.	Aplica na próxima inicialização do 91Ninjas Studio.
 	Applies when the linked file is relinked or updated.	Aplica quando o arquivo vinculado é revinculado ou atualizado.
 	Apply Brush	Aplicar Pincel
 	Apply Character Style	Aplicar Estilo de Caractere
@@ -370,7 +370,7 @@
 	Check Script	Verificar Script
 	Check Script…	Verificar Script…
 	Copy Report	Copiar Relatório
-	VectorCraft read this script without running it.	O VectorCraft leu este script sem executá-lo.
+	91Ninjas Studio read this script without running it.	O 91Ninjas Studio leu este script sem executá-lo.
 	Needs nothing beyond plain JavaScript	Precisa apenas de JavaScript simples
 	Needs the script language's own objects or directives	Precisa de objetos ou diretivas próprios da linguagem do script
 	Needs the document model	Precisa do modelo de documento
@@ -2091,7 +2091,7 @@ digits	Malayalam	Malaiala
 	Quarter Space	Espaço de Quarto
 	Quick Actions	Ações Rápidas
 	Quickly start a new file	Começar rapidamente um novo arquivo
-	Quit VectorCraft	Sair do VectorCraft
+	Quit 91Ninjas Studio	Sair do 91Ninjas Studio
 	RECENT	RECENTES
 	RGB Color	Cor RGB
 	Radar Graph Tool	Ferramenta Gráfico de Radar
@@ -2204,7 +2204,7 @@ digits	Malayalam	Malaiala
 @plural	{n} folder or file couldn't be read|{n} folders or files couldn't be read	{n} pasta ou arquivo não pôde ser lido|{n} pastas ou arquivos não puderam ser lidos
 	The search stopped at its limit: search a smaller folder.	A pesquisa parou no limite: pesquise uma pasta menor.
 	Copy only fonts you own or are licensed to install.	Copie apenas fontes que sejam suas ou que você tenha licença para instalar.
-	VectorCraft copies the fonts to {folder}.	O VectorCraft copia as fontes para {folder}.
+	91Ninjas Studio copies the fonts to {folder}.	O 91Ninjas Studio copia as fontes para {folder}.
 	Registered Trademark Symbol	Símbolo de Marca Registrada
 	Registry name:	Nome do registro:
 	Release	Liberar
@@ -2298,9 +2298,9 @@ digits	Malayalam	Malaiala
 	Revert	Reverter
 	Revert to the saved version of “{name}”?	Reverter para a versão salva de “{name}”?
 	Replace “{name}”, the file this document was opened from?	Substituir “{name}”, o arquivo do qual este documento foi aberto?
-	Opening it left out what VectorCraft can't read yet ({what}), so replacing it loses that for good. Save under another name to keep it.	Ao abri-lo, ficou de fora o que o VectorCraft ainda não consegue ler ({what}), então substituí-lo perde isso para sempre. Salve com outro nome para mantê-lo.
+	Opening it left out what 91Ninjas Studio can't read yet ({what}), so replacing it loses that for good. Save under another name to keep it.	Ao abri-lo, ficou de fora o que o 91Ninjas Studio ainda não consegue ler ({what}), então substituí-lo perde isso para sempre. Salve com outro nome para mantê-lo.
 	“{name}” already exists. Replace it?	“{name}” já existe. Substituir?
-	The name in the save panel was “{typed}”; VectorCraft added the file type's extension. Replacing the file overwrites its contents.	O nome no painel de salvamento era “{typed}”, e o VectorCraft adicionou a extensão do tipo de arquivo. Substituir o arquivo sobrescreve o conteúdo.
+	The name in the save panel was “{typed}”; 91Ninjas Studio added the file type's extension. Replacing the file overwrites its contents.	O nome no painel de salvamento era “{typed}”, e o 91Ninjas Studio adicionou a extensão do tipo de arquivo. Substituir o arquivo sobrescreve o conteúdo.
 	Revolve…	Revolver…
 	Right Grid:	Grade Direita:
 	Right Indent	Recuo Direito
@@ -2992,10 +2992,10 @@ digits	Malayalam	Malaiala
 	Vector Halftone	Meio-tom Vetorial
 	Vector Halftone…	Meio-tom Vetorial…
 	Vector illustration — fast, open, scriptable.	Ilustração vetorial — rápida, aberta, scriptável.
-	VectorCraft Help…	Ajuda do VectorCraft…
-	VectorCraft didn't quit normally last time. These documents had unsaved changes:	O VectorCraft não fechou normalmente da última vez. Estes documentos tinham alterações não salvas:
-	VectorCraft on GitHub	VectorCraft no GitHub
-	VectorCraft on getartcraft.com	VectorCraft em getartcraft.com
+	91Ninjas Studio Help…	Ajuda do 91Ninjas Studio…
+	91Ninjas Studio didn't quit normally last time. These documents had unsaved changes:	O 91Ninjas Studio não fechou normalmente da última vez. Estes documentos tinham alterações não salvas:
+	91Ninjas Studio on GitHub	91Ninjas Studio no GitHub
+	91Ninjas Studio on getartcraft.com	91Ninjas Studio em getartcraft.com
 	Vectors	Vetores
 	Version {version} — open-source vector illustration in pure Rust.	Versão {version} — ilustração vetorial de código aberto em Rust puro.
 	Version:	Versão:
@@ -3026,7 +3026,7 @@ digits	Malayalam	Malaiala
 	Web Shift	Web Shift
 	Web Snap:	Web Snap:
 	Weight:	Peso:
-	Welcome to VectorCraft	Bem-vindo ao VectorCraft
+	Welcome to 91Ninjas Studio	Bem-vindo ao 91Ninjas Studio
 	When pasting text	Ao colar texto
 	White	Branco
 	Widget Position:	Posição do Widget:
@@ -3148,7 +3148,7 @@ imageTrace	Outline	Contorno
 	Dock Panel	Encaixar Painel
 	Float Tool Group	Flutuar Grupo de Ferramentas
 	Services	Serviços
-	Hide VectorCraft	Ocultar o VectorCraft
+	Hide 91Ninjas Studio	Ocultar o 91Ninjas Studio
 	Hide Others	Ocultar Outros
 	Zoom	Zoom
 	Bring All to Front	Trazer Todas para a Frente
@@ -3157,7 +3157,7 @@ imageTrace	Outline	Contorno
 	On: one locked object showing the document, updated when it changes.	Ativado: um objeto bloqueado que mostra o documento, atualizado quando ele muda.
 	Off: an editable copy of its art, embedded in this document.	Desativado: uma cópia editável da arte, incorporada neste documento.
 	Images: link to the file instead of only embedding it.	Imagens: vincular ao arquivo em vez de apenas incorporá-lo.
-	VectorCraft documents: one locked object, updated when the file changes.	Documentos do VectorCraft: um objeto bloqueado, atualizado quando o arquivo muda.
+	91Ninjas Studio documents: one locked object, updated when the file changes.	Documentos do 91Ninjas Studio: um objeto bloqueado, atualizado quando o arquivo muda.
 	A file dialog is open: choose there first	Há uma caixa de diálogo de arquivos aberta: escolha nela primeiro
 	The document was closed while its file dialog was open	O documento foi fechado enquanto sua caixa de diálogo de arquivos estava aberta
 	The dialog was closed before its file dialog answered	O diálogo foi fechado antes que sua caixa de diálogo de arquivos respondesse
@@ -3711,7 +3711,7 @@ axis	Both	Ambos
 @msg	can't encode the document: {0}	não foi possível codificar o documento: {0}
 @msg	can't parse shortcut `{c}`	não foi possível interpretar o atalho `{c}`
 @msg	can't parse shortcut `{s}` for `{k}`	não foi possível interpretar o atalho `{s}` de `{k}`
-@msg	can't save version {0}: VectorCraft writes versions {MIN_VERSION} to {VERSION}	não foi possível salvar a versão {0}: o VectorCraft grava as versões {MIN_VERSION} a {VERSION}
+@msg	can't save version {0}: 91Ninjas Studio writes versions {MIN_VERSION} to {VERSION}	não foi possível salvar a versão {0}: o 91Ninjas Studio grava as versões {MIN_VERSION} a {VERSION}
 @msg	can't write .{ext} images	não é possível gravar imagens .{ext}
 @msg	cannot distort a zero-size bounding box	não é possível distorcer uma caixa delimitadora de tamanho zero
 @msg	cannot read PDF: {0}	não foi possível ler o PDF: {0}
@@ -3738,7 +3738,7 @@ axis	Both	Ambos
 @msg	empty brush stroke	traço de pincel vazio
 @msg	empty cutter	cortador vazio
 @msg	empty path	traçado vazio
-@msg	file version {0} is newer than this VectorCraft supports ({VERSION})	a versão {0} do arquivo é mais recente do que este VectorCraft suporta ({VERSION})
+@msg	file version {0} is newer than this 91Ninjas Studio supports ({VERSION})	a versão {0} do arquivo é mais recente do que este 91Ninjas Studio suporta ({VERSION})
 @msg	freeform point {i} needs `at` [x, y] and a valid `color`	o ponto {i} de forma livre precisa de `at` [x, y] e de uma `color` válida
 @msg	freeform line {i} must be an array of point indices	a linha {i} de forma livre deve ser uma matriz de índices de pontos
 @msg	give both `start` and `end` [x, y] (or neither)	informe `start` e `end` [x, y] (ou nenhum dos dois)
@@ -3758,9 +3758,9 @@ axis	Both	Ambos
 @msg	invalid PDF setting: {0}	configuração de PDF inválida: {0}
 @msg	invalid image data for `{0}`	dados de imagem inválidos para `{0}`
 @msg	invalid parameters for `{cmd}`: {msg}	parâmetros inválidos para `{cmd}`: {msg}
-@msg	is not an image VectorCraft reads	não é uma imagem que o VectorCraft lê
-@msg	it uses `{at}`, which VectorCraft's PostScript reader doesn't know	usa `{at}`, que o leitor de PostScript do VectorCraft não conhece
-@msg	it uses `{at}`, which VectorCraft's PostScript reader doesn't know, in {procs}	usa `{at}`, que o leitor de PostScript do VectorCraft não conhece, em {procs}
+@msg	is not an image 91Ninjas Studio reads	não é uma imagem que o 91Ninjas Studio lê
+@msg	it uses `{at}`, which 91Ninjas Studio's PostScript reader doesn't know	usa `{at}`, que o leitor de PostScript do 91Ninjas Studio não conhece
+@msg	it uses `{at}`, which 91Ninjas Studio's PostScript reader doesn't know, in {procs}	usa `{at}`, que o leitor de PostScript do 91Ninjas Studio não conhece, em {procs}
 @msg	its Windows metafile preview was opened instead, which may simplify the art	a visualização em metarquivo do Windows foi aberta no lugar, o que pode simplificar a arte
 @msg	its preview was placed instead, at screen resolution	a visualização foi inserida no lugar, em resolução de tela
 @msg	join needs open paths	unir exige traçados abertos
@@ -3817,7 +3817,7 @@ axis	Both	Ambos
 @msg	no file system here	nenhum sistema de arquivos aqui
 @msg	no file writer	sem gravador de arquivos
 @msg	no files to place	nenhum arquivo para inserir
-@msg	`{file}` isn't a VectorCraft document, a PDF or a PDF-compatible .ai file	`{file}` não é um documento do VectorCraft, um PDF nem um arquivo .ai compatível com PDF
+@msg	`{file}` isn't a 91Ninjas Studio document, a PDF or a PDF-compatible .ai file	`{file}` não é um documento do 91Ninjas Studio, um PDF nem um arquivo .ai compatível com PDF
 @msg	no format to export to	nenhum formato para exportar
 @msg	no free recovery area	nenhuma área de recuperação livre
 @msg	no gradient stop or freeform point is selected	nenhuma parada de gradiente ou ponto de forma livre selecionado
@@ -3859,7 +3859,7 @@ axis	Both	Ambos
 @msg	not an action set file	não é um arquivo de conjunto de ações
 @msg	the action set file is larger than 8 MiB	o arquivo de conjunto de ações tem mais de 8 MiB
 @msg	the action set file holds more than 1,000 actions	o arquivo de conjunto de ações contém mais de 1.000 ações
-@msg	the action set file needs a later version of VectorCraft	o arquivo de conjunto de ações requer uma versão mais recente do VectorCraft
+@msg	the action set file needs a later version of 91Ninjas Studio	o arquivo de conjunto de ações requer uma versão mais recente do 91Ninjas Studio
 @msg	an action in the action set file has more than 10,000 steps	uma ação do arquivo de conjunto de ações tem mais de 10.000 etapas
 @msg	no such anchor	âncora inexistente
 @msg	no such artboard	prancheta inexistente
@@ -3889,8 +3889,8 @@ axis	Both	Ambos
 @msg	node {_1} is not text	o nó {_1} não é texto
 @msg	node {_1} is on a locked artboard	o nó {_1} está em uma prancheta bloqueada
 @msg	not a DXF drawing	não é um desenho DXF
-@msg	not a VectorCraft file: {0}	não é um arquivo do VectorCraft: {0}
-@msg	not a VectorCraft shortcut set (missing `overrides`)	não é um conjunto de atalhos do VectorCraft (falta `overrides`)
+@msg	not a 91Ninjas Studio file: {0}	não é um arquivo do 91Ninjas Studio: {0}
+@msg	not a 91Ninjas Studio shortcut set (missing `overrides`)	não é um conjunto de atalhos do 91Ninjas Studio (falta `overrides`)
 @msg	not a blend	não é uma mesclagem
 @msg	not a graphic style library (format `{_1}`)	não é uma biblioteca de estilos gráficos (formato `{_1}`)
 @msg	not a stored central record	não é um registro central armazenado
@@ -4171,11 +4171,11 @@ axis	Both	Ambos
 @msg	Sent to {_1}	Enviado para {_1}
 @msg	{_1} files	{_1} arquivos
 @msg	The graphics were lost and have been restarted	Os gráficos foram perdidos e reiniciados
-@msg	The graphics processor tried first couldn't show the window, so VectorCraft started again on {summary}	O processador gráfico tentado primeiro não conseguiu exibir a janela, então o VectorCraft reiniciou em {summary}
-@msg	The last start of VectorCraft ended on {name} before its window appeared, so it started on {summary}. To try that graphics processor again, change Preferences › Performance › Graphics Processor or start with WGPU_BACKEND set	A última inicialização do VectorCraft terminou em {name} antes de a janela aparecer, então o VectorCraft iniciou em {summary}. Para tentar esse processador gráfico novamente, altere Preferências › Desempenho › Processador Gráfico ou inicie com a variável WGPU_BACKEND definida
-@msg	The last start of VectorCraft ended while it listed the graphics processors, so it started on {summary} with OpenGL alone. To try the other graphics backends again, change Preferences › Performance › Graphics Processor or start with WGPU_BACKEND set	A última inicialização do VectorCraft terminou enquanto listava os processadores gráficos, então o VectorCraft iniciou em {summary} apenas com OpenGL. Para tentar as outras interfaces gráficas novamente, altere Preferências › Desempenho › Processador Gráfico ou inicie com a variável WGPU_BACKEND definida
-@msg	Loading VectorCraft…	Carregando o VectorCraft…
-@msg	VectorCraft failed to start: {e}	Falha ao iniciar o VectorCraft: {e}
+@msg	The graphics processor tried first couldn't show the window, so 91Ninjas Studio started again on {summary}	O processador gráfico tentado primeiro não conseguiu exibir a janela, então o 91Ninjas Studio reiniciou em {summary}
+@msg	The last start of 91Ninjas Studio ended on {name} before its window appeared, so it started on {summary}. To try that graphics processor again, change Preferences › Performance › Graphics Processor or start with WGPU_BACKEND set	A última inicialização do 91Ninjas Studio terminou em {name} antes de a janela aparecer, então o 91Ninjas Studio iniciou em {summary}. Para tentar esse processador gráfico novamente, altere Preferências › Desempenho › Processador Gráfico ou inicie com a variável WGPU_BACKEND definida
+@msg	The last start of 91Ninjas Studio ended while it listed the graphics processors, so it started on {summary} with OpenGL alone. To try the other graphics backends again, change Preferences › Performance › Graphics Processor or start with WGPU_BACKEND set	A última inicialização do 91Ninjas Studio terminou enquanto listava os processadores gráficos, então o 91Ninjas Studio iniciou em {summary} apenas com OpenGL. Para tentar as outras interfaces gráficas novamente, altere Preferências › Desempenho › Processador Gráfico ou inicie com a variável WGPU_BACKEND definida
+@msg	Loading 91Ninjas Studio…	Carregando o 91Ninjas Studio…
+@msg	91Ninjas Studio failed to start: {e}	Falha ao iniciar o 91Ninjas Studio: {e}
 @msg	A browser with WebGPU or WebGL2 is required.	É necessário um navegador com WebGPU ou WebGL2.
 @msg	The graphics were lost and couldn't be restarted.	Os gráficos foram perdidos e não puderam ser reiniciados.
 @msg	Your unsaved changes are kept in this browser: reload the page to get them back.	Suas alterações não salvas ficam neste navegador: recarregue a página para recuperá-las.
@@ -4206,25 +4206,25 @@ axis	Both	Ambos
 @msg	it has more than {MAX_NODES} objects	tem mais de {MAX_NODES} objetos
 @msg	it has no layers	não tem camadas
 @msg	it has too many values in a row	tem valores demais em sequência
-@msg	it has {_1}, which VectorCraft doesn't read from it yet	tem {_1}, que o VectorCraft ainda não lê desse arquivo
+@msg	it has {_1}, which 91Ninjas Studio doesn't read from it yet	tem {_1}, que o 91Ninjas Studio ainda não lê desse arquivo
 @msg	its objects are nested too deeply	seus objetos estão aninhados com profundidade excessiva
 @msg	its section ending with `%{end}` doesn't end	sua seção que termina com `%{end}` não termina
 @msg	objects with several fills or strokes, effects or brushes came in as their drawn look ({_1}): their appearance isn't editable yet	objetos com vários preenchimentos ou traços, efeitos ou pincéis entraram com a aparência desenhada ({_1}): sua aparência ainda não é editável
 @msg	gradient “{name}” isn't defined in the file: a plain colour stands in for it	o gradiente “{name}” não está definido no arquivo: uma cor sólida o substitui
-@msg	an image VectorCraft can't read was left out	uma imagem que o VectorCraft não consegue ler foi omitida
+@msg	an image 91Ninjas Studio can't read was left out	uma imagem que o 91Ninjas Studio não consegue ler foi omitida
 @msg	graphs come in as plain art, without their data or settings	os gráficos são importados como arte comum, sem seus dados nem configurações
 @msg	an image whose data is cut short was left out	uma imagem com dados incompletos foi omitida
 @msg	its editing data doesn't say where its art is	seus dados de edição não indicam onde está a arte
 @msg	this file was saved without PDF compatibility, and its editing data can't be read ({why})	este arquivo foi salvo sem compatibilidade com PDF e seus dados de edição não podem ser lidos ({why})
 @msg	the PDF part couldn't be read ({_1}): the file opened from its editing data	não foi possível ler a parte PDF ({_1}): o arquivo foi aberto a partir dos seus dados de edição
 @msg	No fonts are missing in this document	Nenhuma fonte está ausente neste documento
-@msg	VectorCraft doesn't search other apps' or the system's folders: {path}	O VectorCraft não pesquisa pastas de outros aplicativos nem do sistema: {path}
-@msg	VectorCraft doesn't search the Shared or Public folder in Users: {path}	O VectorCraft não pesquisa a pasta Compartilhado ou Público em Usuários: {path}
+@msg	91Ninjas Studio doesn't search other apps' or the system's folders: {path}	O 91Ninjas Studio não pesquisa pastas de outros aplicativos nem do sistema: {path}
+@msg	91Ninjas Studio doesn't search the Shared or Public folder in Users: {path}	O 91Ninjas Studio não pesquisa a pasta Compartilhado ou Público em Usuários: {path}
 @msg	{path} is not a folder	{path} não é uma pasta
 @msg	the search couldn't start: try again in a moment	não foi possível iniciar a pesquisa: tente novamente em instantes
 @msg	searching a folder isn't available on the web	pesquisar em uma pasta não está disponível na web
 @msg	every search thread stopped on an internal error (please report this bug)	todos os processos de pesquisa pararam por um erro interno (relate este bug)
-@msg	VectorCraft's Fonts folder isn't set here: the desktop app and vectorcraft-cli set it	A pasta Fontes do VectorCraft não está definida aqui: o aplicativo para desktop e o vectorcraft-cli a definem
+@msg	91Ninjas Studio's Fonts folder isn't set here: the desktop app and vectorcraft-cli set it	A pasta Fontes do 91Ninjas Studio não está definida aqui: o aplicativo para desktop e o vectorcraft-cli a definem
 @msg	choose the font files to add	escolha os arquivos de fonte a adicionar
 @msg	not a file	não é um arquivo
 @msg	not a font file	não é um arquivo de fonte
@@ -4335,7 +4335,7 @@ axis	Both	Ambos
 	Posterization	Posterização
 	Grain	Grão
 	Highlight Area	Área de realces
-@msg	the compressed file unpacks to more than VectorCraft reads ({_1} MB of document, {_2} MB per image)	o arquivo compactado se expande para mais do que o VectorCraft lê ({_1} MB de documento, {_2} MB por imagem)
+@msg	the compressed file unpacks to more than 91Ninjas Studio reads ({_1} MB of document, {_2} MB per image)	o arquivo compactado se expande para mais do que o 91Ninjas Studio lê ({_1} MB de documento, {_2} MB por imagem)
 @msg	the document is too large to save compressed ({0}): save it with Use Compression off	o documento é grande demais para ser salvo compactado ({0}): salve-o com Usar Compressão desativado
 @msg	the file stopped being read (please report this bug)	a leitura do arquivo foi interrompida (informe este erro)
 	Concentric Dividers:	Divisórias concêntricas:
@@ -4573,7 +4573,7 @@ axis	Both	Ambos
 	Keep:	Manter:
 	Import Shortcut Set	Importar Conjunto de Atalhos
 	Import Shortcut Set…	Importar Conjunto de Atalhos…
-	Each entry of the file is matched to a VectorCraft tool, command or panel. Check the matches and answer what is left.	Cada entrada do arquivo é associada a uma ferramenta, comando ou painel do VectorCraft. Confira as correspondências e resolva o que sobrar.
+	Each entry of the file is matched to a 91Ninjas Studio tool, command or panel. Check the matches and answer what is left.	Cada entrada do arquivo é associada a uma ferramenta, comando ou painel do 91Ninjas Studio. Confira as correspondências e resolva o que sobrar.
 	Keys	Teclas
 	The file writes keys and modifiers as codes. Check the proposed meanings and answer the codes that are not known yet.	O arquivo grava teclas e modificadores como códigos. Confira os significados propostos e informe os códigos que ainda não são conhecidos.
 	Click, then press the key this code stands for (Esc cancels)	Clique e depois pressione a tecla que este código representa (Esc cancela)
@@ -4583,7 +4583,7 @@ axis	Both	Ambos
 	not known yet	ainda não conhecido
 	Shortcuts	Atalhos
 	In the File	No Arquivo
-	In VectorCraft	No VectorCraft
+	In 91Ninjas Studio	No 91Ninjas Studio
 	Needs Attention Only	Somente os que Precisam de Atenção
 	Ready	Pronto
 	Needs a choice	Precisa de uma escolha
@@ -4592,7 +4592,7 @@ axis	Both	Ambos
 	Tools take a single key (optionally with Shift)	Ferramentas usam uma única tecla (opcionalmente com Shift)
 	A later row takes this shortcut	Uma linha posterior usa este atalho
 	Same item as a later row	Mesmo item de uma linha posterior
-	Start from VectorCraft Defaults	Começar com os Padrões do VectorCraft
+	Start from 91Ninjas Studio Defaults	Começar com os Padrões do 91Ninjas Studio
 	Add to the Current Shortcuts	Adicionar aos Atalhos Atuais
 	Remember My Choices	Lembrar Minhas Escolhas
 	{ready} of {total} ready	{ready} de {total} prontos
@@ -4685,7 +4685,7 @@ axis	Both	Ambos
 @plural	Packaged {n} file {note} in {folder}|Packaged {n} files {note} in {folder}	{n} arquivo empacotado em {folder} {note}|{n} arquivos empacotados em {folder} {note}
 	Page information	Informações da página
 	Paragraph Style	Estilo de Parágrafo
-	Part of ArtCraft. MIT OR Apache-2.0. Fonts: Source Sans 3, Inter, JetBrains Mono (OFL). Icons: Lucide (ISC) + VectorCraft.	Parte do ArtCraft. MIT OR Apache-2.0. Fontes: Source Sans 3, Inter, JetBrains Mono (OFL). Ícones: Lucide (ISC) + VectorCraft.
+	Part of ArtCraft. MIT OR Apache-2.0. Fonts: Source Sans 3, Inter, JetBrains Mono (OFL). Icons: Lucide (ISC) + 91Ninjas Studio.	Parte do ArtCraft. MIT OR Apache-2.0. Fontes: Source Sans 3, Inter, JetBrains Mono (OFL). Ícones: Lucide (ISC) + 91Ninjas Studio.
 	Perspective grid presets	Predefinidos de grade de perspectiva
 	Phone 390×844	Celular 390×844
 	Place onto a new locked, dimmed template layer below the current layer	Colocar em uma nova camada de modelo bloqueada e esmaecida abaixo da camada atual
@@ -4851,7 +4851,7 @@ axis	Both	Ambos
 	Joins	Junções
 	Axis	Eixo
 @msg	Copied the script report	Relatório do script copiado
-@msg	This shortcut file is in a form VectorCraft can't read.	Este arquivo de atalhos está em um formato que o VectorCraft não consegue ler.
+@msg	This shortcut file is in a form 91Ninjas Studio can't read.	Este arquivo de atalhos está em um formato que o 91Ninjas Studio não consegue ler.
 @msg	axis must be "vertical", "horizontal" or an angle in degrees, not `{v}`	axis deve ser "vertical", "horizontal" ou um ângulo em graus, não `{v}`
 @msg	give corners of the path: anchors where its sides meet at an angle	informe os cantos do caminho: pontos de ancoragem onde os lados se encontram em ângulo
 @msg	give horizontal or vertical	informe horizontal ou vertical
@@ -5029,7 +5029,7 @@ effect	Regular	Regular
 	All shortcuts reset to defaults.	Todos os atalhos foram redefinidos para os padrões.
 	Imported. Press OK to keep the imported set.	Importado. Pressione OK para manter o conjunto importado.
 	⚠ {chord} was already used by {names} — it has been removed there.	Atenção: {chord} já era usado por {names}; foi removido de lá.
-	VectorCraft Defaults	Padrões do VectorCraft
+	91Ninjas Studio Defaults	Padrões do 91Ninjas Studio
 @plural	{n} shortcut is assigned more than once|{n} shortcuts are assigned more than once	{n} atalho está atribuído mais de uma vez|{n} atalhos estão atribuídos mais de uma vez
 	Simulate prints overprints as Overprint Preview shows them; separations always keep them. A preset flattens transparency before printing (PostScript files always flatten it).	Simular imprime as sobreimpressões como a Visualização de Sobreimpressão as mostra; as separações sempre as mantêm. Um predefinido achata a transparência antes de imprimir (arquivos PostScript sempre a achatam).
 	Preserve	Preservar
@@ -5227,7 +5227,7 @@ file-filter	Print presets	Predefinidos de impressão
 file-filter	Export presets	Predefinições de exportação
 file-filter	SVG Compressed	SVG Compactado
 file-filter	PDF-compatible .ai	.ai compatível com PDF
-file-filter	VectorCraft Template	Modelo do VectorCraft
+file-filter	91Ninjas Studio Template	Modelo do 91Ninjas Studio
 file-filter	Templates	Modelos
 diagnostics	render	renderização
 diagnostics	ui	interface
@@ -5269,7 +5269,7 @@ mark-style	Japanese	Japonesas
 	High Fidelity Photo	Foto de Alta Fidelidade
 	Image Trace (Make and Expand)	Rastreamento de Imagem (Criar e Expandir)
 	Joins:	Junções:
-	Keeps the document editable: VectorCraft reopens the PDF with nothing lost. For files you'll edit again.	Mantém o documento editável: o VectorCraft reabre o PDF sem perder nada. Para arquivos que você vai editar de novo.
+	Keeps the document editable: 91Ninjas Studio reopens the PDF with nothing lost. For files you'll edit again.	Mantém o documento editável: o 91Ninjas Studio reabre o PDF sem perder nada. Para arquivos que você vai editar de novo.
 	Lab Spot Colors	Cores Spot Lab
 	Lasso	Laço
 	Length:	Comprimento:
@@ -5308,9 +5308,9 @@ mark-style	Japanese	Japonesas
 	Touch Type	Texto de Toque
 	UTF-16 (Unicode)	UTF-16 (Unicode)
 	Variation	Variação
-	VectorCraft Default	Padrão do VectorCraft
-	VectorCraft Generic CMYK (SWOP-like)	CMYK Genérico do VectorCraft (tipo SWOP)
-	VectorCraft Swatches (.vcswatches)	Amostras do VectorCraft (.vcswatches)
+	91Ninjas Studio Default	Padrão do 91Ninjas Studio
+	91Ninjas Studio Generic CMYK (SWOP-like)	CMYK Genérico do 91Ninjas Studio (tipo SWOP)
+	91Ninjas Studio Swatches (.vcswatches)	Amostras do 91Ninjas Studio (.vcswatches)
 	Vertical Area Type	Texto de Área Vertical
 	Vertical Type	Texto Vertical
 	Vertical Type on a Path	Texto Vertical em um Caminho
@@ -6115,7 +6115,7 @@ breakText	Glyphs	Glifos
 	Malayalam	Malaiala
 	Odia	Oriá
 	Urdu	Urdu
-	VectorCraft {release} and later (version {n})	VectorCraft {release} e posteriores (versão {n})
+	91Ninjas Studio {release} and later (version {n})	91Ninjas Studio {release} e posteriores (versão {n})
 # Document Tools add-on: Export All Open Documents (#4920).
 	Export All Open Documents as PDF	Exportar todos os documentos abertos como PDF
 	Export All Open Documents as SVG	Exportar todos os documentos abertos como SVG
@@ -6147,7 +6147,7 @@ swatch	[None]	[Nenhum]
 	[Press Quality]	[Qualidade para gráfica]
 swatch	[Registration]	[Registro]
 	[Smallest File Size]	[Menor tamanho de arquivo]
-	[VectorCraft Default]	[Padrão do VectorCraft]
+	[91Ninjas Studio Default]	[Padrão do 91Ninjas Studio]
 swatch	Amber	Âmbar
 	Angular	Angular
 swatch	Aqua	Água
@@ -6178,7 +6178,7 @@ swatch	Copper	Cobre
 swatch	Cyan	Ciano
 swatch	Cyan Green	Verde-ciano
 	Differences from [Default]:	Diferenças em relação a [Padrão]:
-	Differences from VectorCraft Default:	Diferenças em relação ao padrão do VectorCraft:
+	Differences from 91Ninjas Studio Default:	Diferenças em relação ao padrão do 91Ninjas Studio:
 	Dimension Lines	Linhas de cota
 	Dimension Text	Texto da cota
 	Display	Exibição
@@ -6227,7 +6227,7 @@ shape	Open	Aberta
 swatch	Orange	Laranja
 swatch	Orange Red	Vermelho-alaranjado
 	Overlay Edge	Sobreposição de bordas
-	Part of ArtCraft. MIT OR Apache-2.0. Fonts: Source Sans 3, Inter, JetBrains Mono, Noto Sans SC (OFL). Icons: Lucide (ISC) + VectorCraft.	Parte do ArtCraft. MIT OR Apache-2.0. Fontes: Source Sans 3, Inter, JetBrains Mono, Noto Sans SC (OFL). Ícones: Lucide (ISC) + VectorCraft.
+	Part of ArtCraft. MIT OR Apache-2.0. Fonts: Source Sans 3, Inter, JetBrains Mono, Noto Sans SC (OFL). Icons: Lucide (ISC) + 91Ninjas Studio.	Parte do ArtCraft. MIT OR Apache-2.0. Fontes: Source Sans 3, Inter, JetBrains Mono, Noto Sans SC (OFL). Ícones: Lucide (ISC) + 91Ninjas Studio.
 	Path Length	Comprimento do caminho
 	PDF/X-1a:2001	PDF/X-1a:2001
 	PDF/X-3:2002	PDF/X-3:2002
@@ -6276,7 +6276,7 @@ swatch	Teal	Verde-azulado
 	Units & Scale	Unidades e escala
 @msg	Unknown dimension style	Estilo de cota desconhecido
 @msg	Unknown unit	Unidade desconhecida
-	VectorCraft Updates	Atualizações do VectorCraft
+	91Ninjas Studio Updates	Atualizações do 91Ninjas Studio
 	Video 1920×1080	Vídeo 1920×1080
 	Video 3840×2160	Vídeo 3840×2160
 swatch	Violet	Violeta

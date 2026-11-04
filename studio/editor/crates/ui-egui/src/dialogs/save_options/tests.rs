@@ -72,8 +72,8 @@ fn save_as_svg_opens_svg_options_then_writes_svg() {
     // The save panel offers every save format, the document's own first.
     let pick = &picks.borrow()[0];
     let labels: Vec<&str> = pick.filters.iter().map(|f| f.0.as_str()).collect();
-    assert_eq!(labels, ["VectorCraft", "VectorCraft Template", "PDF", "SVG", "SVG Compressed", "PDF-compatible .ai", "EPS"]);
-    assert_eq!(pick.name, "Untitled-1.vectorcraft");
+    assert_eq!(labels, ["91Ninjas Studio", "91Ninjas Studio Template", "PDF", "SVG", "SVG Compressed", "PDF-compatible .ai", "EPS"]);
+    assert_eq!(pick.name, "Untitled-1.91studio");
     let d = dialog(&app);
     assert_eq!((d.kind.as_str(), d.str("path").as_str(), d.str("mode").as_str()), ("svgOptions", "art.svg", "save"));
     assert!(written.borrow().is_empty(), "nothing is written before OK");
@@ -214,11 +214,11 @@ fn the_enter_that_closed_the_save_panel_does_not_confirm_the_options() {
 
 #[test]
 fn save_a_copy_and_template_suggest_their_names() {
-    let (mut app, written, picks) = desktop("copy.vectorcraft");
+    let (mut app, written, picks) = desktop("copy.91studio");
     let folder = vectorcraft_testkit::temp_dir("save-template-dialog");
     app.session.prefs.templates_folder = folder.to_string_lossy().into_owned();
     app.run("file.saveCopy", json!({})).unwrap();
-    assert_eq!(picks.borrow()[0].name, "Untitled-1 copy.vectorcraft");
+    assert_eq!(picks.borrow()[0].name, "Untitled-1 copy.91studio");
     assert!(app.ui.dialog.is_none(), "the native format has no options");
     assert!(vectorcraft_format::sniff(&written.borrow()[0].1));
     assert!(app.session.active().unwrap().path.is_none() && app.session.active().unwrap().is_dirty());
@@ -228,7 +228,7 @@ fn save_a_copy_and_template_suggest_their_names() {
     assert_eq!(pick.folder.as_deref().map(std::path::Path::new), Some(folder.as_path()));
     assert_eq!(
         pick.filters,
-        crate::FilePick::filters([("VectorCraft Template", &["vctemplate"][..]), ("PDF-compatible .ait template", &["ait"][..])])
+        crate::FilePick::filters([("91Ninjas Studio Template", &["vctemplate"][..]), ("PDF-compatible .ait template", &["ait"][..])])
     );
     assert_eq!(written.borrow()[1].0, "copy.vctemplate", "the picked name, its extension replaced with the template's");
 }
@@ -247,7 +247,7 @@ fn save_as_template_writes_ait_when_it_is_picked() {
     let (mut app, written) = web();
     app.run("file.saveAsTemplate", json!({})).unwrap();
     assert_eq!((heading(dialog(&app)).as_str(), dialog(&app).str("format").as_str()), ("Save as Template", "template"));
-    assert_eq!(template_labels(), ["VectorCraft Template", "PDF-compatible .ait template"]);
+    assert_eq!(template_labels(), ["91Ninjas Studio Template", "PDF-compatible .ait template"]);
     frame(&mut app, false);
     let mut d = app.ui.dialog.take().unwrap();
     switch_format(&mut app, &mut d, "ait");
@@ -272,7 +272,7 @@ fn the_ait_template_options_have_no_version_row() {
 /// replaced with the template's, as Save As replaces the extension of a format it doesn't write.
 #[test]
 fn save_as_template_replaces_a_save_formats_extension() {
-    for (picked, saved) in [("card.pdf", "card.vctemplate"), ("card.vectorcraft", "card.vctemplate"), ("card.svg", "card.vctemplate")] {
+    for (picked, saved) in [("card.pdf", "card.vctemplate"), ("card.91studio", "card.vctemplate"), ("card.svg", "card.vctemplate")] {
         let (mut app, written, _) = desktop(picked);
         app.session.prefs.templates_folder = vectorcraft_testkit::temp_dir("save-template-ext").to_string_lossy().into_owned();
         app.run("file.saveAsTemplate", json!({})).unwrap();
@@ -287,7 +287,7 @@ fn web_save_as_names_the_file_and_picks_the_format() {
     let (mut app, written) = web();
     app.run("file.saveAs", json!({})).unwrap();
     let d = dialog(&app);
-    assert_eq!((heading(d).as_str(), d.str("path").as_str(), d.str("format").as_str()), ("Save As", "Untitled-1.vectorcraft", "vectorcraft"));
+    assert_eq!((heading(d).as_str(), d.str("path").as_str(), d.str("format").as_str()), ("Save As", "Untitled-1.91studio", "vectorcraft"));
     frame(&mut app, false);
     let mut d = app.ui.dialog.take().unwrap();
     switch_format(&mut app, &mut d, "pdf");
@@ -356,10 +356,10 @@ fn native_version_is_a_menu_of_the_versions_vectorcraft_writes() {
     let listed: Vec<u32> = NATIVE_VERSIONS.iter().map(|(n, _)| *n).collect();
     let writable: Vec<u32> = (vectorcraft_format::MIN_VERSION..=vectorcraft_format::VERSION).rev().collect();
     assert_eq!(listed, writable, "every version VectorCraft writes, newest first");
-    let (mut app, written, _) = desktop("art.vectorcraft");
+    let (mut app, written, _) = desktop("art.91studio");
     assert_eq!(app.run("file.saveAs", json!({})).unwrap()["pending"], KIND);
     let text = crate::tests_labels::painted_text(&mut app, |app, ui| super::super::show(app, ui.ctx()));
-    assert!(text.contains("VectorCraft 0.8 and later (version 4)"), "{text}");
+    assert!(text.contains("Version 4 (current)"), "{text}");
     assert_eq!(native_version_of(dialog(&app)), vectorcraft_format::VERSION);
     let d = app.ui.dialog.as_mut().unwrap();
     d.fields.insert("version".into(), json!(2));
@@ -376,7 +376,7 @@ fn native_version_is_a_menu_of_the_versions_vectorcraft_writes() {
 /// so in the "Can't save" alert, in the reason's words without the command's, and writes nothing.
 #[test]
 fn a_refused_save_says_so_in_an_alert() {
-    let (mut app, written, _) = desktop("art.vectorcraft");
+    let (mut app, written, _) = desktop("art.91studio");
     assert_eq!(app.run("file.saveAs", json!({})).unwrap()["pending"], KIND);
     app.ui.dialog.as_mut().unwrap().fields.insert("version".into(), json!(55));
     frame(&mut app, false);
@@ -384,7 +384,7 @@ fn a_refused_save_says_so_in_an_alert() {
     let d = dialog(&app);
     assert_eq!(
         (d.kind.as_str(), d.str("message").as_str(), d.str("detail").as_str()),
-        (crate::dialogs::confirm::MESSAGE, "Can't save “art.vectorcraft”.", "can't save version 55: VectorCraft writes versions 1 to 4")
+        (crate::dialogs::confirm::MESSAGE, "Can't save “art.91studio”.", "can't save version 55: 91Ninjas Studio writes versions 1 to 4")
     );
     assert!(written.borrow().is_empty());
     let st = app.session.active().unwrap();

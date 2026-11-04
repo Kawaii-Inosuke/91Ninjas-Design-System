@@ -78,7 +78,7 @@
 	A File…	Αρχείο…
 	A new preset starting from the selected one	Νέα προεπιλογή με βάση την επιλεγμένη
 	A saved copy of the selected preset	Αποθηκευμένο αντίγραφο της επιλεγμένης προεπιλογής
-	About VectorCraft	Σχετικά με το VectorCraft
+	About 91Ninjas Studio	Σχετικά με το 91Ninjas Studio
 	above	παραπάνω
 	Absolute Position	Απόλυτη θέση
 	Accurate	Ακριβές
@@ -183,7 +183,7 @@ font-technology	Variable	Μεταβλητές
 	Appearance of Black	Απεικόνιση του μαύρου
 	Appearance Panel	Πίνακας εμφάνισης
 	Appearance panel	Πίνακας εμφάνισης
-	Applies the next time VectorCraft starts.	Εφαρμόζεται στην επόμενη εκκίνηση του VectorCraft.
+	Applies the next time 91Ninjas Studio starts.	Εφαρμόζεται στην επόμενη εκκίνηση του 91Ninjas Studio.
 	Apply	Εφαρμογή
 	Apply Brush	Εφαρμογή πινέλου
 	Apply Character Style	Εφαρμογή στυλ χαρακτήρων
@@ -374,7 +374,7 @@ font-technology	Variable	Μεταβλητές
 	Check Script	Έλεγχος σεναρίου
 	Check Script…	Έλεγχος σεναρίου…
 	Copy Report	Αντιγραφή αναφοράς
-	VectorCraft read this script without running it.	Το VectorCraft διάβασε αυτό το σενάριο χωρίς να το εκτελέσει.
+	91Ninjas Studio read this script without running it.	Το 91Ninjas Studio διάβασε αυτό το σενάριο χωρίς να το εκτελέσει.
 	Needs nothing beyond plain JavaScript	Απαιτεί μόνο απλή JavaScript
 	Needs the document model	Απαιτεί το μοντέλο εγγράφου
 	Needs files	Απαιτεί πρόσβαση σε αρχεία
@@ -1576,7 +1576,7 @@ font-technology	Variable	Μεταβλητές
 	not known yet	δεν είναι ακόμη γνωστό
 	Shortcuts	Συντομεύσεις
 	In the File	Στο αρχείο
-	In VectorCraft	Στο VectorCraft
+	In 91Ninjas Studio	Στο 91Ninjas Studio
 	Needs Attention Only	Μόνο όσα απαιτούν προσοχή
 	Ready	Έτοιμο
 	Needs a choice	Απαιτεί επιλογή
@@ -1585,7 +1585,7 @@ font-technology	Variable	Μεταβλητές
 	Tools take a single key (optionally with Shift)	Τα εργαλεία χρησιμοποιούν ένα πλήκτρο (προαιρετικά με Shift)
 	A later row takes this shortcut	Μια επόμενη γραμμή χρησιμοποιεί αυτή τη συντόμευση
 	Same item as a later row	Ίδιο στοιχείο με επόμενη γραμμή
-	Start from VectorCraft Defaults	Εκκίνηση από τις προεπιλογές του VectorCraft
+	Start from 91Ninjas Studio Defaults	Εκκίνηση από τις προεπιλογές του 91Ninjas Studio
 	Add to the Current Shortcuts	Προσθήκη στις τρέχουσες συντομεύσεις
 	Remember My Choices	Απομνημόνευση των επιλογών μου
 	{ready} of {total} ready	{ready} από {total} έτοιμα
@@ -2207,7 +2207,7 @@ axis	Both	Και τα δύο
 @msg	Split Into Grid: select paths large enough for the grid	Διαίρεση σε πλέγμα: επιλέξτε αρκετά μεγάλες διαδρομές για το πλέγμα
 @msg	Targa files are RGB: colorModel rgb	Τα αρχεία Targa είναι RGB: colorModel rgb
 @msg	Text Wrap: select a wrap object	Αναδίπλωση κειμένου: επιλέξτε αντικείμενο αναδίπλωσης
-@msg	This shortcut file is in a form VectorCraft can't read.	Αυτό το αρχείο συντομεύσεων έχει μορφή που δεν μπορεί να διαβάσει το VectorCraft.
+@msg	This shortcut file is in a form 91Ninjas Studio can't read.	Αυτό το αρχείο συντομεύσεων έχει μορφή που δεν μπορεί να διαβάσει το 91Ninjas Studio.
 @msg	`aspect` must be a number (%)	Το `aspect` πρέπει να είναι αριθμός (%)
 @msg	`at` must be [x, y]	Το `at` πρέπει να είναι [x, y]
 @msg	`color` must be a colour	Το `color` πρέπει να είναι χρώμα
@@ -2506,7 +2506,7 @@ file-filter	Export presets	Προκαθορισμένα εξαγωγής
 file-filter	SVG Compressed	Συμπιεσμένο SVG
 file-filter	Swatch libraries	Βιβλιοθήκες δειγμάτων χρωμάτων
 file-filter	Templates	Πρότυπα
-file-filter	VectorCraft Template	Πρότυπο VectorCraft
+file-filter	91Ninjas Studio Template	Πρότυπο 91Ninjas Studio
 gradient-kind	Radial	Ακτινωτό
 mark-style	Japanese	Ιαπωνικά
 theme	Appearance	Εμφάνιση
@@ -2552,7 +2552,7 @@ theme	Appearance	Εμφάνιση
 	Join the ArtCraft community on Discord (discord.gg/artcraft)	Γίνετε μέλος της κοινότητας ArtCraft στο Discord (discord.gg/artcraft)
 	Keep a link to an image file instead of only embedding it	Διατήρηση συνδέσμου προς το αρχείο εικόνας αντί μόνο της ενσωμάτωσής του
 	Keep the pasted color as a new swatch with a numbered name.	Διατήρηση του επικολλημένου χρώματος ως νέο δείγμα με αριθμημένο όνομα.
-	Each entry of the file is matched to a VectorCraft tool, command or panel. Check the matches and answer what is left.	Κάθε καταχώριση του αρχείου αντιστοιχίζεται σε εργαλείο, εντολή ή πίνακα του VectorCraft. Ελέγξτε τις αντιστοιχίσεις και συμπληρώστε όσα απομένουν.
+	Each entry of the file is matched to a 91Ninjas Studio tool, command or panel. Check the matches and answer what is left.	Κάθε καταχώριση του αρχείου αντιστοιχίζεται σε εργαλείο, εντολή ή πίνακα του 91Ninjas Studio. Ελέγξτε τις αντιστοιχίσεις και συμπληρώστε όσα απομένουν.
 	The file writes keys and modifiers as codes. Check the proposed meanings and answer the codes that are not known yet.	Το αρχείο αποθηκεύει πλήκτρα και τροποποιητές ως κωδικούς. Ελέγξτε τις προτεινόμενες αντιστοιχίσεις και συμπληρώστε τους άγνωστους κωδικούς.
 	Click, then press the key this code stands for (Esc cancels)	Κάντε κλικ και πατήστε το πλήκτρο που αντιστοιχεί στον κωδικό (Esc για ακύρωση)
 	The file is too large to read in full, so only its first part is listed.	Το αρχείο είναι πολύ μεγάλο για πλήρη ανάγνωση· εμφανίζεται μόνο το αρχικό τμήμα του.
@@ -2962,7 +2962,7 @@ theme	Appearance	Εμφάνιση
 	Paragraph Style	Στυλ παραγράφου
 	Paragraph Style Options	Επιλογές στυλ παραγράφου
 	Paragraph Symbol	Σύμβολο παραγράφου
-	Part of ArtCraft. MIT OR Apache-2.0. Fonts: Source Sans 3, Inter, JetBrains Mono (OFL). Icons: Lucide (ISC) + VectorCraft.	Μέρος του ArtCraft. MIT ή Apache-2.0. Γραμματοσειρές: Source Sans 3, Inter, JetBrains Mono (OFL). Εικονίδια: Lucide (ISC) + VectorCraft.
+	Part of ArtCraft. MIT OR Apache-2.0. Fonts: Source Sans 3, Inter, JetBrains Mono (OFL). Icons: Lucide (ISC) + 91Ninjas Studio.	Μέρος του ArtCraft. MIT ή Apache-2.0. Γραμματοσειρές: Source Sans 3, Inter, JetBrains Mono (OFL). Εικονίδια: Lucide (ISC) + 91Ninjas Studio.
 	Password	Κωδικός πρόσβασης
 	Paste in Back	Επικόλληση στο πίσω μέρος
 	Paste in Front	Επικόλληση στο μπροστινό μέρος
@@ -3107,7 +3107,7 @@ digits	Malayalam	Μαλαγιάλαμ
 	Quality {quality}	Ποιότητα {quality}
 	Quarter Space	Τεταρτοδιάστημα
 	Quickly start a new file	Γρήγορη δημιουργία νέου αρχείου
-	Quit VectorCraft	Τερματισμός VectorCraft
+	Quit 91Ninjas Studio	Τερματισμός 91Ninjas Studio
 	Radar Graph Tool	Αραχνοειδές γράφημα (Radar Graph Tool)
 	Radial Glows	Ακτινικές λάμψεις
 	Radius 1	Ακτίνα 1
@@ -3203,7 +3203,7 @@ digits	Malayalam	Μαλαγιάλαμ
 @plural	{n} folder or file couldn't be read|{n} folders or files couldn't be read	Δεν ήταν δυνατή η ανάγνωση {n} φακέλου ή αρχείου|Δεν ήταν δυνατή η ανάγνωση {n} φακέλων ή αρχείων
 	The search stopped at its limit: search a smaller folder.	Η αναζήτηση έφτασε στο όριό της: επιλέξτε μικρότερο φάκελο.
 	Copy only fonts you own or are licensed to install.	Αντιγράψτε μόνο γραμματοσειρές που σας ανήκουν ή έχετε άδεια να εγκαταστήσετε.
-	VectorCraft copies the fonts to {folder}.	Το VectorCraft αντιγράφει τις γραμματοσειρές στον φάκελο {folder}.
+	91Ninjas Studio copies the fonts to {folder}.	Το 91Ninjas Studio αντιγράφει τις γραμματοσειρές στον φάκελο {folder}.
 	Registered Trademark Symbol	Σύμβολο καταχωρισμένου εμπορικού σήματος
 	Registration marks	Σημάδια ευθυγράμμισης
 	Registry name:	Όνομα καταχώρισης:
@@ -3296,9 +3296,9 @@ digits	Malayalam	Μαλαγιάλαμ
 	Reverse Spine	Αντιστροφή κεντρικής καμπύλης
 	Revert to the saved version of “{name}”?	Επαναφορά στην αποθηκευμένη έκδοση του «{name}»;
 	Replace “{name}”, the file this document was opened from?	Να αντικατασταθεί το «{name}», το αρχικό αρχείο του εγγράφου;
-	Opening it left out what VectorCraft can't read yet ({what}), so replacing it loses that for good. Save under another name to keep it.	Κατά το άνοιγμα παραλείφθηκαν στοιχεία που το VectorCraft δεν μπορεί ακόμη να διαβάσει ({what}). Αν αντικαταστήσετε το αρχείο, θα χαθούν οριστικά. Αποθηκεύστε με άλλο όνομα για να τα διατηρήσετε.
+	Opening it left out what 91Ninjas Studio can't read yet ({what}), so replacing it loses that for good. Save under another name to keep it.	Κατά το άνοιγμα παραλείφθηκαν στοιχεία που το 91Ninjas Studio δεν μπορεί ακόμη να διαβάσει ({what}). Αν αντικαταστήσετε το αρχείο, θα χαθούν οριστικά. Αποθηκεύστε με άλλο όνομα για να τα διατηρήσετε.
 	“{name}” already exists. Replace it?	Το «{name}» υπάρχει ήδη. Να αντικατασταθεί;
-	The name in the save panel was “{typed}”; VectorCraft added the file type's extension. Replacing the file overwrites its contents.	Το όνομα στο παράθυρο αποθήκευσης ήταν «{typed}» και το VectorCraft πρόσθεσε την επέκταση του τύπου αρχείου. Αν αντικαταστήσετε το αρχείο, τα περιεχόμενά του θα χαθούν.
+	The name in the save panel was “{typed}”; 91Ninjas Studio added the file type's extension. Replacing the file overwrites its contents.	Το όνομα στο παράθυρο αποθήκευσης ήταν «{typed}» και το 91Ninjas Studio πρόσθεσε την επέκταση του τύπου αρχείου. Αν αντικαταστήσετε το αρχείο, τα περιεχόμενά του θα χαθούν.
 	Revolve…	Περιστροφή γύρω από άξονα…
 	Right Grid:	Δεξί πλέγμα:
 	Right in Front	Δεξιά εμπρός
@@ -3912,10 +3912,10 @@ digits	Malayalam	Μαλαγιάλαμ
 	Vector Halftone	Διανυσματικός ημιτονισμός
 	Vector Halftone…	Διανυσματικός ημιτονισμός…
 	Vector illustration — fast, open, scriptable.	Διανυσματική σχεδίαση — γρήγορη, ανοιχτή και αυτοματοποιήσιμη.
-	VectorCraft didn't quit normally last time. These documents had unsaved changes:	Το VectorCraft δεν τερματίστηκε κανονικά την προηγούμενη φορά. Τα ακόλουθα έγγραφα είχαν μη αποθηκευμένες αλλαγές:
-	VectorCraft Help…	Βοήθεια VectorCraft…
-	VectorCraft on getartcraft.com	VectorCraft στο getartcraft.com
-	VectorCraft on GitHub	VectorCraft στο GitHub
+	91Ninjas Studio didn't quit normally last time. These documents had unsaved changes:	Το 91Ninjas Studio δεν τερματίστηκε κανονικά την προηγούμενη φορά. Τα ακόλουθα έγγραφα είχαν μη αποθηκευμένες αλλαγές:
+	91Ninjas Studio Help…	Βοήθεια 91Ninjas Studio…
+	91Ninjas Studio on getartcraft.com	91Ninjas Studio στο getartcraft.com
+	91Ninjas Studio on GitHub	91Ninjas Studio στο GitHub
 	Vectors	Διανύσματα
 	Version {version} — open-source vector illustration in pure Rust.	Έκδοση {version} — διανυσματική σχεδίαση ανοιχτού κώδικα εξ ολοκλήρου σε Rust.
 	Vertical %	Κατακόρυφα %
@@ -3943,7 +3943,7 @@ digits	Malayalam	Μαλαγιάλαμ
 	Web Safe 216	216 ασφαλή χρώματα ιστού
 	Web Safe RGB	Ασφαλή χρώματα RGB ιστού
 	Web Shift	Μετατόπιση χρωμάτων ιστού
-	Welcome to VectorCraft	Καλώς ήρθατε στο VectorCraft
+	Welcome to 91Ninjas Studio	Καλώς ήρθατε στο 91Ninjas Studio
 	When pasting text	Κατά την επικόλληση κειμένου
 	Widget Position:	Θέση στοιχείου:
 	Width Point	Σημείο πλάτους
@@ -4080,7 +4080,7 @@ digits	Malayalam	Μαλαγιάλαμ
 @msg	can't encode the document: {0}	δεν είναι δυνατή η κωδικοποίηση εγγράφου: {0}
 @msg	can't parse shortcut `{c}`	δεν είναι δυνατή η ανάλυση της συντόμευσης `{c}`
 @msg	can't parse shortcut `{s}` for `{k}`	δεν είναι δυνατή η ανάλυση της συντόμευσης `{s}` για `{k}`
-@msg	can't save version {0}: VectorCraft writes versions {MIN_VERSION} to {VERSION}	δεν είναι δυνατή η αποθήκευση της έκδοσης {0}: το VectorCraft γράφει εκδόσεις από {MIN_VERSION} έως {VERSION}
+@msg	can't save version {0}: 91Ninjas Studio writes versions {MIN_VERSION} to {VERSION}	δεν είναι δυνατή η αποθήκευση της έκδοσης {0}: το 91Ninjas Studio γράφει εκδόσεις από {MIN_VERSION} έως {VERSION}
 @msg	can't write .{ext} images	δεν είναι δυνατή η εγγραφή εικόνων .{ext}
 @msg	cannot distort a zero-size bounding box	δεν είναι δυνατή η παραμόρφωση πλαισίου οριοθέτησης μηδενικού μεγέθους
 @msg	cannot read PDF: {0}	δεν είναι δυνατή η ανάγνωση PDF: {0}
@@ -4107,7 +4107,7 @@ digits	Malayalam	Μαλαγιάλαμ
 @msg	empty brush stroke	κενό περίγραμμα πινέλου
 @msg	empty cutter	κενό αντικείμενο αποκοπής
 @msg	empty path	κενή διαδρομή
-@msg	file version {0} is newer than this VectorCraft supports ({VERSION})	η έκδοση αρχείου {0} είναι νεότερη από αυτήν που υποστηρίζει το VectorCraft ({VERSION})
+@msg	file version {0} is newer than this 91Ninjas Studio supports ({VERSION})	η έκδοση αρχείου {0} είναι νεότερη από αυτήν που υποστηρίζει το 91Ninjas Studio ({VERSION})
 @msg	freeform point {i} needs `at` [x, y] and a valid `color`	το σημείο ελεύθερης μορφής {i} χρειάζεται `at` [x, y] και έγκυρο `color`
 @msg	freeform line {i} must be an array of point indices	η γραμμή ελεύθερης μορφής {i} πρέπει να είναι πίνακας δεικτών σημείων
 @msg	give both `start` and `end` [x, y] (or neither)	δώστε και τα δύο `start` και `end` [x, y] (ή κανένα)
@@ -4128,9 +4128,9 @@ digits	Malayalam	Μαλαγιάλαμ
 @msg	invalid PDF setting: {0}	μη έγκυρη ρύθμιση PDF: {0}
 @msg	invalid image data for `{0}`	μη έγκυρα δεδομένα εικόνας για `{0}`
 @msg	invalid parameters for `{cmd}`: {msg}	μη έγκυρες παράμετροι για `{cmd}`: {msg}
-@msg	is not an image VectorCraft reads	δεν είναι μορφή εικόνας που μπορεί να διαβάσει το VectorCraft
-@msg	it uses `{at}`, which VectorCraft's PostScript reader doesn't know	χρησιμοποιεί το `{at}`, το οποίο δεν αναγνωρίζει ο αναγνώστης PostScript του VectorCraft
-@msg	it uses `{at}`, which VectorCraft's PostScript reader doesn't know, in {procs}	χρησιμοποιεί το `{at}`, το οποίο δεν αναγνωρίζει ο αναγνώστης PostScript του VectorCraft, στις διαδικασίες {procs}
+@msg	is not an image 91Ninjas Studio reads	δεν είναι μορφή εικόνας που μπορεί να διαβάσει το 91Ninjas Studio
+@msg	it uses `{at}`, which 91Ninjas Studio's PostScript reader doesn't know	χρησιμοποιεί το `{at}`, το οποίο δεν αναγνωρίζει ο αναγνώστης PostScript του 91Ninjas Studio
+@msg	it uses `{at}`, which 91Ninjas Studio's PostScript reader doesn't know, in {procs}	χρησιμοποιεί το `{at}`, το οποίο δεν αναγνωρίζει ο αναγνώστης PostScript του 91Ninjas Studio, στις διαδικασίες {procs}
 @msg	its Windows metafile preview was opened instead, which may simplify the art	αντί γι' αυτό ανοίχτηκε η προεπισκόπηση μετααρχείου Windows, η οποία μπορεί να απλοποιεί το σχέδιο
 @msg	its preview was placed instead, at screen resolution	τοποθετήθηκε η προεπισκόπησή του σε ανάλυση οθόνης
 @msg	join needs open paths	η ένωση απαιτεί ανοιχτές διαδρομές
@@ -4187,7 +4187,7 @@ digits	Malayalam	Μαλαγιάλαμ
 @msg	no file system here	δεν υπάρχει σύστημα αρχείων εδώ
 @msg	no file writer	δεν υπάρχει μηχανισμός εγγραφής αρχείων
 @msg	no files to place	δεν υπάρχουν αρχεία για τοποθέτηση
-@msg	`{file}` isn't a VectorCraft document, a PDF or a PDF-compatible .ai file	Το `{file}` δεν είναι έγγραφο VectorCraft, PDF ή αρχείο .ai συμβατό με PDF
+@msg	`{file}` isn't a 91Ninjas Studio document, a PDF or a PDF-compatible .ai file	Το `{file}` δεν είναι έγγραφο 91Ninjas Studio, PDF ή αρχείο .ai συμβατό με PDF
 @msg	no format to export to	δεν υπάρχει μορφή εξαγωγής
 @msg	no free recovery area	δεν υπάρχει ελεύθερη περιοχή ανάκτησης
 @msg	no gradient stop or freeform point is selected	δεν έχει επιλεγεί σημείο χρώματος ντεγκραντέ ή σημείο ελεύθερης μορφής
@@ -4229,7 +4229,7 @@ digits	Malayalam	Μαλαγιάλαμ
 @msg	not an action set file	δεν είναι αρχείο συνόλου ενεργειών
 @msg	the action set file is larger than 8 MiB	το αρχείο συνόλου ενεργειών είναι μεγαλύτερο από 8 MiB
 @msg	the action set file holds more than 1,000 actions	το αρχείο συνόλου ενεργειών περιέχει περισσότερες από 1.000 ενέργειες
-@msg	the action set file needs a later version of VectorCraft	το αρχείο συνόλου ενεργειών απαιτεί νεότερη έκδοση του VectorCraft
+@msg	the action set file needs a later version of 91Ninjas Studio	το αρχείο συνόλου ενεργειών απαιτεί νεότερη έκδοση του 91Ninjas Studio
 @msg	an action in the action set file has more than 10,000 steps	μια ενέργεια στο αρχείο συνόλου ενεργειών έχει περισσότερα από 10.000 βήματα
 @msg	no such anchor	δεν υπάρχει τέτοιο σημείο αγκύρωσης
 @msg	no such artboard	δεν υπάρχει τέτοιος πίνακας σχεδίασης
@@ -4259,8 +4259,8 @@ digits	Malayalam	Μαλαγιάλαμ
 @msg	node {_1} is not text	ο κόμβος {_1} δεν είναι κείμενο
 @msg	node {_1} is on a locked artboard	ο κόμβος {_1} βρίσκεται σε κλειδωμένο πίνακα σχεδίασης
 @msg	not a DXF drawing	δεν είναι σχέδιο DXF
-@msg	not a VectorCraft file: {0}	δεν είναι αρχείο VectorCraft: {0}
-@msg	not a VectorCraft shortcut set (missing `overrides`)	δεν είναι σύνολο συντομεύσεων VectorCraft (λείπει το `overrides`)
+@msg	not a 91Ninjas Studio file: {0}	δεν είναι αρχείο 91Ninjas Studio: {0}
+@msg	not a 91Ninjas Studio shortcut set (missing `overrides`)	δεν είναι σύνολο συντομεύσεων 91Ninjas Studio (λείπει το `overrides`)
 @msg	not a blend	δεν είναι ανάμειξη
 @msg	not a graphic style library (format `{_1}`)	δεν είναι βιβλιοθήκη στυλ γραφικών (μορφή `{_1}`)
 @msg	not a shortcut set: the text doesn't start with a slash name and an opening brace	δεν είναι σύνολο συντομεύσεων: το κείμενο δεν αρχίζει με όνομα μετά από κάθετο και ανοιχτή αγκύλη
@@ -4538,11 +4538,11 @@ digits	Malayalam	Μαλαγιάλαμ
 @msg	Sent to {_1}	Στάλθηκε στο {_1}
 @msg	{_1} files	{_1} αρχεία
 @msg	The graphics were lost and have been restarted	Η λειτουργία γραφικών διακόπηκε και επανεκκινήθηκε
-@msg	The graphics processor tried first couldn't show the window, so VectorCraft started again on {summary}	Ο αρχικός επεξεργαστής γραφικών δεν μπόρεσε να εμφανίσει το παράθυρο και το VectorCraft επανεκκίνησε στον {summary}
-@msg	The last start of VectorCraft ended on {name} before its window appeared, so it started on {summary}. To try that graphics processor again, change Preferences › Performance › Graphics Processor or start with WGPU_BACKEND set	Η τελευταία εκκίνηση του VectorCraft τερματίστηκε στον {name} πριν εμφανιστεί το παράθυρο, οπότε ξεκίνησε στον {summary}. Για να δοκιμάσετε ξανά αυτόν τον επεξεργαστή γραφικών, αλλάξτε Προτιμήσεις › Επιδόσεις › Επεξεργαστής γραφικών ή ξεκινήστε με ορισμένη τη μεταβλητή WGPU_BACKEND
-@msg	The last start of VectorCraft ended while it listed the graphics processors, so it started on {summary} with OpenGL alone. To try the other graphics backends again, change Preferences › Performance › Graphics Processor or start with WGPU_BACKEND set	Η τελευταία εκκίνηση του VectorCraft τερματίστηκε κατά την απαρίθμηση των επεξεργαστών γραφικών, οπότε ξεκίνησε στον {summary} μόνο με OpenGL. Για να δοκιμάσετε ξανά τα άλλα συστήματα γραφικών, αλλάξτε Προτιμήσεις › Επιδόσεις › Επεξεργαστής γραφικών ή ξεκινήστε με ορισμένη τη μεταβλητή WGPU_BACKEND
-@msg	Loading VectorCraft…	Φόρτωση VectorCraft…
-@msg	VectorCraft failed to start: {e}	Η εκκίνηση του VectorCraft απέτυχε: {e}
+@msg	The graphics processor tried first couldn't show the window, so 91Ninjas Studio started again on {summary}	Ο αρχικός επεξεργαστής γραφικών δεν μπόρεσε να εμφανίσει το παράθυρο και το 91Ninjas Studio επανεκκίνησε στον {summary}
+@msg	The last start of 91Ninjas Studio ended on {name} before its window appeared, so it started on {summary}. To try that graphics processor again, change Preferences › Performance › Graphics Processor or start with WGPU_BACKEND set	Η τελευταία εκκίνηση του 91Ninjas Studio τερματίστηκε στον {name} πριν εμφανιστεί το παράθυρο, οπότε ξεκίνησε στον {summary}. Για να δοκιμάσετε ξανά αυτόν τον επεξεργαστή γραφικών, αλλάξτε Προτιμήσεις › Επιδόσεις › Επεξεργαστής γραφικών ή ξεκινήστε με ορισμένη τη μεταβλητή WGPU_BACKEND
+@msg	The last start of 91Ninjas Studio ended while it listed the graphics processors, so it started on {summary} with OpenGL alone. To try the other graphics backends again, change Preferences › Performance › Graphics Processor or start with WGPU_BACKEND set	Η τελευταία εκκίνηση του 91Ninjas Studio τερματίστηκε κατά την απαρίθμηση των επεξεργαστών γραφικών, οπότε ξεκίνησε στον {summary} μόνο με OpenGL. Για να δοκιμάσετε ξανά τα άλλα συστήματα γραφικών, αλλάξτε Προτιμήσεις › Επιδόσεις › Επεξεργαστής γραφικών ή ξεκινήστε με ορισμένη τη μεταβλητή WGPU_BACKEND
+@msg	Loading 91Ninjas Studio…	Φόρτωση 91Ninjas Studio…
+@msg	91Ninjas Studio failed to start: {e}	Η εκκίνηση του 91Ninjas Studio απέτυχε: {e}
 @msg	A browser with WebGPU or WebGL2 is required.	Απαιτείται πρόγραμμα περιήγησης με WebGPU ή WebGL2.
 @msg	The graphics were lost and couldn't be restarted.	Η λειτουργία γραφικών διακόπηκε και δεν ήταν δυνατή η επανεκκίνησή της.
 @msg	Your unsaved changes are kept in this browser: reload the page to get them back.	Οι μη αποθηκευμένες αλλαγές διατηρούνται σε αυτό το πρόγραμμα περιήγησης: ανανεώστε τη σελίδα για ανάκτησή τους.
@@ -4573,12 +4573,12 @@ digits	Malayalam	Μαλαγιάλαμ
 @msg	it has more than {MAX_NODES} objects	περιέχει περισσότερα από {MAX_NODES} αντικείμενα
 @msg	it has no layers	δεν περιέχει επίπεδα
 @msg	it has too many values in a row	περιέχει υπερβολικά πολλές τιμές σε μία γραμμή
-@msg	it has {_1}, which VectorCraft doesn't read from it yet	περιέχει {_1}, τα οποία το VectorCraft δεν μπορεί ακόμη να διαβάσει
+@msg	it has {_1}, which 91Ninjas Studio doesn't read from it yet	περιέχει {_1}, τα οποία το 91Ninjas Studio δεν μπορεί ακόμη να διαβάσει
 @msg	its objects are nested too deeply	τα αντικείμενά του έχουν υπερβολικά βαθιά ένθεση
 @msg	its section ending with `%{end}` doesn't end	η ενότητά του που τελειώνει σε `%{end}` δεν τερματίζεται
 @msg	objects with several fills or strokes, effects or brushes came in as their drawn look ({_1}): their appearance isn't editable yet	τα αντικείμενα με πολλαπλά γεμίσματα, περιγράμματα, εφέ ή πινέλα εισήχθησαν ως απεικονίσεις ({_1}): η εμφάνισή τους δεν είναι ακόμη επεξεργάσιμη
 @msg	gradient “{name}” isn't defined in the file: a plain colour stands in for it	το ντεγκραντέ «{name}» δεν ορίζεται στο αρχείο: χρησιμοποιείται στη θέση του ένα συμπαγές χρώμα
-@msg	an image VectorCraft can't read was left out	παραλείφθηκε εικόνα που δεν μπορεί να διαβάσει το VectorCraft
+@msg	an image 91Ninjas Studio can't read was left out	παραλείφθηκε εικόνα που δεν μπορεί να διαβάσει το 91Ninjas Studio
 @msg	graphs come in as plain art, without their data or settings	τα γραφήματα εισάγονται ως απλή γραφική, χωρίς τα δεδομένα και τις ρυθμίσεις τους
 @msg	an image whose data is cut short was left out	παραλείφθηκε εικόνα με περικομμένα δεδομένα
 @msg	linked pictures show the low-resolution preview saved in the file until their files are found: relink them in the Links panel	οι συνδεδεμένες εικόνες εμφανίζουν την προεπισκόπηση χαμηλής ανάλυσης που έχει αποθηκευτεί, μέχρι να βρεθούν τα αρχεία τους: επανασυνδέστε τις στον πίνακα Σύνδεσμοι
@@ -4587,13 +4587,13 @@ digits	Malayalam	Μαλαγιάλαμ
 @msg	this file was saved without PDF compatibility, and its editing data can't be read ({why})	το αρχείο αποθηκεύτηκε χωρίς συμβατότητα PDF και τα δεδομένα επεξεργασίας του δεν μπορούν να διαβαστούν ({why})
 @msg	the PDF part couldn't be read ({_1}): the file opened from its editing data	το τμήμα PDF δεν μπόρεσε να διαβαστεί ({_1}): το αρχείο άνοιξε από τα δεδομένα επεξεργασίας του
 @msg	No fonts are missing in this document	Δεν λείπουν γραμματοσειρές από αυτό το έγγραφο
-@msg	VectorCraft doesn't search other apps' or the system's folders: {path}	Το VectorCraft δεν αναζητά στους φακέλους άλλων εφαρμογών ή του συστήματος: {path}
-@msg	VectorCraft doesn't search the Shared or Public folder in Users: {path}	Το VectorCraft δεν αναζητά στους φακέλους Shared ή Public των Χρηστών: {path}
+@msg	91Ninjas Studio doesn't search other apps' or the system's folders: {path}	Το 91Ninjas Studio δεν αναζητά στους φακέλους άλλων εφαρμογών ή του συστήματος: {path}
+@msg	91Ninjas Studio doesn't search the Shared or Public folder in Users: {path}	Το 91Ninjas Studio δεν αναζητά στους φακέλους Shared ή Public των Χρηστών: {path}
 @msg	{path} is not a folder	το {path} δεν είναι φάκελος
 @msg	the search couldn't start: try again in a moment	η αναζήτηση δεν μπόρεσε να ξεκινήσει: δοκιμάστε ξανά
 @msg	searching a folder isn't available on the web	η αναζήτηση σε φάκελο δεν υποστηρίζεται στο web
 @msg	every search thread stopped on an internal error (please report this bug)	όλα τα νήματα αναζήτησης σταμάτησαν λόγω εσωτερικού σφάλματος (αναφέρετε το πρόβλημα)
-@msg	VectorCraft's Fonts folder isn't set here: the desktop app and vectorcraft-cli set it	ο φάκελος γραμματοσειρών του VectorCraft δεν έχει καθοριστεί εδώ: τον ορίζουν η εφαρμογή υπολογιστή και το vectorcraft-cli
+@msg	91Ninjas Studio's Fonts folder isn't set here: the desktop app and vectorcraft-cli set it	ο φάκελος γραμματοσειρών του 91Ninjas Studio δεν έχει καθοριστεί εδώ: τον ορίζουν η εφαρμογή υπολογιστή και το vectorcraft-cli
 @msg	choose the font files to add	επιλέξτε τα αρχεία γραμματοσειρών που θέλετε να προσθέσετε
 @msg	not a file	δεν είναι αρχείο
 @msg	not a font file	δεν είναι αρχείο γραμματοσειράς
@@ -4603,13 +4603,13 @@ digits	Malayalam	Μαλαγιάλαμ
 @msg	every numbered name for it is taken in the Fonts folder	όλα τα αριθμημένα ονόματά του χρησιμοποιούνται ήδη στον φάκελο γραμματοσειρών
 @msg	every numbered name for {name} is taken in the document's folder	όλα τα αριθμημένα ονόματα για το {name} χρησιμοποιούνται ήδη στον φάκελο εγγράφου
 @msg	No linked files to look for	Δεν υπάρχουν συνδεδεμένα αρχεία για αναζήτηση
-	Hide VectorCraft	Απόκρυψη VectorCraft
+	Hide 91Ninjas Studio	Απόκρυψη 91Ninjas Studio
 	Bring All to Front	Μεταφορά όλων στο προσκήνιο
 	Break Link	Κατάργηση σύνδεσης
 	On: one locked object showing the document, updated when it changes.	Ενεργό: ένα κλειδωμένο αντικείμενο που εμφανίζει το έγγραφο και ενημερώνεται με τις αλλαγές του.
 	Off: an editable copy of its art, embedded in this document.	Ανενεργό: επεξεργάσιμο αντίγραφο του σχεδίου ενσωματωμένο σε αυτό το έγγραφο.
 	Images: link to the file instead of only embedding it.	Εικόνες: σύνδεση με το αρχείο αντί μόνο της ενσωμάτωσης.
-	VectorCraft documents: one locked object, updated when the file changes.	Έγγραφα VectorCraft: ένα κλειδωμένο αντικείμενο που ενημερώνεται όταν αλλάζει το αρχείο.
+	91Ninjas Studio documents: one locked object, updated when the file changes.	Έγγραφα 91Ninjas Studio: ένα κλειδωμένο αντικείμενο που ενημερώνεται όταν αλλάζει το αρχείο.
 	A file dialog is open: choose there first	Υπάρχει ανοιχτό παράθυρο αρχείων: ολοκληρώστε πρώτα την επιλογή εκεί
 	The document was closed while its file dialog was open	Το έγγραφο έκλεισε ενώ ήταν ανοιχτό το παράθυρο αρχείων του
 	The dialog was closed before its file dialog answered	Το παράθυρο διαλόγου έκλεισε πριν ολοκληρωθεί το παράθυρο επιλογής αρχείου
@@ -4745,7 +4745,7 @@ digits	Malayalam	Μαλαγιάλαμ
 	Linux Display Server	Διακομιστής οθόνης Linux
 	Ruler Origin	Αρχή χαράκων
 	Reset Ruler Origin	Επαναφορά αρχής χαράκων
-@msg	the compressed file unpacks to more than VectorCraft reads ({_1} MB of document, {_2} MB per image)	το αποσυμπιεσμένο αρχείο υπερβαίνει τα όρια ανάγνωσης του VectorCraft ({_1} MB ανά έγγραφο, {_2} MB ανά εικόνα)
+@msg	the compressed file unpacks to more than 91Ninjas Studio reads ({_1} MB of document, {_2} MB per image)	το αποσυμπιεσμένο αρχείο υπερβαίνει τα όρια ανάγνωσης του 91Ninjas Studio ({_1} MB ανά έγγραφο, {_2} MB ανά εικόνα)
 @msg	the document is too large to save compressed ({0}): save it with Use Compression off	το έγγραφο είναι πολύ μεγάλο για συμπιεσμένη αποθήκευση ({0}): αποθηκεύστε το με απενεργοποιημένη τη Χρήση συμπίεσης
 @msg	the file stopped being read (please report this bug)	η ανάγνωση του αρχείου διακόπηκε (αναφέρετε το σφάλμα)
 	Concentric Dividers:	Ομόκεντρα διαχωριστικά:
@@ -4852,7 +4852,7 @@ digits	Malayalam	Μαλαγιάλαμ
 	DWG (use DXF)	DWG (χρησιμοποιήστε DXF)
 	Default Graphic Style	Προεπιλεγμένο στυλ γραφικών
 	Diamond (open)	Ρόμβος (ανοιχτός)
-	Differences from VectorCraft Default:	Διαφορές από τις προεπιλογές VectorCraft:
+	Differences from 91Ninjas Studio Default:	Διαφορές από τις προεπιλογές 91Ninjas Studio:
 	Differences from [Default]:	Διαφορές από την [Προεπιλογή]:
 	Do Not Scale	Χωρίς κλιμάκωση
 	Don't include profiles	Να μη συμπεριληφθούν προφίλ
@@ -4903,7 +4903,7 @@ digits	Malayalam	Μαλαγιάλαμ
 	Include tagged source profiles	Συμπερίληψη προφίλ πηγής με ετικέτα
 	Inserting, deleting and rotating pages	Εισαγωγή, διαγραφή και περιστροφή σελίδων
 	Joins:	Συνδέσεις:
-	Keeps the document editable: VectorCraft reopens the PDF with nothing lost. For files you'll edit again.	Διατηρεί το έγγραφο επεξεργάσιμο: το VectorCraft ανοίγει ξανά το PDF χωρίς απώλειες. Για αρχεία που θα επεξεργαστείτε ξανά.
+	Keeps the document editable: 91Ninjas Studio reopens the PDF with nothing lost. For files you'll edit again.	Διατηρεί το έγγραφο επεξεργάσιμο: το 91Ninjas Studio ανοίγει ξανά το PDF χωρίς απώλειες. Για αρχεία που θα επεξεργαστείτε ξανά.
 	Kite	Χαρταετός
 	LF (macOS, Linux)	LF (macOS, Linux)
 	Lab Spot Colors	Πλακάτα χρώματα Lab
@@ -4934,7 +4934,7 @@ digits	Malayalam	Μαλαγιάλαμ
 	Outlined Text	Κείμενο ως περιγράμματα
 	PRs	Αιτήματα συγχώνευσης
 	Page Cover 1640×624	Εξώφυλλο σελίδας 1640×624
-	Part of ArtCraft. MIT OR Apache-2.0. Fonts: Source Sans 3, Inter, JetBrains Mono, Noto Sans SC (OFL). Icons: Lucide (ISC) + VectorCraft.	Μέρος του ArtCraft. MIT ή Apache-2.0. Γραμματοσειρές: Source Sans 3, Inter, JetBrains Mono, Noto Sans SC (OFL). Εικονίδια: Lucide (ISC) + VectorCraft.
+	Part of ArtCraft. MIT OR Apache-2.0. Fonts: Source Sans 3, Inter, JetBrains Mono, Noto Sans SC (OFL). Icons: Lucide (ISC) + 91Ninjas Studio.	Μέρος του ArtCraft. MIT ή Apache-2.0. Γραμματοσειρές: Source Sans 3, Inter, JetBrains Mono, Noto Sans SC (OFL). Εικονίδια: Lucide (ISC) + 91Ninjas Studio.
 	Pattern Swatches	Δείγματα μοτίβων
 	Pentagram	Πεντάγραμμο
 	Photo Low Fidelity	Φωτογραφία χαμηλής πιστότητας
@@ -5037,10 +5037,10 @@ digits	Malayalam	Μαλαγιάλαμ
 	Unsorted	Χωρίς ταξινόμηση
 	Up (right reading)	Επάνω (ανάγνωση από δεξιά)
 	Variation	Παραλλαγή
-	VectorCraft Default	Προεπιλογή VectorCraft
-	VectorCraft Defaults	Προεπιλογές VectorCraft
-	VectorCraft Generic CMYK (SWOP-like)	Γενικό CMYK του VectorCraft (τύπου SWOP)
-	VectorCraft Swatches (.vcswatches)	Δείγματα χρωμάτων VectorCraft (.vcswatches)
+	91Ninjas Studio Default	Προεπιλογή 91Ninjas Studio
+	91Ninjas Studio Defaults	Προεπιλογές 91Ninjas Studio
+	91Ninjas Studio Generic CMYK (SWOP-like)	Γενικό CMYK του 91Ninjas Studio (τύπου SWOP)
+	91Ninjas Studio Swatches (.vcswatches)	Δείγματα χρωμάτων 91Ninjas Studio (.vcswatches)
 	Vertical Align	Κατακόρυφη στοίχιση
 	Vertical Area Type	Κατακόρυφο κείμενο περιοχής
 	Vertical Type	Κατακόρυφο κείμενο
@@ -5063,7 +5063,7 @@ digits	Malayalam	Μαλαγιάλαμ
 	[PDF/X-4:2010]	[PDF/X-4:2010]
 	[Press Quality]	[Ποιότητα τυπογραφείου]
 	[Smallest File Size]	[Ελάχιστο μέγεθος αρχείου]
-	[VectorCraft Default]	[Προεπιλογή VectorCraft]
+	[91Ninjas Studio Default]	[Προεπιλογή 91Ninjas Studio]
 	of	από
 	x Height	Ύψος x
 	▾ Default Actions	▾ Προεπιλεγμένες ενέργειες
@@ -6149,7 +6149,7 @@ breakText	Glyphs	Γλύφοι
 	Malayalam	Μαλαγιάλαμ
 	Odia	Όντια
 	Urdu	Ούρντου
-	VectorCraft {release} and later (version {n})	VectorCraft {release} και νεότερες (έκδοση {n})
+	91Ninjas Studio {release} and later (version {n})	91Ninjas Studio {release} και νεότερες (έκδοση {n})
 # Document Tools add-on: Export All Open Documents (#4920).
 	Export All Open Documents as PDF	Εξαγωγή όλων των ανοιχτών εγγράφων ως PDF
 	Export All Open Documents as SVG	Εξαγωγή όλων των ανοιχτών εγγράφων ως SVG

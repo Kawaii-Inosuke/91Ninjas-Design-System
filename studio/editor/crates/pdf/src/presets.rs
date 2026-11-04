@@ -10,7 +10,7 @@ use crate::{
 };
 
 /// The built-in preset every PDF export starts from.
-pub const DEFAULT_PRESET: &str = "VectorCraft Default";
+pub const DEFAULT_PRESET: &str = "91Ninjas Studio Default";
 
 /// A named set of PDF settings: a built-in preset or one the user saved.
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
@@ -58,7 +58,7 @@ pub fn builtin_presets() -> Vec<PdfPreset> {
     vec![
         preset(
             DEFAULT_PRESET,
-            "Keeps the document editable: VectorCraft reopens the PDF with nothing lost. For files you'll edit again.",
+            "Keeps the document editable: 91Ninjas Studio reopens the PDF with nothing lost. For files you'll edit again.",
             PdfSettings { preserve_editing: true, ..Default::default() },
         ),
         preset("High Quality Print", "For desktop printers and proofs: images stay at print resolution.", print(ImageCodec::Auto, false)),
@@ -106,6 +106,7 @@ pub fn builtin_presets() -> Vec<PdfPreset> {
 /// The built-in preset `name` names (any case; `default` is the app default).
 pub fn builtin_preset(name: &str) -> Option<PdfPreset> {
     let name = name.trim();
-    let name = if name.eq_ignore_ascii_case("default") { DEFAULT_PRESET } else { name };
+    // 91studio: "VectorCraft Default" is the same preset under its earlier name (D-045).
+    let name = if name.eq_ignore_ascii_case("default") || name.eq_ignore_ascii_case("VectorCraft Default") { DEFAULT_PRESET } else { name };
     builtin_presets().into_iter().find(|p| p.name.eq_ignore_ascii_case(name))
 }

@@ -58,7 +58,7 @@ pub(crate) fn export(doc: &Document, opts: &ExportOptions, native: Option<&[u8]>
 fn update_editing_hash(svg: &mut String) {
     let opts = usvg::roxmltree::ParsingOptions { allow_dtd: true, ..Default::default() };
     let Some(xml) = usvg::roxmltree::Document::parse_with_options(svg, opts).ok() else { return };
-    let Some(el) = xml.descendants().find(|n| n.tag_name().namespace() == Some(EDITING_NS) && n.tag_name().name() == "document") else { return };
+    let Some(el) = xml.descendants().find(|n| crate::is_editing_ns(n.tag_name().namespace()) && n.tag_name().name() == "document") else { return };
     let (Some(old_h), Some(meta)) = (el.attribute("hash"), el.parent_element()) else { return };
     let r = meta.range();
     let (head, tail) = (svg.get(..r.start).unwrap_or(""), svg.get(r.end..).unwrap_or(""));

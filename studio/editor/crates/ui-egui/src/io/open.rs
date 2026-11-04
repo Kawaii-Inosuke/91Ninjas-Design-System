@@ -2,7 +2,7 @@ use super::save::suggested;
 use super::{Dialog, FilePick, Format, Value, VectorcraftApp, dialogs, fileio, json};
 
 /// Template extensions New from Template's open dialog lists first.
-const TEMPLATE_EXTS: &[&str] = &["vctemplate", "ait", "vectorcraft", "drawcraft"];
+const TEMPLATE_EXTS: &[&str] = &["vctemplate", "ait", "91studio", "vectorcraft", "drawcraft"];
 
 /// Open bytes of any readable format as a new document (templates open untitled); swatch and
 /// graphic style library files open in the library panel, Libraries panel files are added to it,

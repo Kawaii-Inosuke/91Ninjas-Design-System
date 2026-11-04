@@ -54,6 +54,7 @@ They open **Clients → Team clients**, fill in the repo, the key and **their ow
 - **Changed client:** everyone sees what changed, lines added in green and removed in red, then **Install update** / **Not now**.
 - **You, as manager:** besides Install, you see **Reject for everyone**. It puts every laptop back to the earlier version automatically, without asking anyone.
 - **Designs are never shared;** they stay on each laptop.
+- **Members:** everyone who joined is listed in the repo's `members/` folder (the name only) and, for managers, in the app under Team clients → Members. Leave team removes the name.
 - **History:** every share is a commit in the repo. On GitHub, open the repo → **Commits** to see who changed what and when.
 
 ### A6. If a laptop is lost, someone leaves, or the key expires

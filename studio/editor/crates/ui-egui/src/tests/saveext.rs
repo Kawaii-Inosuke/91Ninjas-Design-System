@@ -112,8 +112,8 @@ fn save_panels_show_the_file_type_they_write() {
 fn saves_add_the_format_extension_to_a_bare_name() {
     let (mut app, w) = saving_app("/tmp/Untitled-1");
     app.run("file.save", json!({})).unwrap();
-    assert_eq!(last(&w), "/tmp/Untitled-1.vectorcraft");
-    assert_eq!(app.session.active().unwrap().path.as_deref(), Some("/tmp/Untitled-1.vectorcraft"));
+    assert_eq!(last(&w), "/tmp/Untitled-1.91studio");
+    assert_eq!(app.session.active().unwrap().path.as_deref(), Some("/tmp/Untitled-1.91studio"));
     let (mut app, w) = saving_app("/tmp/copy");
     app.run("file.saveCopy", json!({"format": "svg", "svg": {}})).unwrap();
     assert_eq!(last(&w), "/tmp/copy.svg");
@@ -155,13 +155,13 @@ fn saved_from(app: &mut VectorcraftApp, shown: &crate::tests_picks::Shown, writt
 fn the_file_type_picked_in_the_save_dialog_decides_the_format() {
     for (answer, expected) in [
         (&["/art/poster", "ai"][..], "/art/poster.ai"),
-        (&["/art/Untitled-1.vectorcraft", "ai"], "/art/Untitled-1.ai"),
+        (&["/art/Untitled-1.91studio", "ai"], "/art/Untitled-1.ai"),
         (&["/art/poster.SVG", "ai"], "/art/poster.SVG"),
         (&["/art/poster.foo", "ai"], "/art/poster.foo.ai"),
         (&["/art/poster.ai", "vectorcraft"], "/art/poster.ai"),
         (&["/art/poster", "svg"], "/art/poster.svg"),
         // A dialog that doesn't say, as on Windows and macOS: the default format's extension.
-        (&["/art/poster"], "/art/poster.vectorcraft"),
+        (&["/art/poster"], "/art/poster.91studio"),
     ] {
         let (mut app, shown, written) = portal_app();
         assert_eq!(saved_from(&mut app, &shown, &written, "file.save", answer), expected, "{answer:?}");
@@ -169,13 +169,13 @@ fn the_file_type_picked_in_the_save_dialog_decides_the_format() {
 }
 
 /// The suggested name's extension typed in another case still gets the picked type's
-/// (`Untitled-1.VECTORCRAFT` with .ai picked is saved as `Untitled-1.ai`), and the picked type's
+/// (`Untitled-1.91STUDIO` with .ai picked is saved as `Untitled-1.ai`), and the picked type's
 /// own extension typed in another case stays as typed (`a.AI` with .ai picked).
 #[test]
 fn the_suggested_names_extension_in_another_case_gets_the_picked_types() {
     for (cmd, answer, expected) in [
-        ("file.save", &["/art/Untitled-1.VECTORCRAFT", "ai"][..], "/art/Untitled-1.ai"),
-        ("file.save", &["/art/Untitled-1.VectorCraft", "svg"], "/art/Untitled-1.svg"),
+        ("file.save", &["/art/Untitled-1.91STUDIO", "ai"][..], "/art/Untitled-1.ai"),
+        ("file.save", &["/art/Untitled-1.91Studio", "svg"], "/art/Untitled-1.svg"),
         ("file.saveAsTemplate", &["/art/Untitled-1.VCTemplate", "ait"], "/art/Untitled-1.ait"),
     ] {
         let (mut app, shown, written) = portal_app();
@@ -188,15 +188,15 @@ fn the_suggested_names_extension_in_another_case_gets_the_picked_types() {
 }
 
 /// A name typed with the extension of a format the save does not write has it replaced, with or
-/// without a picked type: `card.ait` and `card.png` are saved as `card.vectorcraft`, not
-/// `card.ait.vectorcraft`. An extension that names no format stays part of the name.
+/// without a picked type: `card.ait` and `card.png` are saved as `card.91studio`, not
+/// `card.ait.91studio`. An extension that names no format stays part of the name.
 #[test]
 fn a_typed_extension_of_a_format_the_save_does_not_write_is_replaced() {
     for (cmd, answer, expected) in [
-        ("file.save", &["/art/card.ait"][..], "/art/card.vectorcraft"),
-        ("file.save", &["/art/card.png"], "/art/card.vectorcraft"),
-        ("file.save", &["/art/My.Card.PNG"], "/art/My.Card.vectorcraft"),
-        ("file.save", &["/art/notes.v2"], "/art/notes.v2.vectorcraft"),
+        ("file.save", &["/art/card.ait"][..], "/art/card.91studio"),
+        ("file.save", &["/art/card.png"], "/art/card.91studio"),
+        ("file.save", &["/art/My.Card.PNG"], "/art/My.Card.91studio"),
+        ("file.save", &["/art/notes.v2"], "/art/notes.v2.91studio"),
         ("file.save", &["/art/card.png", "ai"], "/art/card.ai"),
         ("file.saveCopy", &["/art/card.tif", "svg"], "/art/card.svg"),
         ("file.saveAsTemplate", &["/art/card.ai"], "/art/card.vctemplate"),
@@ -213,12 +213,12 @@ fn a_typed_extension_of_a_format_the_save_does_not_write_is_replaced() {
 #[test]
 fn a_replaced_extension_asks_before_replacing_a_file_there() {
     let (mut app, shown, written) = portal_app();
-    app.services.exists = Some(Box::new(|p: &str| p == "/art/card.vectorcraft"));
-    assert_eq!(saved_from(&mut app, &shown, &written, "file.save", &["/art/card.png"]), "/art/card.vectorcraft");
+    app.services.exists = Some(Box::new(|p: &str| p == "/art/card.91studio"));
+    assert_eq!(saved_from(&mut app, &shown, &written, "file.save", &["/art/card.png"]), "/art/card.91studio");
     assert_eq!(app.ui.dialog.as_ref().map(|d| d.kind.as_str()), Some(dialogs::confirm::REPLACE));
     assert!(written.borrow().is_empty());
     dialogs::confirm(&mut app).unwrap();
-    assert_eq!(*written.borrow(), ["/art/card.vectorcraft"]);
+    assert_eq!(*written.borrow(), ["/art/card.91studio"]);
 }
 
 /// Save As to the type picked asks for that format's options: the .ai options (Version first),
@@ -238,9 +238,9 @@ fn a_document_in_another_format_saves_as_the_type_picked() {
     let (mut app, shown, written) = portal_app();
     app.run("file.saveAs", json!({"path": "/art/a.ai", "options": {}})).unwrap();
     assert_eq!(*written.borrow(), ["/art/a.ai"]);
-    assert_eq!(saved_from(&mut app, &shown, &written, "file.saveAs", &["/art/poster", "vectorcraft"]), "/art/poster.vectorcraft");
+    assert_eq!(saved_from(&mut app, &shown, &written, "file.saveAs", &["/art/poster", "vectorcraft"]), "/art/poster.91studio");
     dialogs::cancel(&mut app);
-    assert_eq!(saved_from(&mut app, &shown, &written, "file.saveAs", &["/art/a.ai", "vectorcraft"]), "/art/a.vectorcraft");
+    assert_eq!(saved_from(&mut app, &shown, &written, "file.saveAs", &["/art/a.ai", "vectorcraft"]), "/art/a.91studio");
     dialogs::cancel(&mut app);
     assert_eq!(saved_from(&mut app, &shown, &written, "file.saveCopy", &["/art/copy", "svg"]), "/art/copy.svg");
     dialogs::cancel(&mut app);
@@ -292,18 +292,18 @@ fn on_disk(tag: &str, typed: &str) -> (VectorcraftApp, std::path::PathBuf) {
     (app, dir)
 }
 
-/// `card` typed in the save panel becomes `card.vectorcraft`, a file the panel did not ask about:
+/// `card` typed in the save panel becomes `card.91studio`, a file the panel did not ask about:
 /// Save asks before replacing it, Cancel leaves it as it was, and OK replaces it.
 #[test]
 fn a_name_given_its_extension_asks_before_replacing_a_file_there() {
     let (mut app, dir) = on_disk("ask", "card");
-    let card = dir.join("card.vectorcraft");
+    let card = dir.join("card.91studio");
     let path = card.to_string_lossy().into_owned();
     std::fs::write(&card, b"the old card").unwrap();
     assert!(app.run("file.save", json!({})).is_err(), "nothing is saved while it asks");
-    let d = app.ui.dialog.clone().expect("Save asks before replacing card.vectorcraft");
+    let d = app.ui.dialog.clone().expect("Save asks before replacing card.91studio");
     assert_eq!((d.kind.as_str(), d.str("path")), (dialogs::confirm::REPLACE, path.clone()));
-    assert!(d.str("message").contains("card.vectorcraft") && d.str("detail").contains("card"), "{d:?}");
+    assert!(d.str("message").contains("card.91studio") && d.str("detail").contains("card"), "{d:?}");
     dialogs::cancel(&mut app);
     assert!(app.ui.dialog.is_none());
     assert_eq!(std::fs::read(&card).unwrap(), b"the old card", "Cancel leaves the file as it was");
@@ -321,7 +321,7 @@ fn a_name_given_its_extension_asks_before_replacing_a_file_there() {
 #[test]
 fn the_enter_that_closed_the_save_panel_does_not_replace_the_file() {
     let (mut app, dir) = on_disk("enter", "card");
-    let card = dir.join("card.vectorcraft");
+    let card = dir.join("card.91studio");
     std::fs::write(&card, b"the old card").unwrap();
     assert!(app.run("file.save", json!({})).is_err());
     let ctx = egui::Context::default();
@@ -348,13 +348,13 @@ fn a_name_given_its_extension_writes_at_once_when_no_file_is_there() {
     let (mut app, dir) = on_disk("fresh", "fresh");
     app.run("file.save", json!({})).unwrap();
     assert!(app.ui.dialog.is_none());
-    assert!(dir.join("fresh.vectorcraft").exists());
+    assert!(dir.join("fresh.91studio").exists());
     let _ = std::fs::remove_dir_all(&dir);
-    let (mut app, dir) = on_disk("typed", "card.vectorcraft");
-    std::fs::write(dir.join("card.vectorcraft"), b"the old card").unwrap();
+    let (mut app, dir) = on_disk("typed", "card.91studio");
+    std::fs::write(dir.join("card.91studio"), b"the old card").unwrap();
     app.run("file.save", json!({})).unwrap();
     assert!(app.ui.dialog.is_none());
-    assert_ne!(std::fs::read(dir.join("card.vectorcraft")).unwrap(), b"the old card");
+    assert_ne!(std::fs::read(dir.join("card.91studio")).unwrap(), b"the old card");
     let _ = std::fs::remove_dir_all(&dir);
 }
 

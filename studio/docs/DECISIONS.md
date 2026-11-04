@@ -579,3 +579,82 @@ Format per entry: **Context → Decision → Alternatives → Consequences**. En
   - **A chosen install folder** (here `D:\91ninjas`): the MSI now reads the previous folder back from `HKCU\Software\91Ninjas Studio\InstallDir`, and the update script passes `INSTALLFOLDER` explicitly. Updates stay in that folder, and the app reopens from it.
   - **The home folder:** on Windows the app now uses `USERPROFILE` before `HOME`, matching Python's `Path.home()`, so both find the same bridge and data folders.
 - **Consequences:** 1.0.2 on Windows can't update itself (it closes too soon). Install 1.0.3 over it by hand once; updates work from 1.0.3 on.
+
+## D-045: .91studio files, the team's members list, more Export choices (2026-11-05)
+- **.91studio:**
+  - Documents are saved as `….91studio` (`vectorcraft_format::STUDIO_EXTENSION`, first in the native format's extensions).
+  - The file inside is unchanged (its `format` field still says `vectorcraft`), so `.vectorcraft` and `.drawcraft` files open as before.
+  - Saving an open old file keeps its path; Save As, Save a Copy and converted files suggest `.91studio`.
+  - The installers register the type, so it shows as "91Ninjas Studio design" with the 91 icon and opens on a double-click:
+    - Windows: per-user `HKCU\Software\Classes`, ProgId `NinjasStudio.Design`, also for `.vectorcraft`;
+    - Mac: `CFBundleDocumentTypes` and an exported type `com.91ninjas.studio.design`.
+  - Visible labels: "91Ninjas Studio" and "91Ninjas Studio Template".
+  - Kept: the settings folder name (renaming it would reset everyone's settings) and the PDF producer field.
+  - Other apps (Illustrator) can't open `.91studio`; to hand a design over, export `.ai` (PDF-compatible), PDF, SVG or EPS.
+- **Members list:**
+  - Each laptop that joins writes `members/<random id>.json` with **the name only**: no dates, no activity, nothing updated afterwards. The user asked for this explicitly, for privacy.
+  - **Leave team** deletes that entry (best effort when offline).
+  - Someone who joined with an older version is added once on their app's next check.
+  - Managers see the list (managers marked) under Team clients → Members.
+- **Export button:** PNG, JPEG, SVG, PDF and EPS directly (JPEG and EPS open Export As on that format), then Export As… and Export for Screens….
+- **"VectorCraft" out of everything a designer or client sees** (only the owner had installed it):
+  - about 130 messages, warnings and descriptions;
+  - preset names: "91Ninjas Studio Default" (PDF), "91Ninjas Studio Defaults" (shortcuts);
+  - the "91Ninjas Studio Generic CMYK (SWOP-like)" profile;
+  - the Templates folder ("Documents/91Ninjas Studio Templates");
+  - the "Created by" field of exported PDF, EPS, TIFF and EMF files;
+  - the starting window title;
+  - the translation tables' entries.
+  - The old preset and profile names are still accepted, so saved documents and settings load.
+  - The native-file Version menu now reads "Version 4 (current)" / "Version n (older)", since its release numbers were VectorCraft's.
+- **Kept:**
+  - markers inside files (`%VectorCraft_BeginData`, the `vectorcraft` format field, the PDF editing-data description), so files and exports reopen;
+  - the settings folder name;
+  - internal automation and connection texts;
+  - the licence credits: About ("built on VectorCraft (MIT OR Apache-2.0)") and the program file's copyright field.
+- **Help menu:** only Search Commands, Check for Updates and About. The links to the original makers (Discord, website, project page, GitHub) are gone from the menu and from command search; this is an internal tool.
+
+## D-046: The About window, and the last visible traces of VectorCraft (2026-11-05)
+- **About** has three tabs:
+  - **About:** the 91 logo, name, version, a short description, Company (91Ninjas, an internal tool), Contact (Yashodhan), and a pointer to Legal.
+  - **Privacy:** the privacy policy (`about::PRIVACY`):
+    - work stays on the computer; no account, analytics, tracking or ads;
+    - Claude: the designer's Claude app sends the request, content, brand guide and previews to Anthropic under their own account and Anthropic's terms;
+    - Team clients: shared clients and the name go to the private team repo; designs never;
+    - Updates and first start: ordinary web requests to GitHub and the official package sources;
+    - logs stay local;
+    - questions to Yashodhan.
+  - **Open-source licences:** NOTICE and the MIT licence, plus the Contributors and Models credits that used to be tabs. The MIT/Apache licences require the copyright and licence notice to ship with every copy; it no longer needs to be visible elsewhere.
+- **Inside files sent to clients:**
+  - PDF and PDF-compatible .ai: the editable-copy attachment is `91studio-editing.91studio`, "91Ninjas Studio editing data".
+  - EPS: data markers `%Studio91_BeginData` / `%Studio91_EndData`.
+  - SVG: the editable-copy namespace is `urn:91ninjas-studio:editing`, prefix `studio:`.
+  - Saved files: the generator line is "91Ninjas Studio <version>".
+  - The old names are still read, so earlier files reopen editable.
+- **Settings folder:** "91Ninjas Studio" (`%APPDATA%`, `~/Library/Application Support`, `~/.config/91ninjas-studio`). On first start the settings file is read in from the old "VectorCraft" folder.
+- **Mac bundle id:** `com.91ninjas.studio` (our updater doesn't need craft-update's `ai.storyteller.*`).
+- **Removed:** the unused community panel (ArtCraft Discord and website links).
+- **What remains, on purpose:**
+  - the licence notices (About › Open-source licences, the licence files, the program file's copyright field);
+  - internal names nobody sees: the source code's folder and package names, the `vectorcraft` format field inside documents, automation texts, the `VECTORCRAFT_*` setting switches;
+  - readers for the old names;
+  - Linux-only ids (no Linux build is shipped).
+
+## D-047: 91Ninjas copyright; the original project's files removed (2026-11-05)
+- **Copyright notice:** "© 2026 91Ninjas. All rights reserved. Internal use only." appears in About, in the Windows program file's copyright field, and in the Mac app (`NSHumanReadableCopyright`). It replaces "Built on VectorCraft…" there.
+- **Deleted from the editor folder** (none of it was used by our app, installers or release workflow):
+  - VectorCraft's app icons (`assets/app-icon/`);
+  - its installer setup for Linux, Mac, Windows and FreeBSD (`packaging/`);
+  - its CI workflows (`.github/`);
+  - its documentation and screenshots (`docs/`);
+  - its sample artwork (`examples/`);
+  - its roadmap and analysis settings;
+  - the Mac bundler of the `xtask` tool;
+  - two tests of the deleted packaging files.
+  - The README is now a short one of ours, and `ASSETS.md` no longer lists the deleted files.
+- **Kept, because the licences require it or the build uses it:**
+  - `NOTICE`, `LICENSE-MIT`, `LICENSE-APACHE`, `licenses/`;
+  - `ASSETS.md` (per-file origin of fonts and icons);
+  - `contributors/` (the credits in About › Open-source licences);
+  - `AGENTS.md` / `CLAUDE.md` (building rules for the code).
+- **PDF editable-copy attachment name:** `91ninjas-studio-editing.91studio` (at least as long as the older names, which are still read).

@@ -83,7 +83,7 @@
 	A lower value follows the stroke closely; a higher one gives fewer points and smoother curves.	Daha düşük bir değer konturu yakından takip eder; daha yüksek olanı daha az nokta ve daha yumuşak eğriler verir.
 	A new preset starting from the selected one	Seçilenden başlayarak yeni bir ön ayar
 	A saved copy of the selected preset	Seçilen ön ayarın kaydedilmiş bir kopyası
-	About VectorCraft	VectorCraft Hakkında
+	About 91Ninjas Studio	91Ninjas Studio Hakkında
 	above	yukarıda
 	Absolute Position	Mutlak Konum
 	Accurate	Doğru
@@ -189,7 +189,7 @@ font-technology	Variable	Değişken
 	Appearance Panel	Görünüm Paneli
 	Appearance panel	Görünüm paneli
 	Applies when the linked file is relinked or updated.	Bağlantılı dosya yeniden bağlandığında veya güncellendiğinde geçerlidir.
-	Applies the next time VectorCraft starts.	VectorCraft'ın bir sonraki başlatılışında uygulanır.
+	Applies the next time 91Ninjas Studio starts.	91Ninjas Studio'ın bir sonraki başlatılışında uygulanır.
 	Apply	Uygula
 	Apply Brush	Fırça Uygula
 	Apply Character Style	Karakter Stilini Uygula
@@ -384,7 +384,7 @@ font-technology	Variable	Değişken
 	Check Script	Komut Dosyasını Kontrol Et
 	Check Script…	Komut Dosyasını Kontrol Et…
 	Copy Report	Raporu Kopyala
-	VectorCraft read this script without running it.	VectorCraft bu betiği çalıştırmadan okudu.
+	91Ninjas Studio read this script without running it.	91Ninjas Studio bu betiği çalıştırmadan okudu.
 	Needs nothing beyond plain JavaScript	Sade JavaScript'in ötesinde hiçbir şeye ihtiyaç duymaz
 	Needs the script language's own objects or directives	Betik dilinin kendi nesnelerine veya direktiflerine ihtiyaç duyar
 	Needs the document model	Belge modeline ihtiyaç var
@@ -1495,7 +1495,7 @@ font-technology	Variable	Değişken
 	Keyboard Shortcuts…	Klavye Kısayolları…
 	Import Shortcut Set	Kısayol Kümesini İçe Aktar
 	Import Shortcut Set…	Kısayol Kümesini İçe Aktar…
-	Each entry of the file is matched to a VectorCraft tool, command or panel. Check the matches and answer what is left.	Dosyanın her girişi bir VectorCraft aracı, komutu veya paneliyle eşleştirilir. Eşleşmeleri kontrol edin ve kalanları cevaplayın.
+	Each entry of the file is matched to a 91Ninjas Studio tool, command or panel. Check the matches and answer what is left.	Dosyanın her girişi bir 91Ninjas Studio aracı, komutu veya paneliyle eşleştirilir. Eşleşmeleri kontrol edin ve kalanları cevaplayın.
 	Keys	Anahtarlar
 	The file writes keys and modifiers as codes. Check the proposed meanings and answer the codes that are not known yet.	Dosya, anahtarları ve değiştiricileri kod olarak yazar. Önerilen anlamları kontrol ederek henüz bilinmeyen kodları cevaplayınız.
 	Click, then press the key this code stands for (Esc cancels)	Tıklayın ve ardından bu kodun temsil ettiği tuşa basın (Esc iptal eder)
@@ -1505,7 +1505,7 @@ font-technology	Variable	Değişken
 	not known yet	henüz bilinmiyor
 	Shortcuts	Kısayollar
 	In the File	Dosyada
-	In VectorCraft	VectorCraft'ta
+	In 91Ninjas Studio	91Ninjas Studio'ta
 	Needs Attention Only	Yalnızca Dikkat Gerekir
 	Ready	Hazır
 	Needs a choice	Bir seçime ihtiyacı var
@@ -1514,7 +1514,7 @@ font-technology	Variable	Değişken
 	Tools take a single key (optionally with Shift)	Araçlar tek bir tuş alır (isteğe bağlı olarak Shift ile)
 	A later row takes this shortcut	Daha sonraki bir satır bu kısayolu alır
 	Same item as a later row	Daha sonraki bir satırla aynı öğe
-	Start from VectorCraft Defaults	VectorCraft Varsayılanlarından Başlayın
+	Start from 91Ninjas Studio Defaults	91Ninjas Studio Varsayılanlarından Başlayın
 	Add to the Current Shortcuts	Geçerli Kısayollara Ekle
 	Remember My Choices	Seçimlerimi Hatırla
 	{ready} of {total} ready	{total}'nin {ready}'si hazır
@@ -2132,7 +2132,7 @@ shape	Open	Açık
 	Paragraph Style Options	Paragraf Stili Seçenekleri
 	Paragraph Styles	Paragraf Stilleri
 	Paragraph Symbol	Paragraf Sembolü
-	Part of ArtCraft. MIT OR Apache-2.0. Fonts: Source Sans 3, Inter, JetBrains Mono (OFL). Icons: Lucide (ISC) + VectorCraft.	ArtCraft'ın bir parçası. MIT VEYA Apache-2.0. Yazı Tipleri: Source Sans 3, Inter, JetBrains Mono (OFL). Simgeler: Lucide (ISC) + VectorCraft.
+	Part of ArtCraft. MIT OR Apache-2.0. Fonts: Source Sans 3, Inter, JetBrains Mono (OFL). Icons: Lucide (ISC) + 91Ninjas Studio.	ArtCraft'ın bir parçası. MIT VEYA Apache-2.0. Yazı Tipleri: Source Sans 3, Inter, JetBrains Mono (OFL). Simgeler: Lucide (ISC) + 91Ninjas Studio.
 	Password	Şifre
 	Paste	Yapıştır
 	Paste in Back	Arkaya Yapıştır
@@ -2327,7 +2327,7 @@ digits	Malayalam	Malayalam
 	Quarter Space	Çeyrek Alan
 	Quick Actions	Hızlı Eylemler
 	Quickly start a new file	Hızlı bir şekilde yeni bir dosya başlatın
-	Quit VectorCraft	VectorCraft'tan çıkın
+	Quit 91Ninjas Studio	91Ninjas Studio'tan çıkın
 	Radar Graph Tool	Radar Grafik Aracı
 	Radial	Radyal
 	Radial Glows	Radyal Parıltılar
@@ -2452,7 +2452,7 @@ digits	Malayalam	Malayalam
 @plural	{n} folder or file couldn't be read|{n} folders or files couldn't be read	{n} klasör veya dosya okunamadı
 	The search stopped at its limit: search a smaller folder.	Arama sınırda durdu: daha küçük bir klasörde arama yapın.
 	Copy only fonts you own or are licensed to install.	Yalnızca sahip olduğunuz veya yükleme lisansına sahip olduğunuz yazı tiplerini kopyalayın.
-	VectorCraft copies the fonts to {folder}.	VectorCraft yazı tiplerini {folder}'ye kopyalar.
+	91Ninjas Studio copies the fonts to {folder}.	91Ninjas Studio yazı tiplerini {folder}'ye kopyalar.
 	Registered Trademark Symbol	Kayıtlı Ticari Marka Sembolü
 	Registration marks	Kayıt işaretleri
 	Registry name:	Kayıt adı:
@@ -2558,7 +2558,7 @@ digits	Malayalam	Malayalam
 	Revert	Geri Döndür
 	Revert to the saved version of “{name}”?	“{name}”nin kayıtlı sürümüne dönülsün mü?
 	Replace “{name}”, the file this document was opened from?	Bu belgenin açıldığı dosya olan "{name}" değiştirilsin mi?
-	Opening it left out what VectorCraft can't read yet ({what}), so replacing it loses that for good. Save under another name to keep it.	Bunu açmak, VectorCraft'ın henüz okuyamadığı şeyi ({what}) dışarıda bıraktı, bu nedenle onu değiştirmek onu tamamen kaybeder. Saklamak için başka bir adla kaydedin.
+	Opening it left out what 91Ninjas Studio can't read yet ({what}), so replacing it loses that for good. Save under another name to keep it.	Bunu açmak, 91Ninjas Studio'ın henüz okuyamadığı şeyi ({what}) dışarıda bıraktı, bu nedenle onu değiştirmek onu tamamen kaybeder. Saklamak için başka bir adla kaydedin.
 	Revolve…	Döndür…
 	RGB Color	RGB Rengi
 	Right	Sağ
@@ -3461,10 +3461,10 @@ digits	Malayalam	Malayalam
 	Vector Halftone	Vektör Noktalı Resim
 	Vector Halftone…	Vektör Noktalı Resim…
 	Vector illustration — fast, open, scriptable.	Vektör illüstrasyonu — hızlı, açık, yazılabilir.
-	VectorCraft didn't quit normally last time. These documents had unsaved changes:	VectorCraft geçen sefer normal şekilde kapanmamıştı. Bu belgelerde kaydedilmemiş değişiklikler vardı:
-	VectorCraft Help…	VectorCraft Yardımı…
-	VectorCraft on getartcraft.com	Getartcraft.com'da VectorCraft
-	VectorCraft on GitHub	GitHub'da VectorCraft
+	91Ninjas Studio didn't quit normally last time. These documents had unsaved changes:	91Ninjas Studio geçen sefer normal şekilde kapanmamıştı. Bu belgelerde kaydedilmemiş değişiklikler vardı:
+	91Ninjas Studio Help…	91Ninjas Studio Yardımı…
+	91Ninjas Studio on getartcraft.com	Getartcraft.com'da 91Ninjas Studio
+	91Ninjas Studio on GitHub	GitHub'da 91Ninjas Studio
 	Vectors	Vektörler
 	Version {version} — open-source vector illustration in pure Rust.	Sürüm {version} — saf Rust'ta açık kaynaklı vektör çizimi.
 	Version:	Sürüm:
@@ -3504,7 +3504,7 @@ digits	Malayalam	Malayalam
 	Web Snap:	Web Snap:
 	Weight	Ağırlık
 	Weight:	Ağırlık:
-	Welcome to VectorCraft	VectorCraft'a hoş geldiniz
+	Welcome to 91Ninjas Studio	91Ninjas Studio'a hoş geldiniz
 	When pasting text	Metin yapıştırırken
 	White	Beyaz
 	Widget Position:	Widget Konumu:
@@ -3789,7 +3789,7 @@ axis	Both	Her İkisi
 @msg	Split Into Grid: select paths large enough for the grid	Izgaraya Böl: ızgara için yeterince büyük yollar seçin
 @msg	Targa files are RGB: colorModel rgb	Targa dosyaları RGB'dir: colorModel rgb
 @msg	Text Wrap: select a wrap object	Metin Sarma: bir sarma nesnesi seçin
-@msg	This shortcut file is in a form VectorCraft can't read.	Bu kısayol dosyası VectorCraft'ın okuyamayacağı bir biçimdedir.
+@msg	This shortcut file is in a form 91Ninjas Studio can't read.	Bu kısayol dosyası 91Ninjas Studio'ın okuyamayacağı bir biçimdedir.
 @msg	`aspect` must be a number (%)	"boyut" bir sayı olmalıdır (%)
 @msg	`at` must be [x, y]	`at` [x, y] olmalıdır
 @msg	`color` must be a colour	"renk" bir renk olmalıdır
@@ -3894,7 +3894,7 @@ axis	Both	Her İkisi
 @msg	can't encode the document: {0}	belge kodlanamıyor: {0}
 @msg	can't parse shortcut `{c}`	`{c}` kısayolu ayrıştırılamıyor
 @msg	can't parse shortcut `{s}` for `{k}`	`{k}` için `{s}` kısayolu ayrıştırılamıyor
-@msg	can't save version {0}: VectorCraft writes versions {MIN_VERSION} to {VERSION}	{0} sürümü kaydedilemiyor: VectorCraft, {MIN_VERSION} sürümlerini {VERSION}'ye yazıyor
+@msg	can't save version {0}: 91Ninjas Studio writes versions {MIN_VERSION} to {VERSION}	{0} sürümü kaydedilemiyor: 91Ninjas Studio, {MIN_VERSION} sürümlerini {VERSION}'ye yazıyor
 @msg	can't write .{ext} images	.{ext} görselleri yazılamıyor
 @msg	cannot distort a zero-size bounding box	sıfır boyutlu bir sınırlayıcı kutuyu bozamaz
 @msg	cannot read PDF: {0}	PDF okunamıyor: {0}
@@ -3921,7 +3921,7 @@ axis	Both	Her İkisi
 @msg	empty brush stroke	boş fırça darbesi
 @msg	empty cutter	boş kesici
 @msg	empty path	boş yol
-@msg	file version {0} is newer than this VectorCraft supports ({VERSION})	dosya sürümü {0}, VectorCraft'ın desteklediğinden daha yenidir ({VERSION})
+@msg	file version {0} is newer than this 91Ninjas Studio supports ({VERSION})	dosya sürümü {0}, 91Ninjas Studio'ın desteklediğinden daha yenidir ({VERSION})
 @msg	freeform point {i} needs `at` [x, y] and a valid `color`	serbest biçimli nokta {i}'nin "[x, y]'de" ve geçerli bir "renk"te olması gerekir
 @msg	freeform line {i} must be an array of point indices	Serbest biçimli çizgi {i}, bir nokta indeks dizisi olmalıdır
 @msg	give both `start` and `end` [x, y] (or neither)	hem "başlangıç" hem de "son" [x, y] verin (ya da ikisini de)
@@ -3940,9 +3940,9 @@ axis	Both	Her İkisi
 @msg	invalid PDF setting: {0}	geçersiz PDF ayarı: {0}
 @msg	invalid image data for `{0}`	`{0}` için geçersiz resim verileri
 @msg	invalid parameters for `{cmd}`: {msg}	`{cmd}` için geçersiz parametreler: {msg}
-@msg	is not an image VectorCraft reads	VectorCraft'ın okuduğu bir resim değil
-@msg	it uses `{at}`, which VectorCraft's PostScript reader doesn't know	VectorCraft'ın PostScript okuyucusunun bilmediği `{at}`yi kullanıyor
-@msg	it uses `{at}`, which VectorCraft's PostScript reader doesn't know, in {procs}	{procs}'de VectorCraft'ın PostScript okuyucusunun bilmediği `{at}`yi kullanıyor
+@msg	is not an image 91Ninjas Studio reads	91Ninjas Studio'ın okuduğu bir resim değil
+@msg	it uses `{at}`, which 91Ninjas Studio's PostScript reader doesn't know	91Ninjas Studio'ın PostScript okuyucusunun bilmediği `{at}`yi kullanıyor
+@msg	it uses `{at}`, which 91Ninjas Studio's PostScript reader doesn't know, in {procs}	{procs}'de 91Ninjas Studio'ın PostScript okuyucusunun bilmediği `{at}`yi kullanıyor
 @msg	its Windows metafile preview was opened instead, which may simplify the art	bunun yerine Windows meta dosyası önizlemesi açıldı, bu da işi basitleştirebilir
 @msg	its preview was placed instead, at screen resolution	bunun yerine önizlemesi ekran çözünürlüğüne yerleştirildi
 @msg	join needs open paths	katılmak için açık yollara ihtiyaç var
@@ -3995,7 +3995,7 @@ axis	Both	Her İkisi
 @msg	no file system here	burada dosya sistemi yok
 @msg	no file writer	dosya yazarı yok
 @msg	no files to place	yerleştirilecek dosya yok
-@msg	`{file}` isn't a VectorCraft document, a PDF or a PDF-compatible .ai file	`{file}` bir VectorCraft belgesi, bir PDF ya da PDF ile uyumlu bir .ai dosyası değil
+@msg	`{file}` isn't a 91Ninjas Studio document, a PDF or a PDF-compatible .ai file	`{file}` bir 91Ninjas Studio belgesi, bir PDF ya da PDF ile uyumlu bir .ai dosyası değil
 @msg	no format to export to	dışa aktarılacak format yok
 @msg	no free recovery area	ücretsiz kurtarma alanı yok
 @msg	no gradient stop or freeform point is selected	degrade durağı veya serbest biçim noktası seçili değil
@@ -4037,7 +4037,7 @@ axis	Both	Her İkisi
 @msg	not an action set file	bir eylem seti dosyası değil
 @msg	the action set file is larger than 8 MiB	eylem seti dosyası 8 MiB'den büyük
 @msg	the action set file holds more than 1,000 actions	eylem seti dosyası 1.000'den fazla eylem içeriyor
-@msg	the action set file needs a later version of VectorCraft	eylem seti dosyası VectorCraft'ın daha yeni bir sürümünü gerektiriyor
+@msg	the action set file needs a later version of 91Ninjas Studio	eylem seti dosyası 91Ninjas Studio'ın daha yeni bir sürümünü gerektiriyor
 @msg	an action in the action set file has more than 10,000 steps	eylem seti dosyasındaki bir eylemde 10.000'den fazla adım var
 @msg	no such anchor	öyle bir çapa yok
 @msg	no such artboard	böyle bir çalışma yüzeyi yok
@@ -4064,8 +4064,8 @@ axis	Both	Her İkisi
 @msg	node {_1} is not text	{_1} düğümü metin değil
 @msg	node {_1} is on a locked artboard	{_1} düğümü kilitli bir çalışma yüzeyinde
 @msg	not a DXF drawing	DXF çizimi değil
-@msg	not a VectorCraft file: {0}	bir VectorCraft dosyası değil: {0}
-@msg	not a VectorCraft shortcut set (missing `overrides`)	VectorCraft kısayol seti değil ("geçersiz kılmalar" eksik)
+@msg	not a 91Ninjas Studio file: {0}	bir 91Ninjas Studio dosyası değil: {0}
+@msg	not a 91Ninjas Studio shortcut set (missing `overrides`)	91Ninjas Studio kısayol seti değil ("geçersiz kılmalar" eksik)
 @msg	not a graphic style library (format `{_1}`)	grafik stili kitaplığı değil (`{_1}` biçimi)
 @msg	not a shortcut set: the text doesn't start with a slash name and an opening brace	bir kısayol seti değil: metin eğik çizgi adı ve açılış paranteziyle başlamıyor
 @msg	not a stored central record	saklanan merkezi bir kayıt değil
@@ -4326,11 +4326,11 @@ axis	Both	Her İkisi
 @msg	Sent to {_1}	{_1}'ye gönderildi
 @msg	{_1} files	{_1} dosyaları
 @msg	The graphics were lost and have been restarted	Grafikler kayboldu ve yeniden başlatıldı
-@msg	The graphics processor tried first couldn't show the window, so VectorCraft started again on {summary}	İlk önce denenen grafik işlemcisi pencereyi gösteremedi, bu yüzden VectorCraft {summary}'de yeniden başladı
-@msg	The last start of VectorCraft ended on {name} before its window appeared, so it started on {summary}. To try that graphics processor again, change Preferences › Performance › Graphics Processor or start with WGPU_BACKEND set	VectorCraft'ın son başlangıcı, penceresi görünmeden önce {name}'de sona erdi, bu nedenle {summary}'de başladı. Bu grafik işlemciyi tekrar denemek için Tercihler › Performans › Grafik İşlemcisi seçeneğini değiştirin veya WGPU_BACKEND ayarıyla başlayın
-@msg	The last start of VectorCraft ended while it listed the graphics processors, so it started on {summary} with OpenGL alone. To try the other graphics backends again, change Preferences › Performance › Graphics Processor or start with WGPU_BACKEND set	VectorCraft'ın son başlangıcı grafik işlemcilerini listelerken sona erdi ve {summary}'de yalnızca OpenGL ile başladı. Diğer grafik arka uçlarını tekrar denemek için Tercihler › Performans › Grafik İşlemci seçeneğini değiştirin veya WGPU_BACKEND ayarıyla başlayın
-@msg	Loading VectorCraft…	VectorCraft Yükleniyor…
-@msg	VectorCraft failed to start: {e}	VectorCraft başlatılamadı: {e}
+@msg	The graphics processor tried first couldn't show the window, so 91Ninjas Studio started again on {summary}	İlk önce denenen grafik işlemcisi pencereyi gösteremedi, bu yüzden 91Ninjas Studio {summary}'de yeniden başladı
+@msg	The last start of 91Ninjas Studio ended on {name} before its window appeared, so it started on {summary}. To try that graphics processor again, change Preferences › Performance › Graphics Processor or start with WGPU_BACKEND set	91Ninjas Studio'ın son başlangıcı, penceresi görünmeden önce {name}'de sona erdi, bu nedenle {summary}'de başladı. Bu grafik işlemciyi tekrar denemek için Tercihler › Performans › Grafik İşlemcisi seçeneğini değiştirin veya WGPU_BACKEND ayarıyla başlayın
+@msg	The last start of 91Ninjas Studio ended while it listed the graphics processors, so it started on {summary} with OpenGL alone. To try the other graphics backends again, change Preferences › Performance › Graphics Processor or start with WGPU_BACKEND set	91Ninjas Studio'ın son başlangıcı grafik işlemcilerini listelerken sona erdi ve {summary}'de yalnızca OpenGL ile başladı. Diğer grafik arka uçlarını tekrar denemek için Tercihler › Performans › Grafik İşlemci seçeneğini değiştirin veya WGPU_BACKEND ayarıyla başlayın
+@msg	Loading 91Ninjas Studio…	91Ninjas Studio Yükleniyor…
+@msg	91Ninjas Studio failed to start: {e}	91Ninjas Studio başlatılamadı: {e}
 @msg	A browser with WebGPU or WebGL2 is required.	WebGPU veya WebGL2'ye sahip bir tarayıcı gereklidir.
 @msg	The graphics were lost and couldn't be restarted.	Grafikler kayboldu ve yeniden başlatılamadı.
 @msg	Your unsaved changes are kept in this browser: reload the page to get them back.	Kaydedilmemiş değişiklikleriniz bu tarayıcıda tutuluyor: onları geri almak için sayfayı yeniden yükleyin.
@@ -4361,12 +4361,12 @@ axis	Both	Her İkisi
 @msg	it has more than {MAX_NODES} objects	{MAX_NODES}'den daha fazla nesneye sahip
 @msg	it has no layers	katmanı yok
 @msg	it has too many values in a row	arka arkaya çok fazla değer var
-@msg	it has {_1}, which VectorCraft doesn't read from it yet	VectorCraft'ın henüz okumadığı {_1} var
+@msg	it has {_1}, which 91Ninjas Studio doesn't read from it yet	91Ninjas Studio'ın henüz okumadığı {_1} var
 @msg	its objects are nested too deeply	nesneleri çok derin bir şekilde iç içe geçmiş
 @msg	its section ending with `%{end}` doesn't end	`%{end}` ile biten bölümü bitmiyor
 @msg	objects with several fills or strokes, effects or brushes came in as their drawn look ({_1}): their appearance isn't editable yet	çeşitli dolgulara veya konturlara, efektlere veya fırçalara sahip nesneler çizilmiş görünümleri olarak geldi ({_1}): görünümleri henüz düzenlenemez
 @msg	gradient “{name}” isn't defined in the file: a plain colour stands in for it	“{name}” degradesi dosyada tanımlı değil: onun yerine düz bir renk geliyor
-@msg	an image VectorCraft can't read was left out	VectorCraft'ın okuyamadığı bir resim dışarıda bırakıldı
+@msg	an image 91Ninjas Studio can't read was left out	91Ninjas Studio'ın okuyamadığı bir resim dışarıda bırakıldı
 @msg	graphs come in as plain art, without their data or settings	grafikler, verileri ve ayarları olmadan düz çizim olarak içe aktarılır
 @msg	an image whose data is cut short was left out	verileri kısa kesilen bir resim dışarıda bırakıldı
 @msg	linked pictures show the low-resolution preview saved in the file until their files are found: relink them in the Links panel	bağlantılı resimler, dosyaları bulunana kadar dosyaya kaydedilen düşük çözünürlüklü önizlemeyi gösterir: bunları Bağlantılar panelinde yeniden bağlayın
@@ -4375,13 +4375,13 @@ axis	Both	Her İkisi
 @msg	this file was saved without PDF compatibility, and its editing data can't be read ({why})	bu dosya PDF uyumluluğu olmadan kaydedildi ve düzenleme verileri okunamıyor ({why})
 @msg	the PDF part couldn't be read ({_1}): the file opened from its editing data	PDF kısmı okunamadı ({_1}): dosya düzenleme verilerinden açıldı
 @msg	No fonts are missing in this document	Bu belgede eksik yazı tipi yok
-@msg	VectorCraft doesn't search other apps' or the system's folders: {path}	VectorCraft diğer uygulamaların veya sistemin klasörlerini aramaz: {path}
-@msg	VectorCraft doesn't search the Shared or Public folder in Users: {path}	VectorCraft, Kullanıcılar'daki Paylaşılan veya Genel klasörü aramıyor: {path}
+@msg	91Ninjas Studio doesn't search other apps' or the system's folders: {path}	91Ninjas Studio diğer uygulamaların veya sistemin klasörlerini aramaz: {path}
+@msg	91Ninjas Studio doesn't search the Shared or Public folder in Users: {path}	91Ninjas Studio, Kullanıcılar'daki Paylaşılan veya Genel klasörü aramıyor: {path}
 @msg	{path} is not a folder	{path} bir klasör değil
 @msg	the search couldn't start: try again in a moment	arama başlatılamadı: birazdan tekrar deneyin
 @msg	searching a folder isn't available on the web	Web'de klasör arama özelliği kullanılamıyor
 @msg	every search thread stopped on an internal error (please report this bug)	her arama dizisi dahili bir hata nedeniyle durduruldu (lütfen bu hatayı bildirin)
-@msg	VectorCraft's Fonts folder isn't set here: the desktop app and vectorcraft-cli set it	VectorCraft'ın Fonts klasörü burada ayarlanmamış: masaüstü uygulaması ve Vectorcraft-cli bunu ayarlıyor
+@msg	91Ninjas Studio's Fonts folder isn't set here: the desktop app and vectorcraft-cli set it	91Ninjas Studio'ın Fonts klasörü burada ayarlanmamış: masaüstü uygulaması ve Vectorcraft-cli bunu ayarlıyor
 @msg	choose the font files to add	eklenecek yazı tipi dosyalarını seçin
 @msg	not a file	dosya değil
 @msg	not a font file	yazı tipi dosyası değil
@@ -4392,7 +4392,7 @@ axis	Both	Her İkisi
 @msg	every numbered name for {name} is taken in the document's folder	{name} için numaralandırılmış her ad belgenin klasöründe alınır
 @msg	No linked files to look for	Aranacak bağlantılı dosya yok
 	Services	Hizmetler
-	Hide VectorCraft	VectorCraft'ı gizle
+	Hide 91Ninjas Studio	91Ninjas Studio'ı gizle
 	Zoom	Yakınlaştır
 	Bring All to Front	Herkesi Öne Çıkarın
 	Settings	Ayarlar
@@ -4400,7 +4400,7 @@ axis	Both	Her İkisi
 	On: one locked object showing the document, updated when it changes.	Açık: Belgeyi gösteren, değiştiğinde güncellenen kilitli bir nesne.
 	Off: an editable copy of its art, embedded in this document.	Kapalı: Bu belgeye yerleştirilmiş resmin düzenlenebilir bir kopyası.
 	Images: link to the file instead of only embedding it.	Resimler: dosyayı yalnızca gömmek yerine dosyaya bağlantı verin.
-	VectorCraft documents: one locked object, updated when the file changes.	VectorCraft belgeleri: Dosya değiştiğinde güncellenen tek bir kilitli nesne.
+	91Ninjas Studio documents: one locked object, updated when the file changes.	91Ninjas Studio belgeleri: Dosya değiştiğinde güncellenen tek bir kilitli nesne.
 	A file dialog is open: choose there first	Bir dosya iletişim kutusu açık: önce orayı seçin
 	The document was closed while its file dialog was open	Belge, dosya iletişim kutusu açıkken kapatıldı
 	The dialog was closed before its file dialog answered	Dosya iletişim kutusu yanıtlanmadan iletişim kutusu kapatıldı
@@ -4642,7 +4642,7 @@ lighting	Light	Işık
 	Artistic	Sanatsal
 	Film Grain…	Film Tahıl…
 	Highlight Area	Alanı Vurgula
-@msg	the compressed file unpacks to more than VectorCraft reads ({_1} MB of document, {_2} MB per image)	sıkıştırılmış dosya, VectorCraft'ın okuduğundan daha fazlasına açılır (belgenin {_1} MB'ı, görüntü başına {_2} MB)
+@msg	the compressed file unpacks to more than 91Ninjas Studio reads ({_1} MB of document, {_2} MB per image)	sıkıştırılmış dosya, 91Ninjas Studio'ın okuduğundan daha fazlasına açılır (belgenin {_1} MB'ı, görüntü başına {_2} MB)
 @msg	the document is too large to save compressed ({0}): save it with Use Compression off	belge sıkıştırılmış olarak kaydedilemeyecek kadar büyük ({0}): Sıkıştırmayı Kullan kapalı olarak kaydedin
 @msg	the file stopped being read (please report this bug)	dosyanın okunması durduruldu (lütfen bu hatayı bildirin)
 	Concentric Dividers:	Eşmerkezli Bölücüler:
@@ -4791,7 +4791,7 @@ lighting	Light	Işık
 	DWG (use DXF)	DWG (DXF kullanın)
 	Default Graphic Style	Varsayılan Grafik Stili
 	Diamond (open)	Elmas (açık)
-	Differences from VectorCraft Default:	VectorCraft Varsayılanından Farklar:
+	Differences from 91Ninjas Studio Default:	91Ninjas Studio Varsayılanından Farklar:
 	Differences from [Default]:	[Varsayılan]'dan farkları:
 	Diffusion	Difüzyon
 	Direct Selection	Doğrudan Seçim
@@ -4859,7 +4859,7 @@ lighting	Light	Işık
 	Inserting, deleting and rotating pages	Sayfa ekleme, silme ve döndürme
 	Joins:	Katılma:
 	Justify	İki Yana Yasla
-	Keeps the document editable: VectorCraft reopens the PDF with nothing lost. For files you'll edit again.	Belgeyi düzenlenebilir tutar: VectorCraft, PDF'yi hiçbir şey kaybolmadan yeniden açar. Dosyalar için tekrar düzenleme yapacaksınız.
+	Keeps the document editable: 91Ninjas Studio reopens the PDF with nothing lost. For files you'll edit again.	Belgeyi düzenlenebilir tutar: 91Ninjas Studio, PDF'yi hiçbir şey kaybolmadan yeniden açar. Dosyalar için tekrar düzenleme yapacaksınız.
 	Keyboard Shortcuts	Klavye Kısayolları
 	Kite	Uçurtma
 	LF (macOS, Linux)	LF (macOS, Linux)
@@ -4909,7 +4909,7 @@ lighting	Light	Işık
 	PDF/X-4:2010	PDF/X-4:2010
 	PRs	PR'ler
 	Page Cover 1640×624	Sayfa Kapağı 1640×624
-	Part of ArtCraft. MIT OR Apache-2.0. Fonts: Source Sans 3, Inter, JetBrains Mono, Noto Sans SC (OFL). Icons: Lucide (ISC) + VectorCraft.	ArtCraft'ın bir parçası. MIT VEYA Apache-2.0. Yazı Tipleri: Source Sans 3, Inter, JetBrains Mono, Noto Sans SC (OFL). Simgeler: Lucide (ISC) + VectorCraft.
+	Part of ArtCraft. MIT OR Apache-2.0. Fonts: Source Sans 3, Inter, JetBrains Mono, Noto Sans SC (OFL). Icons: Lucide (ISC) + 91Ninjas Studio.	ArtCraft'ın bir parçası. MIT VEYA Apache-2.0. Yazı Tipleri: Source Sans 3, Inter, JetBrains Mono, Noto Sans SC (OFL). Simgeler: Lucide (ISC) + 91Ninjas Studio.
 	Pattern Swatches	Desen Örnekleri
 	Pen	Kalem
 	Pentagram	Pentagram
@@ -5047,10 +5047,10 @@ lighting	Light	Işık
 	Up (right reading)	Yukarı (sağ okuma)
 	Use Default	Varsayılanı Kullan
 	Variation	Varyasyon
-	VectorCraft Default	VectorCraft Varsayılanı
-	VectorCraft Defaults	VectorCraft Varsayılanları
-	VectorCraft Generic CMYK (SWOP-like)	VectorCraft Genel CMYK (SWOP benzeri)
-	VectorCraft Swatches (.vcswatches)	VectorCraft Renk Örnekleri (.vcswatches)
+	91Ninjas Studio Default	91Ninjas Studio Varsayılanı
+	91Ninjas Studio Defaults	91Ninjas Studio Varsayılanları
+	91Ninjas Studio Generic CMYK (SWOP-like)	91Ninjas Studio Genel CMYK (SWOP benzeri)
+	91Ninjas Studio Swatches (.vcswatches)	91Ninjas Studio Renk Örnekleri (.vcswatches)
 	Vertical Align	Dikey Hizalama
 	Vertical Area Type	Dikey Alan Türü
 	Vertical Type	Dikey Tip
@@ -5087,7 +5087,7 @@ lighting	Light	Işık
 	[PDF/X-4:2010]	[PDF/X-4:2010]
 	[Press Quality]	[Basın Kalitesi]
 	[Smallest File Size]	[En Küçük Dosya Boyutu]
-	[VectorCraft Default]	[VectorCraft Varsayılanı]
+	[91Ninjas Studio Default]	[91Ninjas Studio Varsayılanı]
 	of	arasında
 	sRGB IEC61966-2.1	sRGB IEC61966-2.1
 	x Height	x Yükseklik
@@ -5116,7 +5116,7 @@ file-filter	Print presets	Baskı önayarları
 file-filter	SVG Compressed	Sıkıştırılmış SVG
 file-filter	Swatch libraries	Renk örneği kitaplıkları
 file-filter	Templates	Şablonlar
-file-filter	VectorCraft Template	VectorCraft Şablonu
+file-filter	91Ninjas Studio Template	91Ninjas Studio Şablonu
 gradient-kind	Radial	Radyal
 mark-style	Japanese	Japon
 theme	Appearance	Görünüm
@@ -5349,7 +5349,7 @@ theme	Appearance	Görünüm
 	Symbol Stainer	Sembol Renklendirici
 	Symbol Styler	Sembol Stil Verici
 	Text Orientation	Metin Yönü
-	The name in the save panel was “{typed}”; VectorCraft added the file type's extension. Replacing the file overwrites its contents.	Kayıt panelindeki ad “{typed}” idi; VectorCraft dosya türünün uzantısını ekledi. Dosyayı değiştirmek içeriğinin üzerine yazar.
+	The name in the save panel was “{typed}”; 91Ninjas Studio added the file type's extension. Replacing the file overwrites its contents.	Kayıt panelindeki ad “{typed}” idi; 91Ninjas Studio dosya türünün uzantısını ekledi. Dosyayı değiştirmek içeriğinin üzerine yazar.
 	Thread Text	Metni Bağla
 	Trackpad Gesture to Rotate View	Görünümü Döndürmek İçin İzleme Dörtgeni Hareketi
 	Typing	Yazma
@@ -6154,7 +6154,7 @@ breakText	Glyphs	Glifler
 	Malayalam	Malayalam dili
 	Odia	Oriya dili
 	Urdu	Urduca
-	VectorCraft {release} and later (version {n})	VectorCraft {release} ve sonrası (sürüm {n})
+	91Ninjas Studio {release} and later (version {n})	91Ninjas Studio {release} ve sonrası (sürüm {n})
 # Document Tools add-on: Export All Open Documents (#4920).
 	Export All Open Documents as PDF	Tüm Açık Belgeleri PDF Olarak Dışa Aktar
 	Export All Open Documents as SVG	Tüm Açık Belgeleri SVG Olarak Dışa Aktar

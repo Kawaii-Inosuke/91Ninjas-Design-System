@@ -23,7 +23,7 @@
 	Paste Design	Vložit návrh
 	Select Unused	Vybrat nepoužité
 	Glowing Edges…	Zářící okraje…
-	About VectorCraft	O aplikaci VectorCraft
+	About 91Ninjas Studio	O aplikaci 91Ninjas Studio
 	Align to Path	Zarovnat k cestě
 	Cut Path at Selected Anchor Points	Rozdělit cestu ve vybraných kotevních bodech
 	Join Our Discord	Připojit se k našemu Discordu
@@ -33,7 +33,7 @@
 	Medium Dark	Středně tmavý
 	Medium Light	Středně světlý
 	Light	Světlý
-	Quit VectorCraft	Ukončit VectorCraft
+	Quit 91Ninjas Studio	Ukončit 91Ninjas Studio
 # Artwork drag between document tabs.
 	Drop Artwork	Umístit grafiku
 @msg	{key} must be [x, y] with finite coordinates	{key} musí být [x, y] s konečnými souřadnicemi
@@ -123,7 +123,7 @@
 # Import Shortcut Set (Keyboard Shortcuts › Import…, File › Open of a .kys file) and its commands.
 	Import Shortcut Set	Importovat sadu klávesových zkratek
 	Import Shortcut Set…	Importovat sadu klávesových zkratek…
-	Each entry of the file is matched to a VectorCraft tool, command or panel. Check the matches and answer what is left.	Každá položka souboru je přiřazena k nástroji, příkazu nebo panelu VectorCraftu. Zkontrolujte přiřazení a doplňte, co zbývá.
+	Each entry of the file is matched to a 91Ninjas Studio tool, command or panel. Check the matches and answer what is left.	Každá položka souboru je přiřazena k nástroji, příkazu nebo panelu 91Ninjas Studiou. Zkontrolujte přiřazení a doplňte, co zbývá.
 	Keys	Klávesy
 	The file writes keys and modifiers as codes. Check the proposed meanings and answer the codes that are not known yet.	Soubor ukládá klávesy a modifikátory jako kódy. Zkontrolujte navržené významy a doplňte ty, které zatím nejsou známé.
 	Click, then press the key this code stands for (Esc cancels)	Klikněte a stiskněte klávesu, kterou tento kód označuje (Esc zruší)
@@ -133,7 +133,7 @@
 	not known yet	zatím není známo
 	Shortcuts	Zkratky
 	In the File	V souboru
-	In VectorCraft	Ve VectorCraftu
+	In 91Ninjas Studio	Ve 91Ninjas Studiou
 	Needs Attention Only	Jen řádky vyžadující pozornost
 	Ready	Připraveno
 	Needs a choice	Vyžaduje volbu
@@ -142,7 +142,7 @@
 	Tools take a single key (optionally with Shift)	Nástroje používají jedinou klávesu (volitelně se Shift)
 	A later row takes this shortcut	Tuto zkratku přebírá pozdější řádek
 	Same item as a later row	Stejná položka jako v pozdějším řádku
-	Start from VectorCraft Defaults	Vycházet z výchozích zkratek VectorCraftu
+	Start from 91Ninjas Studio Defaults	Vycházet z výchozích zkratek 91Ninjas Studiou
 	Add to the Current Shortcuts	Přidat k aktuálním zkratkám
 	Remember My Choices	Zapamatovat si moje volby
 	{ready} of {total} ready	Připraveno {ready} z {total}
@@ -156,7 +156,7 @@
 	Forget Import Matches	Zapomenout přiřazení z importů
 @plural	agrees with {n} default shortcut|agrees with {n} default shortcuts	shoduje se s {n} výchozí zkratkou|shoduje se s {n} výchozími zkratkami|shoduje se s {n} výchozími zkratkami
 @plural	{n} part of the file wasn't read|{n} parts of the file weren't read	{n} část souboru nebyla přečtena|{n} části souboru nebyly přečteny|{n} částí souboru nebylo přečteno
-@msg	This shortcut file is in a form VectorCraft can't read.	Tento soubor klávesových zkratek je ve formátu, který VectorCraft neumí přečíst.
+@msg	This shortcut file is in a form 91Ninjas Studio can't read.	Tento soubor klávesových zkratek je ve formátu, který 91Ninjas Studio neumí přečíst.
 @msg	not a shortcut set: the text doesn't start with a slash name and an opening brace	nejde o sadu klávesových zkratek: text nezačíná názvem s lomítkem a otevírací složenou závorkou
 	Preferences…	Předvolby…
 	Object	Objekt
@@ -532,7 +532,7 @@
 	Working CMYK	Pracovní CMYK
 	RGB	RGB
 	sRGB IEC61966-2.1	sRGB IEC61966-2.1
-	VectorCraft Generic CMYK (SWOP-like)	VectorCraft obecný CMYK (podobný SWOP)
+	91Ninjas Studio Generic CMYK (SWOP-like)	91Ninjas Studio obecný CMYK (podobný SWOP)
 	Legacy Macintosh RGB (Gamma 1.8)	Starší Macintosh RGB (gama 1,8)
 	Internet Standard RGB (sRGB)	Standardní internetové RGB (sRGB)
 	Monitor RGB	RGB monitoru
@@ -757,10 +757,10 @@
 	Symbol Libraries	Knihovny symbolů
 	Help	Nápověda
 	ArtCraft Website	Web ArtCraft
-	VectorCraft on getartcraft.com	VectorCraft na getartcraft.com
-	VectorCraft on GitHub	VectorCraft na GitHubu
+	91Ninjas Studio on getartcraft.com	91Ninjas Studio na getartcraft.com
+	91Ninjas Studio on GitHub	91Ninjas Studio na GitHubu
 	Search Commands…	Hledat příkazy…
-	VectorCraft Help…	Nápověda VectorCraft…
+	91Ninjas Studio Help…	Nápověda 91Ninjas Studio…
 	Auto Color	Automatická barva
 	Automatic	Automaticky
 	Isolate Selected Group	Izolovat vybranou skupinu
@@ -814,7 +814,7 @@
 
 # The macOS menu bar (native_menu): the app and Window menus' system items, Settings pages.
 	Services	Služby
-	Hide VectorCraft	Skrýt VectorCraft
+	Hide 91Ninjas Studio	Skrýt 91Ninjas Studio
 	Hide Others	Skrýt ostatní
 	Minimize	Minimalizovat
 	Zoom	Zvětšení
@@ -2103,8 +2103,8 @@ digits	Malayalam	Malajálamské
 
 # Dialogs
 	Graphics: {adapter}	Grafika: {adapter}
-	Part of ArtCraft. MIT OR Apache-2.0. Fonts: Source Sans 3, Inter, JetBrains Mono (OFL). Icons: Lucide (ISC) + VectorCraft.	Součást ArtCraft. MIT OR Apache-2.0. Písma: Source Sans 3, Inter, JetBrains Mono (OFL). Ikony: Lucide (ISC) + VectorCraft.
-	Part of ArtCraft. MIT OR Apache-2.0. Fonts: Source Sans 3, Inter, JetBrains Mono, Noto Sans SC (OFL). Icons: Lucide (ISC) + VectorCraft.	Součást ArtCraft. MIT OR Apache-2.0. Písma: Source Sans 3, Inter, JetBrains Mono, Noto Sans SC (OFL). Ikony: Lucide (ISC) + VectorCraft.
+	Part of ArtCraft. MIT OR Apache-2.0. Fonts: Source Sans 3, Inter, JetBrains Mono (OFL). Icons: Lucide (ISC) + 91Ninjas Studio.	Součást ArtCraft. MIT OR Apache-2.0. Písma: Source Sans 3, Inter, JetBrains Mono (OFL). Ikony: Lucide (ISC) + 91Ninjas Studio.
+	Part of ArtCraft. MIT OR Apache-2.0. Fonts: Source Sans 3, Inter, JetBrains Mono, Noto Sans SC (OFL). Icons: Lucide (ISC) + 91Ninjas Studio.	Součást ArtCraft. MIT OR Apache-2.0. Písma: Source Sans 3, Inter, JetBrains Mono, Noto Sans SC (OFL). Ikony: Lucide (ISC) + 91Ninjas Studio.
 	Version {version} — open-source vector illustration in pure Rust.	Verze {version} — open-source vektorová ilustrace v čistém Rustu.
 	Align to Page	Zarovnat ke stránce
 	Smooth Color	Plynulá barva
@@ -2450,7 +2450,7 @@ digits	Malayalam	Malajálamské
 @plural	{n} folder or file couldn't be read|{n} folders or files couldn't be read	Nepodařilo se přečíst {n} složku nebo soubor|Nepodařilo se přečíst {n} složky nebo soubory|Nepodařilo se přečíst {n} složek nebo souborů
 	The search stopped at its limit: search a smaller folder.	Hledání se zastavilo na limitu: prohledejte menší složku.
 	Copy only fonts you own or are licensed to install.	Kopírujte jen písma, která vlastníte nebo máte licenci instalovat.
-	VectorCraft copies the fonts to {folder}.	VectorCraft zkopíruje písma do {folder}.
+	91Ninjas Studio copies the fonts to {folder}.	91Ninjas Studio zkopíruje písma do {folder}.
 @plural	Apply to All ({n} more missing)|Apply to All ({n} more missing)	Použít na všechny (chybí ještě {n})|Použít na všechny (chybí ještě {n})|Použít na všechny (chybí ještě {n})
 	Ignore	Ignorovat
 	Linked File Not Found	Propojený soubor nebyl nalezen
@@ -2538,7 +2538,7 @@ digits	Malayalam	Malajálamské
 	On: one locked object showing the document, updated when it changes.	Zapnuto: jeden zamčený objekt zobrazující dokument, aktualizovaný při jeho změně.
 	Off: an editable copy of its art, embedded in this document.	Vypnuto: upravitelná kopie jeho kresby vložená do tohoto dokumentu.
 	Images: link to the file instead of only embedding it.	Obrázky: propojit se souborem místo pouhého vložení.
-	VectorCraft documents: one locked object, updated when the file changes.	Dokumenty VectorCraft: jeden zamčený objekt, aktualizovaný při změně souboru.
+	91Ninjas Studio documents: one locked object, updated when the file changes.	Dokumenty 91Ninjas Studio: jeden zamčený objekt, aktualizovaný při změně souboru.
 	Alignment:	Zarovnání:
 	Applies when the linked file is relinked or updated.	Platí při opětovném propojení nebo aktualizaci propojeného souboru.
 	Bounds (Fill Proportionally)	Hranice (vyplnit proporcionálně)
@@ -2624,7 +2624,7 @@ digits	Malayalam	Malajálamské
 	A new preset starting from the selected one	Nové přednastavení vycházející z vybraného
 	Differences from {preset}:	Rozdíly oproti {preset}:
 	Differences from [Default]:	Rozdíly oproti [Výchozí]:
-	Differences from VectorCraft Default:	Rozdíly oproti přednastavení Výchozí VectorCraft:
+	Differences from 91Ninjas Studio Default:	Rozdíly oproti přednastavení Výchozí 91Ninjas Studio:
 	Edit…	Upravit…
 	None.	Žádné.
 	Presets:	Přednastavení:
@@ -2674,7 +2674,7 @@ digits	Malayalam	Malajálamské
 	3 Color Job	Zakázka se 3 barvami
 	Recover Documents	Obnovit dokumenty
 	Restored documents open unsaved: save them to keep them.	Obnovené dokumenty se otevřou neuložené: pokud je chcete zachovat, uložte je.
-	VectorCraft didn't quit normally last time. These documents had unsaved changes:	VectorCraft se minule neukončil normálně. Tyto dokumenty měly neuložené změny:
+	91Ninjas Studio didn't quit normally last time. These documents had unsaved changes:	91Ninjas Studio se minule neukončil normálně. Tyto dokumenty měly neuložené změny:
 	Do you want to save the changes you made to “{name}”?	Chcete uložit změny provedené v dokumentu „{name}“?
 	Don't Save	Neukládat
 	Your changes will be lost if you don't save them.	Pokud změny neuložíte, budou ztraceny.
@@ -2740,7 +2740,7 @@ digits	Malayalam	Malajálamské
 	Color images	Barevné obrazy
 	Compatibility:	Kompatibilita:
 	PDF 1.7	PDF 1.7
-	VectorCraft Default	Výchozí VectorCraft
+	91Ninjas Studio Default	Výchozí 91Ninjas Studio
 	High Quality Print	Tisk ve vysoké kvalitě
 	[High Quality Print]	[Tisk ve vysoké kvalitě]
 	Press Quality	Kvalita pro tiskový stroj
@@ -2753,7 +2753,7 @@ digits	Malayalam	Malajálamské
 	[PDF/X-3:2002]	[PDF/X-3:2002]
 	PDF/X-4:2010	PDF/X-4:2010
 	[PDF/X-4:2010]	[PDF/X-4:2010]
-	Keeps the document editable: VectorCraft reopens the PDF with nothing lost. For files you'll edit again.	Zachová možnost úprav dokumentu: VectorCraft znovu otevře PDF bez ztráty dat. Pro soubory, které budete znovu upravovat.
+	Keeps the document editable: 91Ninjas Studio reopens the PDF with nothing lost. For files you'll edit again.	Zachová možnost úprav dokumentu: 91Ninjas Studio znovu otevře PDF bez ztráty dat. Pro soubory, které budete znovu upravovat.
 	Compress text and line art	Komprimovat text a perokresbu
 	Compression	Komprese
 	Compression › Color › Above Ppi	Komprese › Barevné › Nad ppi
@@ -2831,14 +2831,14 @@ digits	Malayalam	Malajálamské
 	A File…	Soubor…
 	GPL palettes keep solid colours only, as RGB.	Palety GPL uchovávají pouze plné barvy, a to jako RGB.
 	Save Swatch Library	Uložit knihovnu vzorníku
-	VectorCraft Swatches (.vcswatches)	Vzorník VectorCraft (.vcswatches)
+	91Ninjas Studio Swatches (.vcswatches)	Vzorník 91Ninjas Studio (.vcswatches)
 	Save To:	Uložit do:
 	Saved to User Defined: {}	Uloženo do uživatelských knihoven: {}
 	Selected Swatches Only	Pouze vybrané položky vzorníku
 	Selected Swatches Only (0)	Pouze vybrané položky vzorníku (0)
 	User Defined Libraries	Uživatelské knihovny
 	Copy Report	Kopírovat zprávu
-	VectorCraft read this script without running it.	VectorCraft tento skript přečetl, aniž by ho spustil.
+	91Ninjas Studio read this script without running it.	91Ninjas Studio tento skript přečetl, aniž by ho spustil.
 	Needs nothing beyond plain JavaScript	Nepotřebuje nic kromě běžného JavaScriptu
 	Needs the script language's own objects or directives	Potřebuje vlastní objekty nebo direktivy skriptovacího jazyka
 	Needs the document model	Potřebuje model dokumentu
@@ -3825,7 +3825,7 @@ axis	Both	Obě
 	Print as Bitmap	Tisknout jako bitmapu
 	Draft	Koncept
 	Default	Výchozí
-	[VectorCraft Default]	[Výchozí VectorCraft]
+	[91Ninjas Studio Default]	[Výchozí 91Ninjas Studio]
 	Magenta	Purpurová
 	Page	Stránka
 	Print Tiling	Dlaždice tisku
@@ -3935,7 +3935,7 @@ effect	Regular	Pravidelný
 	Quickly start a new file	Rychle začít nový soubor
 	Recent Files	Nedávné soubory
 	Vector illustration — fast, open, scriptable.	Vektorová ilustrace — rychlá, otevřená, skriptovatelná.
-	Welcome to VectorCraft	Vítejte ve VectorCraftu
+	Welcome to 91Ninjas Studio	Vítejte ve 91Ninjas Studiou
 	ArtCraft website	Web ArtCraft
 	Discord	Discord
 	Join our Discord	Připojit se k našemu Discordu
@@ -3981,9 +3981,9 @@ font-technology	Variable	Variabilní
 	Installed plug-in {}	Nainstalován zásuvný modul {}
 	Revert to the saved version of “{name}”?	Vrátit se k uložené verzi dokumentu „{name}“?
 	Replace “{name}”, the file this document was opened from?	Nahradit „{name}“, soubor, ze kterého byl tento dokument otevřen?
-	Opening it left out what VectorCraft can't read yet ({what}), so replacing it loses that for good. Save under another name to keep it.	Při otevírání bylo vynecháno, co VectorCraft zatím neumí přečíst ({what}), takže nahrazením se to nenávratně ztratí. Chcete-li to zachovat, uložte dokument pod jiným názvem.
+	Opening it left out what 91Ninjas Studio can't read yet ({what}), so replacing it loses that for good. Save under another name to keep it.	Při otevírání bylo vynecháno, co 91Ninjas Studio zatím neumí přečíst ({what}), takže nahrazením se to nenávratně ztratí. Chcete-li to zachovat, uložte dokument pod jiným názvem.
 	“{name}” already exists. Replace it?	„{name}“ již existuje. Nahradit?
-	The name in the save panel was “{typed}”; VectorCraft added the file type's extension. Replacing the file overwrites its contents.	Název v panelu ukládání byl „{typed}“ a VectorCraft přidal příponu typu souboru. Nahrazením souboru se přepíše jeho obsah.
+	The name in the save panel was “{typed}”; 91Ninjas Studio added the file type's extension. Replacing the file overwrites its contents.	Název v panelu ukládání byl „{typed}“ a 91Ninjas Studio přidal příponu typu souboru. Nahrazením souboru se přepíše jeho obsah.
 	Saved {path}	Uloženo: {path}
 	Saving	Ukládání
 	Saving {}	Ukládání {}
@@ -3991,7 +3991,7 @@ font-technology	Variable	Variabilní
 	Dashed Line	Čárkovaná čára
 	Panel menu	Nabídka panelu
 	Unembed…	Zrušit vložení…
-	Applies the next time VectorCraft starts.	Projeví se při příštím spuštění VectorCraftu.
+	Applies the next time 91Ninjas Studio starts.	Projeví se při příštím spuštění 91Ninjas Studiou.
 	Enable Contextual Task Bar	Povolit kontextový panel úloh
 	Next	Další
 	OK	OK
@@ -4432,7 +4432,7 @@ imageTrace	Outline	Obrys
 @msg	can't encode the document: {0}	dokument nelze zakódovat: {0}
 @msg	can't parse shortcut `{c}`	klávesovou zkratku `{c}` nelze analyzovat
 @msg	can't parse shortcut `{s}` for `{k}`	klávesovou zkratku `{s}` pro `{k}` nelze analyzovat
-@msg	can't save version {0}: VectorCraft writes versions {MIN_VERSION} to {VERSION}	verzi {0} nelze uložit: VectorCraft zapisuje verze {MIN_VERSION} až {VERSION}
+@msg	can't save version {0}: 91Ninjas Studio writes versions {MIN_VERSION} to {VERSION}	verzi {0} nelze uložit: 91Ninjas Studio zapisuje verze {MIN_VERSION} až {VERSION}
 @msg	can't write .{ext} images	obrázky .{ext} nelze zapisovat
 @msg	cannot distort a zero-size bounding box	ohraničovací rámeček nulové velikosti nelze deformovat
 @msg	cannot read PDF: {0}	PDF nelze přečíst: {0}
@@ -4459,7 +4459,7 @@ imageTrace	Outline	Obrys
 @msg	empty brush stroke	prázdný tah štětcem
 @msg	empty cutter	prázdný řezací objekt
 @msg	empty path	prázdná cesta
-@msg	file version {0} is newer than this VectorCraft supports ({VERSION})	verze souboru {0} je novější, než tento VectorCraft podporuje ({VERSION})
+@msg	file version {0} is newer than this 91Ninjas Studio supports ({VERSION})	verze souboru {0} je novější, než tento 91Ninjas Studio podporuje ({VERSION})
 @msg	freeform point {i} needs `at` [x, y] and a valid `color`	volný bod {i} potřebuje `at` [x, y] a platnou `color`
 @msg	freeform line {i} must be an array of point indices	volná čára {i} musí být pole indexů bodů
 @msg	give both `start` and `end` [x, y] (or neither)	zadejte `start` i `end` [x, y] (nebo ani jedno)
@@ -4480,9 +4480,9 @@ imageTrace	Outline	Obrys
 @msg	invalid PDF setting: {0}	neplatné nastavení PDF: {0}
 @msg	invalid image data for `{0}`	neplatná obrazová data pro `{0}`
 @msg	invalid parameters for `{cmd}`: {msg}	neplatné parametry pro `{cmd}`: {msg}
-@msg	is not an image VectorCraft reads	není obraz, který VectorCraft umí přečíst
-@msg	it uses `{at}`, which VectorCraft's PostScript reader doesn't know	používá `{at}`, které čtečka PostScriptu ve VectorCraftu nezná
-@msg	it uses `{at}`, which VectorCraft's PostScript reader doesn't know, in {procs}	používá `{at}`, které čtečka PostScriptu ve VectorCraftu nezná, v {procs}
+@msg	is not an image 91Ninjas Studio reads	není obraz, který 91Ninjas Studio umí přečíst
+@msg	it uses `{at}`, which 91Ninjas Studio's PostScript reader doesn't know	používá `{at}`, které čtečka PostScriptu ve 91Ninjas Studiou nezná
+@msg	it uses `{at}`, which 91Ninjas Studio's PostScript reader doesn't know, in {procs}	používá `{at}`, které čtečka PostScriptu ve 91Ninjas Studiou nezná, v {procs}
 @msg	its Windows metafile preview was opened instead, which may simplify the art	místo něj byl otevřen jeho náhled ve formátu Windows metafile, který může kresbu zjednodušit
 @msg	its preview was placed instead, at screen resolution	místo něj byl umístěn jeho náhled v rozlišení obrazovky
 @msg	join needs open paths	spojení vyžaduje otevřené cesty
@@ -4539,7 +4539,7 @@ imageTrace	Outline	Obrys
 @msg	no file system here	zde není souborový systém
 @msg	no file writer	chybí zápis souborů
 @msg	no files to place	žádné soubory k umístění
-@msg	`{file}` isn't a VectorCraft document, a PDF or a PDF-compatible .ai file	`{file}` není dokument VectorCraft, PDF ani soubor .ai kompatibilní s PDF
+@msg	`{file}` isn't a 91Ninjas Studio document, a PDF or a PDF-compatible .ai file	`{file}` není dokument 91Ninjas Studio, PDF ani soubor .ai kompatibilní s PDF
 @msg	no format to export to	žádný formát pro export
 @msg	no free recovery area	žádná volná oblast pro obnovení
 @msg	no gradient stop or freeform point is selected	není vybrána žádná zarážka přechodu ani volný bod
@@ -4581,7 +4581,7 @@ imageTrace	Outline	Obrys
 @msg	not an action set file	není to soubor sady akcí
 @msg	the action set file is larger than 8 MiB	soubor sady akcí je větší než 8 MiB
 @msg	the action set file holds more than 1,000 actions	soubor sady akcí obsahuje více než 1 000 akcí
-@msg	the action set file needs a later version of VectorCraft	soubor sady akcí vyžaduje novější verzi aplikace VectorCraft
+@msg	the action set file needs a later version of 91Ninjas Studio	soubor sady akcí vyžaduje novější verzi aplikace 91Ninjas Studio
 @msg	an action in the action set file has more than 10,000 steps	akce v souboru sady akcí má více než 10 000 kroků
 @msg	no such anchor	takový kotevní bod neexistuje
 @msg	no such artboard	taková pracovní plocha neexistuje
@@ -4611,8 +4611,8 @@ imageTrace	Outline	Obrys
 @msg	node {_1} is not text	uzel {_1} není text
 @msg	node {_1} is on a locked artboard	uzel {_1} je na zamčené pracovní ploše
 @msg	not a DXF drawing	nejde o výkres DXF
-@msg	not a VectorCraft file: {0}	nejde o soubor VectorCraft: {0}
-@msg	not a VectorCraft shortcut set (missing `overrides`)	nejde o sadu klávesových zkratek VectorCraft (chybí `overrides`)
+@msg	not a 91Ninjas Studio file: {0}	nejde o soubor 91Ninjas Studio: {0}
+@msg	not a 91Ninjas Studio shortcut set (missing `overrides`)	nejde o sadu klávesových zkratek 91Ninjas Studio (chybí `overrides`)
 @msg	not a blend	nejde o prolnutí
 @msg	not a graphic style library (format `{_1}`)	nejde o knihovnu grafických stylů (formát `{_1}`)
 @msg	not a stored central record	nejde o uložený centrální záznam
@@ -4895,11 +4895,11 @@ imageTrace	Outline	Obrys
 @msg	Sent to {_1}	Odesláno do {_1}
 @msg	{_1} files	Soubory {_1}
 @msg	The graphics were lost and have been restarted	Grafika byla ztracena a byla restartována
-@msg	The graphics processor tried first couldn't show the window, so VectorCraft started again on {summary}	Grafický procesor zkoušený jako první nedokázal zobrazit okno, proto se VectorCraft znovu spustil na {summary}
-@msg	The last start of VectorCraft ended on {name} before its window appeared, so it started on {summary}. To try that graphics processor again, change Preferences › Performance › Graphics Processor or start with WGPU_BACKEND set	Poslední spuštění aplikace VectorCraft skončilo na {name} dřív, než se zobrazilo okno, proto se spustila na {summary}. Chcete-li tento grafický procesor zkusit znovu, změňte Předvolby › Výkon › Grafický procesor nebo ji spusťte s nastavenou proměnnou WGPU_BACKEND
-@msg	The last start of VectorCraft ended while it listed the graphics processors, so it started on {summary} with OpenGL alone. To try the other graphics backends again, change Preferences › Performance › Graphics Processor or start with WGPU_BACKEND set	Poslední spuštění aplikace VectorCraft skončilo během zjišťování grafických procesorů, proto se spustila na {summary} jen s OpenGL. Chcete-li znovu zkusit ostatní grafická rozhraní, změňte Předvolby › Výkon › Grafický procesor nebo ji spusťte s nastavenou proměnnou WGPU_BACKEND
-@msg	Loading VectorCraft…	Načítání VectorCraftu…
-@msg	VectorCraft failed to start: {e}	VectorCraft se nepodařilo spustit: {e}
+@msg	The graphics processor tried first couldn't show the window, so 91Ninjas Studio started again on {summary}	Grafický procesor zkoušený jako první nedokázal zobrazit okno, proto se 91Ninjas Studio znovu spustil na {summary}
+@msg	The last start of 91Ninjas Studio ended on {name} before its window appeared, so it started on {summary}. To try that graphics processor again, change Preferences › Performance › Graphics Processor or start with WGPU_BACKEND set	Poslední spuštění aplikace 91Ninjas Studio skončilo na {name} dřív, než se zobrazilo okno, proto se spustila na {summary}. Chcete-li tento grafický procesor zkusit znovu, změňte Předvolby › Výkon › Grafický procesor nebo ji spusťte s nastavenou proměnnou WGPU_BACKEND
+@msg	The last start of 91Ninjas Studio ended while it listed the graphics processors, so it started on {summary} with OpenGL alone. To try the other graphics backends again, change Preferences › Performance › Graphics Processor or start with WGPU_BACKEND set	Poslední spuštění aplikace 91Ninjas Studio skončilo během zjišťování grafických procesorů, proto se spustila na {summary} jen s OpenGL. Chcete-li znovu zkusit ostatní grafická rozhraní, změňte Předvolby › Výkon › Grafický procesor nebo ji spusťte s nastavenou proměnnou WGPU_BACKEND
+@msg	Loading 91Ninjas Studio…	Načítání 91Ninjas Studiou…
+@msg	91Ninjas Studio failed to start: {e}	91Ninjas Studio se nepodařilo spustit: {e}
 @msg	A browser with WebGPU or WebGL2 is required.	Je potřeba prohlížeč s WebGPU nebo WebGL2.
 @msg	The graphics were lost and couldn't be restarted.	Grafika byla ztracena a nepodařilo se ji restartovat.
 @msg	Your unsaved changes are kept in this browser: reload the page to get them back.	Vaše neuložené změny zůstávají v tomto prohlížeči: obnovte stránku a získáte je zpět.
@@ -4930,12 +4930,12 @@ imageTrace	Outline	Obrys
 @msg	it has more than {MAX_NODES} objects	má více než {MAX_NODES} objektů
 @msg	it has no layers	nemá žádné vrstvy
 @msg	it has too many values in a row	má příliš mnoho hodnot v řadě
-@msg	it has {_1}, which VectorCraft doesn't read from it yet	obsahuje {_1}, což z něj VectorCraft zatím nečte
+@msg	it has {_1}, which 91Ninjas Studio doesn't read from it yet	obsahuje {_1}, což z něj 91Ninjas Studio zatím nečte
 @msg	its objects are nested too deeply	jeho objekty jsou vnořené příliš hluboko
 @msg	its section ending with `%{end}` doesn't end	jeho oddíl končící `%{end}` nemá konec
 @msg	objects with several fills or strokes, effects or brushes came in as their drawn look ({_1}): their appearance isn't editable yet	objekty s více výplněmi nebo tahy, efekty či štětci byly načteny jako vykreslený vzhled ({_1}): jejich vzhled zatím nelze upravovat
 @msg	gradient “{name}” isn't defined in the file: a plain colour stands in for it	přechod „{name}“ není v souboru definován: zastupuje ho plná barva
-@msg	an image VectorCraft can't read was left out	obrázek, který VectorCraft neumí přečíst, byl vynechán
+@msg	an image 91Ninjas Studio can't read was left out	obrázek, který 91Ninjas Studio neumí přečíst, byl vynechán
 @msg	graphs come in as plain art, without their data or settings	grafy se načtou jako obyčejná grafika, bez svých dat a nastavení
 @msg	an image whose data is cut short was left out	obrázek s useknutými daty byl vynechán
 @msg	linked pictures show the low-resolution preview saved in the file until their files are found: relink them in the Links panel	propojené obrázky se zobrazují jako náhled v nízkém rozlišení uložený v souboru, dokud se nenajdou jejich soubory: znovu je propojte v panelu Propojení
@@ -4944,13 +4944,13 @@ imageTrace	Outline	Obrys
 @msg	this file was saved without PDF compatibility, and its editing data can't be read ({why})	tento soubor byl uložen bez kompatibility s PDF a jeho data pro úpravy nelze přečíst ({why})
 @msg	the PDF part couldn't be read ({_1}): the file opened from its editing data	část PDF nelze přečíst ({_1}): soubor byl otevřen z jeho dat pro úpravy
 @msg	No fonts are missing in this document	V tomto dokumentu nechybí žádná písma
-@msg	VectorCraft doesn't search other apps' or the system's folders: {path}	VectorCraft neprohledává složky jiných aplikací ani systému: {path}
-@msg	VectorCraft doesn't search the Shared or Public folder in Users: {path}	VectorCraft neprohledává složku Shared ani Public ve složce Users: {path}
+@msg	91Ninjas Studio doesn't search other apps' or the system's folders: {path}	91Ninjas Studio neprohledává složky jiných aplikací ani systému: {path}
+@msg	91Ninjas Studio doesn't search the Shared or Public folder in Users: {path}	91Ninjas Studio neprohledává složku Shared ani Public ve složce Users: {path}
 @msg	{path} is not a folder	{path} není složka
 @msg	the search couldn't start: try again in a moment	hledání nelze spustit: zkuste to za chvíli znovu
 @msg	searching a folder isn't available on the web	prohledávání složky není na webu k dispozici
 @msg	every search thread stopped on an internal error (please report this bug)	všechna vlákna hledání se zastavila na vnitřní chybě (nahlaste prosím tuto chybu)
-@msg	VectorCraft's Fonts folder isn't set here: the desktop app and vectorcraft-cli set it	složka Fonts VectorCraftu zde není nastavena: nastavuje ji desktopová aplikace a vectorcraft-cli
+@msg	91Ninjas Studio's Fonts folder isn't set here: the desktop app and vectorcraft-cli set it	složka Fonts 91Ninjas Studiou zde není nastavena: nastavuje ji desktopová aplikace a vectorcraft-cli
 @msg	choose the font files to add	vyberte soubory písem, které chcete přidat
 @msg	not a file	nejde o soubor
 @msg	not a font file	nejde o soubor písma
@@ -5100,7 +5100,7 @@ imageTrace	Outline	Obrys
 	All shortcuts reset to defaults.	Všechny zkratky byly obnoveny na výchozí hodnoty.
 	Imported. Press OK to keep the imported set.	Importováno. Importovanou sadu zachováte stisknutím OK.
 	⚠ {chord} was already used by {names} — it has been removed there.	Pozor: zkratka {chord} už byla použita pro {names} — tam byla odebrána.
-	VectorCraft Defaults	Výchozí VectorCraft
+	91Ninjas Studio Defaults	Výchozí 91Ninjas Studio
 @plural	{n} shortcut is assigned more than once|{n} shortcuts are assigned more than once	{n} zkratka je přiřazena více než jednou|{n} zkratky jsou přiřazeny více než jednou|{n} zkratek je přiřazeno více než jednou
 # Print dialog: overprints note and choice labels
 	Simulate prints overprints as Overprint Preview shows them; separations always keep them. A preset flattens transparency before printing (PostScript files always flatten it).	Možnost Simulovat vytiskne přetisky tak, jak je ukazuje Náhled přetisků; separace je vždy zachovávají. Přednastavení před tiskem sloučí průhlednost (soubory PostScript ji sloučí vždy).
@@ -5356,7 +5356,7 @@ file-filter	Print presets	Přednastavení tisku
 file-filter	Export presets	Přednastavení exportu
 file-filter	SVG Compressed	Komprimované SVG
 file-filter	PDF-compatible .ai	.ai kompatibilní s PDF
-file-filter	VectorCraft Template	Šablona VectorCraft
+file-filter	91Ninjas Studio Template	Šablona 91Ninjas Studio
 file-filter	Templates	Šablony
 diagnostics	render	vykreslení
 diagnostics	ui	rozhraní
@@ -5367,7 +5367,7 @@ diagnostics	ui	rozhraní
 @plural	{n} commit|{n} commits	{n} commit|{n} commity|{n} commitů
 gradient-kind	Radial	Kruhový
 mark-style	Japanese	Japonské
-@msg	the compressed file unpacks to more than VectorCraft reads ({_1} MB of document, {_2} MB per image)	komprimovaný soubor se rozbalí na více, než VectorCraft přečte ({_1} MB dokumentu, {_2} MB na obrázek)
+@msg	the compressed file unpacks to more than 91Ninjas Studio reads ({_1} MB of document, {_2} MB per image)	komprimovaný soubor se rozbalí na více, než 91Ninjas Studio přečte ({_1} MB dokumentu, {_2} MB na obrázek)
 @msg	the document is too large to save compressed ({0}): save it with Use Compression off	dokument je příliš velký pro komprimované uložení ({0}): uložte ho s vypnutou volbou Použít kompresi
 @msg	the file stopped being read (please report this bug)	čtení souboru se přerušilo (nahlaste prosím tuto chybu)
 	Concentric Dividers:	Soustředné dělicí čáry:
@@ -6197,7 +6197,7 @@ breakText	Glyphs	Glyfy
 	Malayalam	Malajálamština
 	Odia	Urijština
 	Urdu	Urdština
-	VectorCraft {release} and later (version {n})	VectorCraft {release} a novější (verze {n})
+	91Ninjas Studio {release} and later (version {n})	91Ninjas Studio {release} a novější (verze {n})
 # Document Tools add-on: Export All Open Documents (#4920).
 	Export All Open Documents as PDF	Exportovat všechny otevřené dokumenty jako PDF
 	Export All Open Documents as SVG	Exportovat všechny otevřené dokumenty jako SVG

@@ -693,11 +693,8 @@ pub fn menu_tree_named(english_names: bool) -> Vec<(&'static str, Vec<Item>)> {
         (
             "Help",
             vec![
-                // 91studio: no upstream community links (D-022); the code we build on stays credited.
-                c("VectorCraft (the editor 91Ninjas Studio is built on)", "help.github"),
-                Sep,
+                // 91studio: no links to the original makers (D-022, D-045); About credits the editor we build on.
                 c("Search Commands…", "help.commandPalette"),
-                todos("VectorCraft Help…", "F1"),
                 Sep,
                 c("Check for Updates…", "help.checkForUpdates"),
                 c("About 91Ninjas Studio", "help.about"),
