@@ -68,10 +68,10 @@ jobs:
       matrix:
         include:
           - arch: arm64
-            runner: macos-14
+            runner: macos-latest     # GitHub retired macos-14 (Nov 2026); latest is always a supported Apple-chip Mac
             target: aarch64-apple-darwin
           - arch: x86_64
-            runner: macos-14          # an Apple-chip machine builds the Intel version too (cross-compiled)
+            runner: macos-latest      # an Apple-chip machine builds the Intel version too (cross-compiled)
             target: x86_64-apple-darwin
     runs-on: ${{ matrix.runner }}
     env:
