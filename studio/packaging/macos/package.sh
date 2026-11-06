@@ -38,6 +38,8 @@ cp "$WORK/$UV_ASSET/uv" "$APP/Contents/MacOS/uv"
 # The agents: source and lock file only.
 rsync -a --exclude .venv --exclude tests --exclude __pycache__ --exclude .pytest_cache --exclude '*.pyc' --exclude .env \
   "$STUDIO/agents/" "$APP/Contents/Resources/agents/"
+# Marks the agents as installed with the app (D-049): the editor then uses only these, inside the bundle.
+printf 'installed with 91Ninjas Studio' > "$APP/Contents/Resources/agents/.installed"
 
 SHORT="${STUDIO_VERSION%%-*}"
 cat >"$APP/Contents/Info.plist" <<PLIST

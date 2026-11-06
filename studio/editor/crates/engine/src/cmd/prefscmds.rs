@@ -289,7 +289,7 @@ pub const PREF_SPECS: &[PrefSpec] = &[
         "User Interface",
         "",
         "Accent Color",
-        choice(&[("mint", "Mint"), ("coral", "Coral"), ("blue", "Blue"), ("violet", "Violet"), ("green", "Green"), ("amber", "Amber"), ("pink", "Pink")])
+        choice(&[("lime", "Lime"), ("mint", "Mint"), ("coral", "Coral"), ("blue", "Blue"), ("violet", "Violet"), ("green", "Green"), ("amber", "Amber"), ("pink", "Pink")])
     ),
     p!(
         "canvasColor",

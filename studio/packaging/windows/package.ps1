@@ -49,6 +49,8 @@ Copy-Item (Join-Path $env:RUNNER_TEMP 'uv\uv.exe') $Stage
 $AgentsStage = Join-Path $Stage 'agents'
 robocopy $Agents $AgentsStage /E /XD .venv tests __pycache__ .pytest_cache /XF *.pyc .env | Out-Null
 if ($LASTEXITCODE -ge 8) { throw "copying the agents failed ($LASTEXITCODE)" }
+# Marks the agents as installed with the app (D-049): the editor then uses only these, next to the .exe.
+Set-Content -Path (Join-Path $AgentsStage '.installed') -Value 'installed with 91Ninjas Studio' -NoNewline
 $global:LASTEXITCODE = 0
 
 # Installer art in the 91Ninjas colours.

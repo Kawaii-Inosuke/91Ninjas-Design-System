@@ -48,8 +48,15 @@ fn agents_dir() -> Option<PathBuf> {
         return Some(PathBuf::from(d));
     }
     let exe = std::env::current_exe().ok()?;
-    // A checkout (studio/agents), the Windows install folder (agents\ next to the .exe) or the macOS bundle
-    // (Contents/Resources/agents) (D-040).
+    // Installed: only the agents shipped with this app, marked `.installed` by the packaging (D-049): agents\
+    // next to the .exe on Windows, Contents/Resources/agents in the macOS bundle. Never a folder found further
+    // up, which another account could have made.
+    let here = exe.parent()?;
+    let shipped = [here.join("agents"), here.parent().map_or_else(|| here.join("Resources"), |c| c.join("Resources")).join("agents")];
+    if let Some(d) = shipped.into_iter().find(|d| d.join(INSTALLED).is_file()) {
+        return Some(d);
+    }
+    // A checkout (studio/agents, found from target/debug or target/release) (D-040).
     exe.ancestors()
         .flat_map(|a| [a.join("studio").join("agents"), a.join("agents"), a.join("Resources").join("agents")])
         .find(|d| d.join("pyproject.toml").is_file() && d.join("studio_agents").is_dir())
@@ -58,8 +65,11 @@ fn agents_dir() -> Option<PathBuf> {
 /// Installed (not a checkout): the agents came with the app, so their Python environment lives in the user's
 /// data folder (the install folder may not be writable) and is built from the lock file as shipped.
 fn bundled(dir: &std::path::Path) -> bool {
-    !dir.join(".venv").exists() && std::env::var_os("STUDIO_AGENTS_DIR").is_none()
+    dir.join(INSTALLED).is_file() && std::env::var_os("STUDIO_AGENTS_DIR").is_none()
 }
+
+/// The marker the installers put in the agents folder they ship (D-049).
+const INSTALLED: &str = ".installed";
 
 /// The data folder the agents use (`~/.local/share/91studio`, as `studio_agents.config.data_dir`).
 fn data_dir() -> Option<PathBuf> {

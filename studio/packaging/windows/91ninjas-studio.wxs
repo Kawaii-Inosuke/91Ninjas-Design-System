@@ -29,6 +29,7 @@
       <ComponentGroupRef Id="AgentsFiles" />
       <ComponentRef Id="DesktopShortcut" />
       <ComponentRef Id="FileType" />
+      <ComponentRef Id="InstallFolderLock" />
     </Feature>
 
     <Property Id="INSTALLDESKTOPSHORTCUT" Value="1" Secure="yes" />
@@ -92,6 +93,16 @@
     </ComponentGroup>
     <!-- .91studio files (and the older .vectorcraft) show as "91Ninjas Studio design" with the 91 icon and open in the
          app on a double-click (D-045). Per user: under HKCU\Software\Classes, no admin rights. -->
+    <!-- The install folder gets its own permissions, not the drive's (D-049): a folder made on another drive
+         (D:\91ninjas) inherits "Authenticated Users: Modify", so any account on the computer could change the
+         program. Only its owner (the designer), SYSTEM and Administrators may; inheritance is cut (P) and the
+         rule is passed to everything inside (OICI). Re-applied by every update, which re-runs this installer. -->
+    <Component Id="InstallFolderLock" Directory="INSTALLFOLDER" Guid="6B1F0E3A-2C77-4F59-9E0B-8D2A41C7B5E1">
+      <RegistryValue Root="HKCU" Key="Software\91Ninjas Studio" Name="FolderLocked" Value="1" Type="integer" KeyPath="yes" />
+      <CreateFolder>
+        <PermissionEx Sddl="D:PAI(A;OICI;FA;;;OW)(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)" />
+      </CreateFolder>
+    </Component>
     <Component Id="FileType" Directory="INSTALLFOLDER" Guid="D4DCD0F5-7178-4A2B-93A9-24503B7E5259">
       <RegistryValue Root="HKCU" Key="Software\Classes\NinjasStudio.Design" Value="91Ninjas Studio design" Type="string" KeyPath="yes" />
       <RegistryValue Root="HKCU" Key="Software\Classes\NinjasStudio.Design\DefaultIcon" Value="&quot;[#StudioExe]&quot;,0" Type="string" />

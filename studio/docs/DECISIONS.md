@@ -658,3 +658,20 @@ Format per entry: **Context → Decision → Alternatives → Consequences**. En
   - `contributors/` (the credits in About › Open-source licences);
   - `AGENTS.md` / `CLAUDE.md` (building rules for the code).
 - **PDF editable-copy attachment name:** `91ninjas-studio-editing.91studio` (at least as long as the older names, which are still read).
+
+## D-048: The interface takes the 91Ninjas brand colours (2026-11-06)
+- **Why:** the teal greys and mint accent read as a generic "AI-generated" dark theme (the hallmark skill's colour checks: cyan/mint on dark, pure white and black text). The brand's own colours come from 91ninjas.com's stylesheet, not from memory:
+  - ink #130e00;
+  - cream #fffbee;
+  - lime #c6fb50 for the main button, with ink text.
+- **Colours only; no layout or position changes:**
+  - The greys of all four brightness levels keep their lightness (so contrast stays the same) and take the brand's warm tint (OKLCH hue 93).
+  - Text is cream or ink, never pure white or black.
+  - The new default accent **Lime** is the brand lime on dark panels (with ink lettering, as on the website) and a deep olive of the same hue on light panels, because lime is unreadable on cream.
+- **Other accents:** Mint and the rest stay in Preferences › User Interface › Accent Color. Existing installs keep their saved accent until changed there.
+
+## D-049: The install folder belongs to the designer only (2026-11-06)
+- **Why:** security audit issue 8. A folder made outside the user profile (e.g. `D:\91ninjas`, D-044) inherits the drive's "Authenticated Users: Modify", so any account on the computer could change the program, and the editor runs uv and Python from it.
+- **The installer locks the folder:** its permissions are set to the owner (the designer), SYSTEM and Administrators only, with inheritance cut (`InstallFolderLock`, WiX `PermissionEx`). Every update re-runs the installer, so existing installs are locked by their next update.
+- **The packaging marks the agents it ships** with an `.installed` file. The editor then uses only those agents (next to the .exe, or in the Mac bundle) and decides "installed" by that marker, not by a missing `.venv`. The search up through parent folders is kept for checkouts only.
+- **Check on a laptop after the update:** `icacls <install folder>` lists only the user, SYSTEM and Administrators.

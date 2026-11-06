@@ -39,3 +39,6 @@ Thumbs.db
 
 # Installers built by studio/packaging (D-040)
 studio/dist/
+
+# Security audit findings: keep private while the repo is public
+studio/docs/SECURITY-ISSUES.md
